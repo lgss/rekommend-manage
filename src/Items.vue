@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer dark app permanent>
+    <v-navigation-drawer permanent app color="blue--lighten-1">
       <v-list-group v-for="(page, index) in pages.pages" :key="index">
         <template v-slot:activator>
           <v-list-item-title>Page {{index + 1}} - {{page.title}}</v-list-item-title>
@@ -11,7 +11,7 @@
           <v-list-item-subtitle>{{item.label}}</v-list-item-subtitle>
             <v-list-item-action>
               <v-btn icon>
-                <v-icon class="grey lighten-1">mdi-close</v-icon>
+                <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-list-item-action>
         </v-list-item>
@@ -20,11 +20,9 @@
         <v-list-item-title>Copy JSON</v-list-item-title>
       </v-list-item>
     </v-navigation-drawer>
-    <v-content>
       <v-container >
           <component :is="field.fieldType" v-model="field"/>
       </v-container>
-    </v-content>
   </div>
 </template>
 

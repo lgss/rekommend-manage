@@ -19,21 +19,24 @@
     <v-subheader>Choices</v-subheader>
     <v-expansion-panels accordion>
       <v-expansion-panel v-for="(choice, index) in $attrs.value.choices" :key="index">
-        <v-expansion-panel-header #default="{open}">
-          <v-fade-transition leave-absolute>
-            <span v-if="!open">
-              {{choice.value}}
-            </span>
-          </v-fade-transition>
-          <template actions="{}">
-            <v-icon color="primary">$vuetify.icons.expand</v-icon>
+        <v-expansion-panel-header >
+          <template #default="{open}">
+            <v-fade-transition leave-absolute>
+              <span v-if="!open">
+                {{choice.value}}
+              </span>
+            </v-fade-transition>
+            <v-spacer/>
+          </template>
+          <template #actions>
             <v-btn icon @click="remove(index)">
               <v-icon>mdi-close</v-icon>
             </v-btn>
+            <v-icon color="primary">$vuetify.icons.expand</v-icon>
           </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <v-text-field label="Choice label" v-model="choice.value" append-icon="mdi-close" @click:append="remove(index)"/>
+          <v-text-field label="Choice label" v-model="choice.value"/>
           <v-combobox
             v-model="choice.tags"
             chips
