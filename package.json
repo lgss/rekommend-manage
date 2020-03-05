@@ -9,7 +9,14 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
-    "vue": "^2.6.11"
+    "fibers": "^4.0.2",
+    "node-sass": "^4.13.1",
+    "prosemirror-tables": "^1.0.0",
+    "sass": "^1.26.2",
+    "sass-loader": "^8.0.2",
+    "tiptap-vuetify": "^2.13.2",
+    "vue": "^2.6.11",
+    "vuetify": "^2.2.15"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.2.0",
@@ -32,7 +39,7 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules1": {"no-unused-vars": ["warn"]}
   },
   "browserslist": [
     "> 1%",
