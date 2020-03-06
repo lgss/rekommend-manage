@@ -16,6 +16,12 @@
             </v-list-item-action>
         </v-list-item>
       </v-list-group>
+      <v-list-item color="primary" @click="newPage">
+        <v-list-item-icon>
+            <v-icon>mdi-plus</v-icon>
+          </v-list-item-icon>
+        New page
+      </v-list-item>
       <v-list-item @click="copy">
         <v-list-item-title>Copy JSON</v-list-item-title>
       </v-list-item>
@@ -62,6 +68,9 @@ export default {
     },
     copy() {
       navigator.clipboard.writeText(JSON.stringify(this.pages, null, 2))
+    },
+    newPage() {
+      this.pages.pages.push({title: "New page"})
     }
   }
 }

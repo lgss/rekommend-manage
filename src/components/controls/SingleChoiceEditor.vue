@@ -52,7 +52,7 @@
         </transition-group>
       </draggable>
     </v-expansion-panels>
-    <v-btn @click="append">
+    <v-btn color="primary" @click="append">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
   </v-container>

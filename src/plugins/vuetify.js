@@ -3,5 +3,22 @@ import Vuetify from 'vuetify/lib';
 
 Vue.use(Vuetify);
 
-export default new Vuetify({
+import 'vuetify/dist/vuetify.min.css';
+import colors from 'vuetify/lib/util/colors';
+
+import { TiptapVuetifyPlugin } from 'tiptap-vuetify'
+import 'tiptap-vuetify/dist/main.css'
+
+
+let vuetify = new Vuetify({
+    theme: {
+        base: colors.cyan.base
+    }
 });
+
+Vue.use(TiptapVuetifyPlugin, {
+    vuetify,
+    iconsGroup: 'mdi'
+  })
+
+export default vuetify
