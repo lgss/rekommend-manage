@@ -3,7 +3,7 @@
     <v-navigation-drawer permanent app color="blue--lighten-1">
       <v-list-group v-for="(page, index) in pages.pages" :key="index">
         <template v-slot:activator>
-          <v-list-item-title>Page {{index + 1}} - {{page.title}}</v-list-item-title>
+          <v-list-item-title @click="loadEditor(page, 'page')">Page {{index + 1}} - {{page.title}}</v-list-item-title>
         </template>
 
         <v-list-item @click="loadEditor(item)" link v-for="(item, itemIndex) in page.items" :key="itemIndex">
@@ -21,7 +21,7 @@
       </v-list-item>
     </v-navigation-drawer>
       <v-container >
-          <component :is="field.fieldType" v-model="field"/>
+        <component :is="interactionType" v-model="field"/>
       </v-container>
   </div>
 </template>
@@ -43,7 +43,8 @@ export default {
     return {
       pages: [],
       item: 1,
-      field: {fieldType: "div"}
+      field: {fieldType: "div"},
+      interactionType: ''
     }
   },
   created() {
@@ -55,8 +56,9 @@ export default {
       })
   },
   methods: {
-    loadEditor(obj) {
+    loadEditor(obj, fieldType) {
       this.field = obj
+      this.interactionType = fieldType || obj.fieldType
     },
     copy() {
       navigator.clipboard.writeText(JSON.stringify(this.pages, null, 2))
