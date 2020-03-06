@@ -86,6 +86,7 @@
       append() {
         this.value.choices.push({
           value: "New choice",
+          choices: [],
           tags: []
         })
       },

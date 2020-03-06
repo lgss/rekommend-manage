@@ -70,7 +70,7 @@ export default {
       navigator.clipboard.writeText(JSON.stringify(this.pages, null, 2))
     },
     newPage() {
-      this.pages.pages.push({title: "New page"})
+      this.pages.pages.push({title: "New page", items: []})
     }
   }
 }
