@@ -1,6 +1,8 @@
 <template>
   <div>
-    <v-navigation-drawer permanent color="blue--lighten-1">
+    <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1">
+      <v-select solo label="Journey"></v-select>
+      <v-divider></v-divider>
       <v-list-group v-for="(page, index) in pages.pages" :key="index">
         <template v-slot:activator>
           <v-list-item-title @click="loadEditor(page, 'page')">Page {{index + 1}} - {{page.title}}</v-list-item-title>

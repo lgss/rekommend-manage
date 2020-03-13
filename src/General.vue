@@ -1,5 +1,5 @@
 <template>
-  <span>Resources config goes here</span>
+  <span>General config goes here</span>
 </template>
 
 <script>

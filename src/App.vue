@@ -27,14 +27,15 @@
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-tabs-items v-model="tab">
+    <v-tabs-items v-model="tab" class="fill-height">
       <v-tab-item key="general">
-        erg
+        <General/>
       </v-tab-item>
       <v-tab-item key="journeys">
           <Items/>
       </v-tab-item>
       <v-tab-item key="resources">
+        <Resources/>
       </v-tab-item>
     </v-tabs-items>
   </v-app>
@@ -42,12 +43,16 @@
 
 <script>
 import Items from './Items.vue';
+import General from './General.vue';
+import Resources from './Resources.vue';
 
 export default {
   name: 'App',
 
   components: {
+    General,
     Items,
+    Resources
   },
 
   data: () => ({
