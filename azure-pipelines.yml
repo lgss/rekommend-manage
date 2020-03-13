@@ -19,3 +19,12 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
+
+- script: sudo apt-get install -y awscli
+  displayName: Install AWS CLI
+
+- script: aws s3 sync ./dist s3://$(BUCKET_ADDRESS)
+  displayName: Deploy rekommend-manage
+  env:
+    AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+    AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
