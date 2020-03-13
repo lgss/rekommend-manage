@@ -47,14 +47,12 @@
 </template>
 
 <script>
+import interactionTypes from '../../utils/types';
+
 export default {
   data() {
     return {
-      interactionTypes: {
-        'single-choice-input': "Single choice input",
-        'multiple-choice-input': "Multiple choice input",
-        'stimulus': 'Stimulus'
-      }
+      interactionTypes
     }
   },
   props: ['value'],

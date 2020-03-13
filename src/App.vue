@@ -1,10 +1,17 @@
 <template>
   <v-app>
     <v-app-bar
-      app
+      max-height="112px"
       color="primary"
       dark
     >
+      <template v-slot:extension>
+        <v-tabs align-with-title v-model="tab">
+          <v-tab key="general">General</v-tab>
+          <v-tab key="journeys">Journeys</v-tab>
+          <v-tab key="resources">Resources</v-tab>
+        </v-tabs>
+      </template>
       <div class="d-flex align-center">
         <v-img
           alt="Vuetify Logo"
@@ -29,10 +36,16 @@
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
-
-    <v-content>
-      <Items/>
-    </v-content>
+    <v-tabs-items v-model="tab">
+      <v-tab-item key="general">
+        erg
+      </v-tab-item>
+      <v-tab-item key="journeys">
+          <Items/>
+      </v-tab-item>
+      <v-tab-item key="resources">
+      </v-tab-item>
+    </v-tabs-items>
   </v-app>
 </template>
 
@@ -47,7 +60,7 @@ export default {
   },
 
   data: () => ({
-    //
+    tab: 'journeys'
   }),
 };
 </script>

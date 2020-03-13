@@ -1,5 +1,6 @@
 <template>
   <v-container >
+    <h2>{{}}</h2>
     <v-text-field label="Name" v-model="value.name" />
     <v-text-field label="Label" v-model="value.label" />
     <v-combobox
@@ -60,6 +61,7 @@
 
 <script>
  import draggable from 'vuedraggable'
+ import typeName from '../../utils/types.js'
 
   export default {
     name: 'SingleChoiceEditor',
@@ -80,6 +82,9 @@
           disabled: false,
           ghostClass: "ghost"
         }
+      },
+      interactionTypeName() {
+        return typeName(this.value.fieldType)
       }
     },
     methods: {

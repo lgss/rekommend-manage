@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer permanent app color="blue--lighten-1">
+    <v-navigation-drawer permanent color="blue--lighten-1">
       <v-list-group v-for="(page, index) in pages.pages" :key="index">
         <template v-slot:activator>
           <v-list-item-title @click="loadEditor(page, 'page')">Page {{index + 1}} - {{page.title}}</v-list-item-title>
@@ -26,9 +26,11 @@
         <v-list-item-title>Copy JSON</v-list-item-title>
       </v-list-item>
     </v-navigation-drawer>
-      <v-container >
+    <v-content>
+      <v-container fluid class="fill-height">
         <component :is="interactionType" v-model="field"/>
       </v-container>
+    </v-content>
   </div>
 </template>
 
