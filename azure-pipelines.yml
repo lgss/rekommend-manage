@@ -23,7 +23,7 @@ steps:
 - script: sudo apt-get install -y awscli
   displayName: Install AWS CLI
 
-- script: aws s3 sync ./dist s3://$(BUCKET_ADDRESS)
+- script: npm run deploy
   displayName: Deploy rekommend-manage
   env:
     AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
