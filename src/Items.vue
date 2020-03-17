@@ -12,11 +12,6 @@
         <v-list-item @click="loadEditor(item)" link v-for="(item, itemIndex) in page.items" :key="itemIndex">
           <v-list-item-title>{{item.fieldType}}</v-list-item-title>
           <v-list-item-subtitle>{{item.label}}</v-list-item-subtitle>
-            <v-list-item-action>
-              <v-btn icon>
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </v-list-item-action>
         </v-list-item>
       </v-list-group>
 
