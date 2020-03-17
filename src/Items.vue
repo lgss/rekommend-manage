@@ -27,6 +27,13 @@
         New page
       </v-list-item>
 
+      <v-list-item color="primary" @click="newJourney">
+        <v-list-item-icon>
+            <v-icon>mdi-plus</v-icon>
+          </v-list-item-icon>
+        New journey
+      </v-list-item>
+
       <v-list-item @click="copy">
         <v-list-item-title>Copy JSON</v-list-item-title>
       </v-list-item>
@@ -72,7 +79,7 @@ export default {
         this.journeys = y
         })
       .finally(() => {
-        console.log(this.journeys)
+        //console.log(this.journeys)
       })
   },
   methods: {
@@ -93,6 +100,15 @@ export default {
     },
     newPage() {
       this.pages.pages.push({title: "New page", items: []})
+    },
+    newJourney() {
+      fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys', {
+        method: 'POST',
+        body:JSON.stringify({label:"new journey",doc:{"pages":[]}, type: "journey"})
+      })
+        .then((res) => res.json())
+        .then((data) =>  this.journeys.push(data))
+        .catch((err)=>console.error(err))
     }
   }
 }
