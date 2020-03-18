@@ -6,9 +6,8 @@
         <v-text-field label="Label" v-model="value.label"/>
         <v-subheader>Pages</v-subheader>
         <v-expansion-panels accordion>
-            <draggable v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
+            <draggable v-model="pageOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
                 <transition-group type="transition" :name="!drag ? 'flip-list' : null">
-                    
                     <v-expansion-panel v-for="(x, index) in JSON.parse(value.doc).pages" :key="index" >
                         <v-expansion-panel-header style="width: 100%">
                         <template #default="{open}">
@@ -37,7 +36,7 @@ export default {
     name: 'JourneyEditor',
     data() {
         return {
-            drag: false
+            drag: false,
         }
     },
     components: {
@@ -52,6 +51,15 @@ export default {
                 disabled: false,
                 ghostClass: "ghost"
             }
+        },
+        pageOrder: {
+            get: function() {
+				return JSON.parse(this.value.doc).pages
+			},
+			set: function(value) {
+                let newOrder = "{\"pages\":" + JSON.stringify(value) + "}"
+                this.value.doc = newOrder
+			},
         }
     },
   methods: {
