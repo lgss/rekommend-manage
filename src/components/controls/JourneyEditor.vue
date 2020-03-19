@@ -10,16 +10,17 @@
                 <transition-group type="transition" :name="!drag ? 'flip-list' : null">
                     <v-expansion-panel v-for="(x, index) in JSON.parse(value.doc).pages" :key="index" >
                         <v-expansion-panel-header style="width: 100%">
-                        <template #default="{open}">
+                        <template>
                             <v-icon class="handle flex-grow-0" >mdi-drag</v-icon>
-                            <v-fade-transition leave-absolute >
-                            <span v-if="!open">
+                            <!-- <v-fade-transition leave-absolute > -->
                                 {{x.title}}
-                            </span>
-                            </v-fade-transition>
+                            <!-- </v-fade-transition> -->
                             <v-spacer/>
                         </template>
                         </v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                            <v-btn @click="remove(x.title)">Remove</v-btn>
+                        </v-expansion-panel-content>
                     </v-expansion-panel>
 
                 </transition-group>
@@ -77,6 +78,12 @@ export default {
         })
             .then((res) => res.json())
             .catch((err)=>console.error(err))
+    },
+    remove(title) {
+        let currentPages = JSON.parse(this.value.doc).pages;
+        let filteredPages = currentPages.filter((page)=>{return page.title !== title});
+        let newPages = "{\"pages\":" + JSON.stringify(filteredPages) + "}"
+        this.value.doc = newPages
     }
   }
 }
