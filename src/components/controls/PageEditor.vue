@@ -37,7 +37,7 @@
         <v-list-item
           v-for="(interactionType, index) in interactionTypes.interactionTypes"
           :key="index"
-          @click="append(interactionType)"
+          @click="append(index)"
         >
           <v-list-item-title>{{ interactionType }}</v-list-item-title>
         </v-list-item>
@@ -57,9 +57,9 @@ export default {
   },
   props: ['value'],
   methods: {
-    append(interactionType) {
-      console.log(this.value)
-      this.value.items.push({fieldType: interactionType})
+    append(index) {
+      console.log(index)
+      this.value.items.push({fieldType: index})
     },
     remove(idx) {
       this.value.items.splice(idx, 1)
