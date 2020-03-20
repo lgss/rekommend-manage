@@ -19,7 +19,7 @@
       solo/>
     <v-subheader>Choices</v-subheader>
     <v-expansion-panels accordion>
-      <draggable v-bind="dragOptions" @start="drag = true" @end="drag = false" v-model="value.choices" handle=".handle">
+      <draggable v-model="choiceOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
         <transition-group type="transition" :name="!drag ? 'flip-list' : null">
           <v-expansion-panel v-for="(choice, index) in value.choices" :key="index" >
             <v-expansion-panel-header style="width: 100%">
@@ -73,6 +73,11 @@
         drag: false
       }
     },
+    created() {
+      if(this.value.choices === undefined) {
+        this.value.choices = []
+      }
+    },
     props: ['value'],
     computed: {
       dragOptions() {
@@ -85,6 +90,14 @@
       },
       interactionTypeName() {
         return typeName(this.value.fieldType)
+      },
+      choiceOrder: {
+        get: function() {
+          return this.value.choices
+        },
+        set: function(value) {
+          this.value.choices = value
+        }
       }
     },
     methods: {
@@ -94,9 +107,13 @@
           choices: [],
           tags: []
         })
+        this.$forceUpdate();  // temp fix as component doesn't 
+                              // appear to be updating when data changes
       },
       remove(index) {
         this.value.choices.splice(index, 1)
+        this.$forceUpdate();  // temp fix as component doesn't 
+                              // appear to be updating when data changes
       }
     }
   }
