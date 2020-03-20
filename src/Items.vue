@@ -45,6 +45,7 @@
     </v-navigation-drawer>
     <v-content>
       <v-container fluid class="fill-height">
+        <v-btn @click="updateJourney" v-if="currentJourneyId !== ''">Update</v-btn>
         <component :is="interactionType" v-model="field"/>
       </v-container>
     </v-content>
@@ -123,6 +124,21 @@ export default {
           this.currentJourneyId = ''
         })
         .catch((err)=>console.error(err))
+    },
+    updateJourney() {
+      fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys/'+this.currentJourney.id, {
+          method: 'PUT',
+          body:JSON.stringify({paramName: "label", paramValue: this.currentJourney.label})
+      })
+          .then((res) => res.json())
+          .catch((err)=>console.error(err))
+
+      fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys/'+this.currentJourney.id, {
+          method: 'PUT',
+          body:JSON.stringify({paramName: "doc", paramValue: JSON.stringify(this.currentJourney.doc)})
+      })
+          .then((res) => res.json())
+          .catch((err)=>console.error(err))
     }
   }
 }

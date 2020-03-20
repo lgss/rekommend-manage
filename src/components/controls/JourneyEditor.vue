@@ -1,6 +1,5 @@
 <template>
     <v-container>
-        <v-btn @click="update">Update</v-btn>
         <v-spacer/>
         <h2>Journey</h2>
         <v-text-field label="Label" v-model="value.label"/>
@@ -63,21 +62,6 @@ export default {
         }
     },
   methods: {
-    update() {
-        fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys/'+this.value.id, {
-            method: 'PUT',
-            body:JSON.stringify({paramName: "label", paramValue: this.value.label})
-        })
-            .then((res) => res.json())
-            .catch((err)=>console.error(err))
-
-        fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys/'+this.value.id, {
-            method: 'PUT',
-            body:JSON.stringify({paramName: "doc", paramValue: JSON.stringify(this.value.doc)})
-        })
-            .then((res) => res.json())
-            .catch((err)=>console.error(err))
-    },
     remove(title) {
         let filteredPages = this.value.doc.pages.filter((page)=>{return page.title !== title});
         this.value.doc.pages = filteredPages
