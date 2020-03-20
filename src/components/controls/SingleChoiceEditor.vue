@@ -1,6 +1,6 @@
 <template>
   <v-container >
-    <h2>{{}}</h2>
+    <h2>{{value.fieldType}}</h2>
     <v-text-field label="Name" v-model="value.name" />
     <v-text-field label="Label" v-model="value.label" />
     <v-combobox
