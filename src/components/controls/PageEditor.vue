@@ -58,7 +58,6 @@ export default {
   props: ['value'],
   methods: {
     append(index) {
-      console.log(index)
       this.value.items.push({fieldType: index})
     },
     remove(idx) {
