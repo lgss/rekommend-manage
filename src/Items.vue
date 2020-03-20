@@ -7,7 +7,7 @@
       <v-divider></v-divider>
 
       <v-container v-if="currentJourneyId !== ''">
-        <v-list-group v-for="(page, index) in JSON.parse(currentJourney.doc).pages" :key="index">
+        <v-list-group v-for="(page, index) in currentJourney.doc.pages" :key="index">
           <template v-slot:activator>
             <v-list-item-title @click="loadEditor(page, 'page')">Page {{index + 1}} - {{page.title}}</v-list-item-title>
           </template>
@@ -90,6 +90,7 @@ export default {
     journeySelector() {
       let arr = this.journeys.filter((journey)=>{return journey.id == this.currentJourneyId})
       this.currentJourney = arr[0]
+      this.currentJourney.doc = JSON.parse(this.currentJourney.doc)
       this.loadEditor(this.currentJourney,'journey')
     },
     loadEditor(obj, fieldType) {
@@ -100,9 +101,7 @@ export default {
       // navigator.clipboard.writeText(JSON.stringify(this.pages, null, 2))
     },
     newPage() {
-      let doc = JSON.parse(this.currentJourney.doc)
-      doc.pages.push({title: "New page", items: []})
-      this.currentJourney.doc = JSON.stringify(doc)
+      this.currentJourney.doc.pages.push({title: "New page", items: []})
     },
     newJourney() {
       fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys', {

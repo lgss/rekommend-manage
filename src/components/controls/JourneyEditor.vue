@@ -8,7 +8,7 @@
         <v-expansion-panels accordion>
             <draggable v-model="pageOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
                 <transition-group type="transition" :name="!drag ? 'flip-list' : null">
-                    <v-expansion-panel v-for="(x, index) in JSON.parse(value.doc).pages" :key="index" >
+                    <v-expansion-panel v-for="(x, index) in value.doc.pages" :key="index" >
                         <v-expansion-panel-header style="width: 100%">
                         <template>
                             <v-icon class="handle flex-grow-0" >mdi-drag</v-icon>
@@ -55,11 +55,10 @@ export default {
         },
         pageOrder: {
             get: function() {
-				return JSON.parse(this.value.doc).pages
+				return this.value.doc.pages
 			},
 			set: function(value) {
-                let newOrder = "{\"pages\":" + JSON.stringify(value) + "}"
-                this.value.doc = newOrder
+                this.value.doc.pages = value
 			},
         }
     },
@@ -74,16 +73,14 @@ export default {
 
         fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys/'+this.value.id, {
             method: 'PUT',
-            body:JSON.stringify({paramName: "doc", paramValue: this.value.doc})
+            body:JSON.stringify({paramName: "doc", paramValue: JSON.stringify(this.value.doc)})
         })
             .then((res) => res.json())
             .catch((err)=>console.error(err))
     },
     remove(title) {
-        let currentPages = JSON.parse(this.value.doc).pages;
-        let filteredPages = currentPages.filter((page)=>{return page.title !== title});
-        let newPages = "{\"pages\":" + JSON.stringify(filteredPages) + "}"
-        this.value.doc = newPages
+        let filteredPages = this.value.doc.pages.filter((page)=>{return page.title !== title});
+        this.value.doc.pages = filteredPages
     }
   }
 }
