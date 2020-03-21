@@ -84,14 +84,15 @@ export default {
         this.journeys = y
         })
       .finally(() => {
-        //console.log(this.journeys)
+        this.journeys.forEach(journey => {
+          journey.doc = JSON.parse(journey.doc)
+        })
       })
   },
   methods: {
     journeySelector() {
       let arr = this.journeys.filter((journey)=>{return journey.id == this.currentJourneyId})
       this.currentJourney = arr[0]
-      this.currentJourney.doc = JSON.parse(this.currentJourney.doc)
       this.loadEditor(this.currentJourney,'journey')
     },
     loadEditor(obj, fieldType) {
@@ -128,14 +129,16 @@ export default {
     updateJourney() {
       fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys/'+this.currentJourney.id, {
           method: 'PUT',
-          body:JSON.stringify({paramName: "label", paramValue: this.currentJourney.label})
-      })
-          .then((res) => res.json())
-          .catch((err)=>console.error(err))
-
-      fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys/'+this.currentJourney.id, {
-          method: 'PUT',
-          body:JSON.stringify({paramName: "doc", paramValue: JSON.stringify(this.currentJourney.doc)})
+          body:JSON.stringify({
+            updates:[
+              {
+                paramName: "label", paramValue: this.currentJourney.label
+              },
+              {
+                paramName: "doc", paramValue: JSON.stringify(this.currentJourney.doc)
+              }
+            ]
+          })
       })
           .then((res) => res.json())
           .catch((err)=>console.error(err))
