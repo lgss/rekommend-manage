@@ -54,15 +54,15 @@
 
 <script>
 
-import SingleChoiceEditor from './components/controls/SingleChoiceEditor.vue'
+import ChoiceEditor from './components/controls/ChoiceEditor.vue'
 import TextBlockEditor from './components/controls/TextBlockEditor.vue'
 import PageEditor from './components/controls/PageEditor.vue'
 import JouryneyEditor from './components/controls/JourneyEditor.vue'
 
 export default {
   components: {
-    'single-choice-input': SingleChoiceEditor,
-    'multiple-choice-input': SingleChoiceEditor,
+    'single-choice-input': ChoiceEditor,
+    'multiple-choice-input': ChoiceEditor,
     'page': PageEditor,
     'stimulus': TextBlockEditor,
     'journey': JouryneyEditor
