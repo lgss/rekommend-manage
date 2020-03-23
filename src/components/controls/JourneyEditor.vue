@@ -16,15 +16,23 @@
                             <!-- </v-fade-transition> -->
                             <v-spacer/>
                         </template>
+                        <template #actions>
+                            <v-btn icon @click.stop="remove(index)">
+                                <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                            <v-icon color="primary">$vuetify.icons.expand</v-icon>
+                        </template>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
-                            <v-btn @click="remove(x.title)">Remove</v-btn>
+                            <!-- content -->
                         </v-expansion-panel-content>
                     </v-expansion-panel>
-
                 </transition-group>
             </draggable>
         </v-expansion-panels>
+        <v-btn color="primary" @click="append">
+            <v-icon>mdi-plus</v-icon>
+        </v-btn>
     </v-container>
 </template>
 
@@ -62,9 +70,11 @@ export default {
         }
     },
   methods: {
-    remove(title) {
-        let filteredPages = this.value.doc.pages.filter((page)=>{return page.title !== title});
-        this.value.doc.pages = filteredPages
+    remove(index) {
+        this.value.doc.pages.splice(index, 1)
+    },
+    append() {
+        this.value.doc.pages.push({title: "New page", items: []})
     }
   }
 }
