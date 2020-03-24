@@ -111,7 +111,10 @@ export default {
         body:JSON.stringify({label:"new journey",doc:{"pages":[]}, type: "journey"})
       })
         .then((res) => res.json())
-        .then((data) =>  this.journeys.push(data))
+        .then((data) => {
+          data.doc = JSON.parse(data.doc)
+          this.journeys.push(data)
+        })
         .catch((err)=>console.error(err))
     },
     deleteJourney() {
