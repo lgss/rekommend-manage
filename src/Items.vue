@@ -44,8 +44,8 @@
       </v-list-item>
     </v-navigation-drawer>
     <v-content>
-      <v-container fluid class="fill-height">
-        <v-btn @click="updateJourney" v-if="currentJourneyId !== ''">Update</v-btn>
+      <v-container fluid class="fill-height" v-if="currentJourneyId !== ''">
+        <v-btn @click="updateJourney">Update</v-btn>
         <component :is="interactionType" v-model="field"/>
       </v-container>
     </v-content>
@@ -126,6 +126,8 @@ export default {
           let arr = this.journeys.filter((journey)=>{return journey.id !== this.currentJourneyId})
           this.journeys = arr
           this.currentJourneyId = ''
+          this.currentJourney = {}
+          this.field = {fieldType: "div"}
         })
         .catch((err)=>console.error(err))
     },
