@@ -5,7 +5,7 @@ module.exports = {
 
   pluginOptions: {
     s3Deploy: {
-      awsProfile: 'default',
+      awsProfile: 'work',
       overrideEndpoint: false,
       region: 'eu-west-2',
       bucket: 'rekommend-manage',
