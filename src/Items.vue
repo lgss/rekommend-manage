@@ -78,7 +78,7 @@ export default {
     }
   },
   created() {
-    fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys')
+    fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys')
       .then(y => y.json())
       .then(y => {
         this.journeys = y
@@ -106,7 +106,7 @@ export default {
       this.currentJourney.doc.pages.push({title: "New page", items: []})
     },
     newJourney() {
-      fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys', {
+      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys', {
         method: 'POST',
         body:JSON.stringify({label:"new journey",doc:{"pages":[]}, type: "journey"})
       })
@@ -118,7 +118,7 @@ export default {
         .catch((err)=>console.error(err))
     },
     deleteJourney() {
-      fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys/'+this.currentJourneyId, {
+      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys/'+this.currentJourneyId, {
         method: 'DELETE'
       })
         .then((res) => res.json())
@@ -132,7 +132,7 @@ export default {
         .catch((err)=>console.error(err))
     },
     updateJourney() {
-      fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/journeys/'+this.currentJourney.id, {
+      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys/'+this.currentJourney.id, {
           method: 'PUT',
           body:JSON.stringify({
             updates:[

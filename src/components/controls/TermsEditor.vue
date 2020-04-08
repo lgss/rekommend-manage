@@ -21,7 +21,7 @@ export default {
     }
   },
   created() {
-    fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/terms')
+    fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/terms')
       .then(data => data.json())
       .then(results => {
         console.log(results)
@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     newTerms() {
-      fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/terms', {
+      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/terms', {
         method: 'POST',
         body:JSON.stringify({label:"terms",doc:{"pages":[]}, type: "terms"})
       })
