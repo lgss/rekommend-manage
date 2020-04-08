@@ -1,5 +1,5 @@
 <template>
-  <v-row align="center">
+  <div>
     <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1">
       <v-list>
         <v-select solo :items="resourceSets" v-model="currentResourceSetId" item-text="label" item-value="id" label="Resource"></v-select>
@@ -19,7 +19,7 @@
         <component :is="component" v-model="currentResource"/>
       </v-container>
     </v-content>
-  </v-row>
+  </div>
 </template>
 
 
