@@ -13,15 +13,28 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
+    <v-content>
+      <v-container fluid class="fill-height" v-if="currentResource">
+        <v-btn @click="updateResources">Update Resources</v-btn>
+        <component :is="component" v-model="currentResource"/>
+      </v-container>
+    </v-content>
   </v-row>
 </template>
 
+
 <script>
+  import ResourceEditor from './components/controls/ResourceEditor'
+  
   export default {
+    components :{
+      'resource-editor': ResourceEditor
+    },
     data: () => ({
       resourceSets: [],
       resourceIndex: 0,
-      currentResourceSetId: null
+      currentResourceSetId: null,
+      component: "resource-editor"
     }),
     created() {
       fetch('https://aqvneinxel.execute-api.eu-west-2.amazonaws.com/dev/resources')
@@ -42,7 +55,12 @@
         return this.resourceSets.find(set => set.id == this.currentResourceSetId)
       },
       currentResource() {
-        return this.currentResourceSet.doc ? this.currentResourceSet.doc[this.resourceIndex] : null
+        return this.currentResourceSet && this.currentResourceSet.doc ? this.currentResourceSet.doc[this.resourceIndex] : null
+      }
+    },
+    methods: {
+      updateResources() {
+        console.log("Update")
       }
     }
   }
