@@ -2,7 +2,24 @@
     <v-container>
         <v-spacer/>
         <h2>Journey</h2>
-        <v-text-field label="Label" v-model="value.label"/>
+        <v-text-field
+            ref="Label"
+            v-model="value.label"
+            :rules="[() => !!value.label || 'This field is required']"
+            :error-messages="errorMessages"
+            label="Label"
+            placeholder="Enter journey name"
+            required
+          ></v-text-field>
+        <v-text-field
+            ref="Parent"
+            v-model="value.parent"
+            :rules="[() => !!value.parent || 'This field is required']"
+            :error-messages="errorMessages"
+            label="Parent"
+            placeholder="Enter journey parent"
+            required
+          ></v-text-field>
         <v-subheader>Pages</v-subheader>
         <v-expansion-panels accordion>
             <draggable v-model="pageOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
@@ -45,6 +62,7 @@ export default {
     data() {
         return {
             drag: false,
+            errorMessages: ''
         }
     },
     components: {
