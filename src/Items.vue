@@ -108,7 +108,7 @@ export default {
     newJourney() {
       fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys', {
         method: 'POST',
-        body:JSON.stringify({label:"new journey",doc:{"pages":[]}, type: "journey"})
+        body:JSON.stringify({label:"new journey", parent:"", doc:{"pages":[]}, type: "journey"})
       })
         .then((res) => res.json())
         .then((data) => {
@@ -138,6 +138,9 @@ export default {
             updates:[
               {
                 paramName: "label", paramValue: this.currentJourney.label
+              },
+              {
+                paramName: "parent", paramValue: this.currentJourney.parent
               },
               {
                 paramName: "doc", paramValue: JSON.stringify(this.currentJourney.doc)
