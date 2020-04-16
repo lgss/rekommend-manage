@@ -9,11 +9,19 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
+        <v-list-item color="primary" @click="newResource">
+          <v-list-item-icon>
+            <v-icon>mdi-plus</v-icon>
+          </v-list-item-icon>New Resource
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-content>
       <v-container fluid class="fill-height" v-if="currentResource">
-        <v-btn @click="updateResource">Update Resources</v-btn>
+        <v-btn-toggle>
+          <v-btn @click="saveResource">Save</v-btn>
+          <v-btn @click="deleteResource">Delete</v-btn>
+        </v-btn-toggle>
         <component :is="component" v-model="currentResource.doc"/>
       </v-container>
     </v-content>
@@ -46,6 +54,7 @@
     },
     methods: {
       updateResource() {
+        console.log("updating resource")
         let putReq = {
           method: 'PUT',
           body:JSON.stringify({
@@ -60,6 +69,48 @@
         fetch(this.endpoint+'/resources/'+this.currentResource.id, putReq )
         .then((res) => res.json())
         .catch((err)=>console.error(err))
+      },
+      createResource() {
+        console.log("creating resource");
+        let req = {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.currentResource.doc)
+        }
+        console.log(req)
+        fetch(this.endpoint+'/resources', req)
+        .then((res)=> res.json())
+        .then(console.log)
+        .catch(console.log)
+      },
+      saveResource() {
+        this.currentResource.id ? this.updateResource() : this.createResource(); 
+      },
+      deleteResource() {
+        let delReq = {
+          method: "DELETE"
+        }
+        fetch(this.endpoint + '/resources/' + this.currentResource.id, delReq)
+        .then(()=>{
+          this.resources.splice(this.resourceIndex,1);
+          this.resourceIndex = null;
+        })
+      },
+      newResource() {
+        let item = {
+          type: "resource",
+          doc : {
+            name: "New resource",
+            content: "",
+            includeTags: [],
+            excludeTags: []
+          }
+        }
+        this.resources.push(item);
+        this.resourceIndex = this.resources.length - 1
       }
     }
   }
