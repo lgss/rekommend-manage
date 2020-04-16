@@ -41,7 +41,7 @@
       resources: [],
       resourceIndex: -1,
       component: "resource-editor",
-      endpoint: 'https://0ynfhl6ndh.execute-api.eu-west-2.amazonaws.com/dev'
+      endpoint: 'https://1dds21470e.execute-api.eu-west-2.amazonaws.com/dev'
     }),
     created() {
       fetch(this.endpoint+'/resources')
