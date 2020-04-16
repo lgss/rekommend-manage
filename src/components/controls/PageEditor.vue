@@ -1,7 +1,15 @@
 <template>
   <v-container >
     <h2>Page</h2>
-    <v-text-field label="Header" v-model="value.title"/>
+    <v-text-field
+      ref="Header"
+      v-model="value.title"
+      :rules="[() => !!value.name || 'This field is required']"
+      :error-messages="errorMessages"
+      label="Header"
+      placeholder="Enter a header"
+      required
+    ></v-text-field>
     <v-subheader>Items</v-subheader>
     <v-expansion-panels>
       <v-expansion-panel v-for="(item, index) in value.items" :key="index" >

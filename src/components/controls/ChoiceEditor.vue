@@ -1,8 +1,24 @@
 <template>
   <v-container >
     <h2>{{value.fieldType}}</h2>
-    <v-text-field label="Name" v-model="value.name" />
-    <v-text-field label="Label" v-model="value.label" />
+    <v-text-field
+      ref="Name"
+      v-model="value.name"
+      :rules="[() => !!value.name || 'This field is required']"
+      :error-messages="errorMessages"
+      label="Name"
+      placeholder="Enter a name"
+      required
+    ></v-text-field>
+    <v-text-field
+      ref="Label"
+      v-model="value.label"
+      :rules="[() => !!value.label || 'This field is required']"
+      :error-messages="errorMessages"
+      label="Label"
+      placeholder="Enter a label"
+      required
+    ></v-text-field>
     <v-combobox
       v-model="value.includeTags"
       chips
@@ -70,7 +86,8 @@
     },
     data() {
       return {
-        drag: false
+        drag: false,
+        errorMessages: ''
       }
     },
     created() {
