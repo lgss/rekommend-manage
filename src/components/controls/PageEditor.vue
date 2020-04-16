@@ -60,7 +60,8 @@ import interactionTypes from '../../utils/types';
 export default {
   data() {
     return {
-      interactionTypes
+      interactionTypes,
+      errorMessages: ''
     }
   },
   props: ['value'],

@@ -46,6 +46,7 @@ export default {
         Paragraph,
         HardBreak
       ],
+      errorMessages: ''
     }
   },
   components: {
