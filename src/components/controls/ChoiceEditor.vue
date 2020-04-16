@@ -19,6 +19,10 @@
       placeholder="Enter a label"
       required
     ></v-text-field>
+    <v-switch
+      v-model="value.isMandatory"
+      label="is mandatory?"
+    ></v-switch>
     <v-combobox
       v-model="value.includeTags"
       chips
