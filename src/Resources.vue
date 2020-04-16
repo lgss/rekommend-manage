@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1">
-      <v-list v-if="resources.length">
-        <v-list-item-group v-model="resourceIndex" color="primary">
+      <v-list>
+        <v-list-item-group v-if="resources.length" v-model="resourceIndex" color="primary">
           <v-list-item v-for="(resource, i) in resources" :key="i">
             <v-list-item-content>
               <v-list-item-title v-if="resource.doc" v-html="resource.doc.name">Hello</v-list-item-title>
@@ -19,7 +19,8 @@
     <v-content>
       <v-container fluid class="fill-height" v-if="currentResource">
         <v-btn-toggle>
-          <v-btn @click="saveResource">Save</v-btn>
+          <v-btn v-if="currentResource.id" @click="updateResource">Update</v-btn>
+          <v-btn v-else @click="createResource">Save</v-btn>
           <v-btn @click="deleteResource">Delete</v-btn>
         </v-btn-toggle>
         <component :is="component" v-model="currentResource.doc"/>
@@ -54,7 +55,9 @@
     },
     methods: {
       updateResource() {
-        console.log("updating resource")
+        if (!this.currentResource.doc.content || !this.currentResource.doc.name) {
+          throw "Content and Name may not be empty"
+        }
         let putReq = {
           method: 'PUT',
           body:JSON.stringify({
@@ -65,29 +68,30 @@
             ]
           })
         }
-        console.log(putReq)
         fetch(this.endpoint+'/resources/'+this.currentResource.id, putReq )
         .then((res) => res.json())
         .catch((err)=>console.error(err))
       },
       createResource() {
-        console.log("creating resource");
+        if (!this.currentResource.doc.content || !this.currentResource.doc.name) {
+          throw "Content and Name may not be empty"
+        }
         let req = {
           method: "POST",
-          mode: "no-cors",
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(this.currentResource.doc)
         }
-        console.log(req)
         fetch(this.endpoint+'/resources', req)
         .then((res)=> res.json())
-        .then(console.log)
+        .then((res)=>{
+          for (var field in res) {
+            // Update array in such a fashion that currentResource is still computed
+            this.$set(this.resources[this.resourceIndex],field,res[field]);
+          }
+        })
         .catch(console.log)
-      },
-      saveResource() {
-        this.currentResource.id ? this.updateResource() : this.createResource(); 
       },
       deleteResource() {
         let delReq = {
