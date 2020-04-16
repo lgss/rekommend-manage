@@ -19,11 +19,12 @@
     <v-content>
       <v-container fluid class="fill-height" v-if="currentResource">
         <v-btn-toggle>
+          <v-btn @click="validate">Validate</v-btn>
           <v-btn v-if="currentResource.id" @click="updateResource">Update</v-btn>
           <v-btn v-else @click="createResource">Save</v-btn>
           <v-btn @click="deleteResource">Delete</v-btn>
         </v-btn-toggle>
-        <component :is="component" v-model="currentResource.doc"/>
+        <component ref="resourceComponent" :is="component" v-model="currentResource.doc"/>
       </v-container>
     </v-content>
   </div>
@@ -54,10 +55,11 @@
       }
     },
     methods: {
+      validate() {
+        return this.$refs.resourceComponent.validate()
+      },
       updateResource() {
-        if (!this.currentResource.doc.content || !this.currentResource.doc.name) {
-          throw "Content and Name may not be empty"
-        }
+        if (!this.validate()) return;
         let putReq = {
           method: 'PUT',
           body:JSON.stringify({
@@ -73,9 +75,7 @@
         .catch((err)=>console.error(err))
       },
       createResource() {
-        if (!this.currentResource.doc.content || !this.currentResource.doc.name) {
-          throw "Content and Name may not be empty"
-        }
+        if (!this.validate()) return;
         let req = {
           method: "POST",
           headers: {
@@ -86,10 +86,7 @@
         fetch(this.endpoint+'/resources', req)
         .then((res)=> res.json())
         .then((res)=>{
-          for (var field in res) {
-            // Update array in such a fashion that currentResource is still computed
-            this.$set(this.resources[this.resourceIndex],field,res[field]);
-          }
+          this.$set(this.resources, this.resourceIndex, res)
         })
         .catch(console.log)
       },
