@@ -1,11 +1,8 @@
 <template>
   <div>
     <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1">
-      
       <v-select :items="journeys" v-model="currentJourneyId" item-text="label" item-value="id" label="Journey"  v-on:input="journeySelector"></v-select>
-
       <v-divider></v-divider>
-
       <v-container v-if="currentJourneyId !== ''">
         <v-list-group v-for="(page, index) in currentJourney.doc.pages" :key="index">
           <template v-slot:activator>
@@ -45,7 +42,17 @@
     </v-navigation-drawer>
     <v-content>
       <v-container fluid class="fill-height" v-if="currentJourneyId !== ''">
-        <v-btn @click="updateJourney">Update</v-btn>
+        <v-container fluid class="fill-width">
+          <v-btn @click="updateJourney">Update</v-btn>
+        </v-container>
+        <v-container fluid class="fill-width">
+          <h2 v-if="errorMessages.length > 0">There is a problem</h2>
+          <v-list v-if="errorMessages.length > 0">
+            <v-list-item v-for="(error, index) in errorMessages" :key="index">
+              <v-list-item-title>{{error.message}}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-container>
         <component :is="interactionType" v-model="field"/>
       </v-container>
     </v-content>
@@ -74,7 +81,8 @@ export default {
       currentJourney: {},
       item: 1,
       field: {fieldType: "div"},
-      interactionType: ''
+      interactionType: '',
+      errorMessages: []
     }
   },
   created() {
@@ -91,6 +99,7 @@ export default {
   },
   methods: {
     journeySelector() {
+      this.errorMessages = [] 
       let arr = this.journeys.filter((journey)=>{return journey.id == this.currentJourneyId})
       this.currentJourney = arr[0]
       this.loadEditor(this.currentJourney,'journey')
@@ -132,7 +141,9 @@ export default {
         .catch((err)=>console.error(err))
     },
     updateJourney() {
-      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys/'+this.currentJourney.id, {
+      this.validateJourney()
+      if(this.errorMessages.length === 0) {
+        fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys/'+this.currentJourney.id, {
           method: 'PUT',
           body:JSON.stringify({
             updates:[
@@ -147,9 +158,43 @@ export default {
               }
             ]
           })
+        })
+        .then((res) => res.json())
+        .catch((err)=>console.error(err))
+      }
+    },
+    validateJourney() { 
+      this.errorMessages = []  
+      // validate journey
+      this.hasValue("journey id",this.currentJourney.id);
+      this.hasValue("journey label",this.currentJourney.label);
+      this.hasValue("journey parent",this.currentJourney.parent);
+      // validate pages 
+      this.hasMinimum("journey pages",this.currentJourney.doc.pages, 1); // check there are pages
+      this.currentJourney.doc.pages.forEach(page => {
+        this.hasValue("page title", page.title);
+        this.hasMinimum(page.title + " items",page.items, 1);
+        // validate items
+        page.items.forEach(item => {
+          this.hasValue("item field type",item.fieldType);
+          this.hasValue("item name",item.name);
+          this.hasValue("item label",item.label);
+          if(item.fieldType !== 'stimulus') {
+              // validate choices
+              this.hasMinimum("item choices",item.choices, 2);
+              item.choices.forEach(choice => {
+                this.hasValue("choice value",choice.value);
+                //this.hasMinimum(item.name + " choice tags",choice.tags, 1);
+            })
+          }
+        })
       })
-          .then((res) => res.json())
-          .catch((err)=>console.error(err))
+    },
+    hasValue(key,value) {
+      if(!value){this.errorMessages.push({key:key, message:key + " cannot be empty"})}
+    },
+    hasMinimum(key,value,minLength) {
+      if(value.length < minLength) {this.errorMessages.push({key:key, message:key + " require at least " + minLength + " value(s)"})}
     }
   }
 }
