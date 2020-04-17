@@ -1,7 +1,15 @@
 <template>
   <v-container >
     <h2>Page</h2>
-    <v-text-field label="Header" v-model="value.title"/>
+    <v-text-field
+      ref="Header"
+      v-model="value.title"
+      :rules="[() => !!value.name || 'This field is required']"
+      :error-messages="errorMessages"
+      label="Header"
+      placeholder="Enter a header"
+      required
+    ></v-text-field>
     <v-subheader>Items</v-subheader>
     <v-expansion-panels>
       <v-expansion-panel v-for="(item, index) in value.items" :key="index" >
@@ -35,11 +43,11 @@
       </template>
       <v-list>
         <v-list-item
-          v-for="(interationType, index) in interactionTypes"
+          v-for="(interactionType, index) in interactionTypes.interactionTypes"
           :key="index"
           @click="append(index)"
         >
-          <v-list-item-title>{{ interationType }}</v-list-item-title>
+          <v-list-item-title>{{ interactionType }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -52,13 +60,14 @@ import interactionTypes from '../../utils/types';
 export default {
   data() {
     return {
-      interactionTypes
+      interactionTypes,
+      errorMessages: ''
     }
   },
   props: ['value'],
   methods: {
-    append(interactionType) {
-      this.value.items.push({fieldType: interactionType})
+    append(index) {
+      this.value.items.push({fieldType: index})
     },
     remove(idx) {
       this.value.items.splice(idx, 1)
