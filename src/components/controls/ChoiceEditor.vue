@@ -1,8 +1,28 @@
 <template>
   <v-container >
-    <h2>{{}}</h2>
-    <v-text-field label="Name" v-model="value.name" />
-    <v-text-field label="Label" v-model="value.label" />
+    <h2>{{value.fieldType}}</h2>
+    <v-text-field
+      ref="Name"
+      v-model="value.name"
+      :rules="[() => !!value.name || 'This field is required']"
+      :error-messages="errorMessages"
+      label="Name"
+      placeholder="Enter a name"
+      required
+    ></v-text-field>
+    <v-text-field
+      ref="Label"
+      v-model="value.label"
+      :rules="[() => !!value.label || 'This field is required']"
+      :error-messages="errorMessages"
+      label="Label"
+      placeholder="Enter a label"
+      required
+    ></v-text-field>
+    <v-switch
+      v-model="value.isMandatory"
+      label="is mandatory?"
+    ></v-switch>
     <v-combobox
       v-model="value.includeTags"
       chips
@@ -19,7 +39,7 @@
       solo/>
     <v-subheader>Choices</v-subheader>
     <v-expansion-panels accordion>
-      <draggable v-bind="dragOptions" @start="drag = true" @end="drag = false" v-model="value.choices" handle=".handle">
+      <draggable v-model="choiceOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
         <transition-group type="transition" :name="!drag ? 'flip-list' : null">
           <v-expansion-panel v-for="(choice, index) in value.choices" :key="index" >
             <v-expansion-panel-header style="width: 100%">
@@ -64,13 +84,19 @@
  import typeName from '../../utils/types.js'
 
   export default {
-    name: 'SingleChoiceEditor',
+    name: 'ChoiceEditor',
     components: {
       draggable
     },
     data() {
       return {
-        drag: false
+        drag: false,
+        errorMessages: ''
+      }
+    },
+    created() {
+      if(this.value.choices === undefined) {
+        this.value.choices = []
       }
     },
     props: ['value'],
@@ -85,6 +111,14 @@
       },
       interactionTypeName() {
         return typeName(this.value.fieldType)
+      },
+      choiceOrder: {
+        get: function() {
+          return this.value.choices
+        },
+        set: function(value) {
+          this.value.choices = value
+        }
       }
     },
     methods: {
@@ -94,9 +128,13 @@
           choices: [],
           tags: []
         })
+        this.$forceUpdate();  // temp fix as component doesn't 
+                              // appear to be updating when data changes
       },
       remove(index) {
         this.value.choices.splice(index, 1)
+        this.$forceUpdate();  // temp fix as component doesn't 
+                              // appear to be updating when data changes
       }
     }
   }
