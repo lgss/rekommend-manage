@@ -30,7 +30,7 @@
         </v-col>
       </v-row>
     <v-row>
-      <v-col>
+      <v-col md="6">
         <v-text-field label="Title" v-model="title"/> 
       </v-col>
       <v-col>
@@ -43,7 +43,7 @@
     </v-row>
     <v-row justify="center">
       <v-col>
-        <v-btn @click="save-general()" color="success">Save</v-btn>
+        <v-btn @click="saveGeneral()" color="success">Save</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -56,7 +56,7 @@ import {TiptapVuetify, Heading, Bold, Italic, Strike, Underline, Paragraph, Bull
 /* eslint-disable */
 export default {
   created() {
-    fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev' + '/general')
+    fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev' + '/config/general')
       .then(x => x.json())
       .then(x => {
         this.title = x.title
@@ -113,15 +113,15 @@ export default {
   },
   methods: {
     saveGeneral() {
-      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev' + '/general', {
-        method: "POST",
+      fetch('https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev' + '/config/general', {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
           primary: this.color,
           landing: this.landing,
-          title: this.title
+          title: this.title 
         })
       })
     }
