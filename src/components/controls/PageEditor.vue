@@ -37,7 +37,7 @@
     </v-expansion-panels>
     <v-menu offset-y>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" color="primary">
+        <v-btn v-on="on" fab small color="primary">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
