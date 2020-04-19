@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     newTerms() {
-      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/terms', {
+      fetch('https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev'+'/terms', {
         method: 'POST',
         body:JSON.stringify({label:"terms",doc:{"pages":[]}, type: "terms"})
       })

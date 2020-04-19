@@ -42,10 +42,10 @@
       resources: [],
       resourceIndex: -1,
       component: "resource-editor",
-      endpoint: 'https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'
+      endpoint: 'https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev'
     }),
     created() {
-      fetch(this.endpoint+'/resources')
+      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev' + '/resources')
       .then(res => res.json())
       .then(res => { this.resources = res })
     },
