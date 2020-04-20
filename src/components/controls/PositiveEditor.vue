@@ -17,7 +17,17 @@
             </v-col>
           </v-row>
           <v-row>
+            <v-col>
+              <h2>{{title}}</h2>
+            </v-col>
+          </v-row>
+          <v-row>
             <v-col v-html="content"></v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-btn name='btn-start-again'>START AGAIN</v-btn>
+            </v-col>
           </v-row>
         </v-card>
       </v-col>
