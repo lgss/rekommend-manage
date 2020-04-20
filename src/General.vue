@@ -3,7 +3,6 @@
     <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1">
       <v-list>
         <v-list-item color="primary" @click="changeView('theme')">Home</v-list-item>
-        <v-list-item color="primary" @click="changeView('disclaimer')">Disclaimer</v-list-item>
         <v-list-item color="primary" @click="changeView('positive')">Positive outcome</v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -15,13 +14,11 @@
 
 <script>
 import ThemeEditor from './components/controls/ThemeEditor.vue'
-import DisclaimerEditor from './components/controls/DisclaimerEditor.vue'
 import PositiveEditor from './components/controls/PositiveEditor.vue'
 /* eslint-disable */
 export default {
   components: {
     'theme': ThemeEditor,
-    'disclaimer': DisclaimerEditor,
     'positive': PositiveEditor
   },
   data() {
