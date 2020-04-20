@@ -17,16 +17,19 @@
             </v-col>
           </v-row>
           <v-row>
+            <v-col>
+              <h2>{{title}}</h2>
+            </v-col>
+          </v-row>
+          <v-row>
             <v-col v-html="content"></v-col>
           </v-row>
-
           <v-row>
             <v-col>
               <v-btn name='btn-back'>Back</v-btn>
               <v-btn color="success" name='btn-finish'>Finish</v-btn>
             </v-col>
           </v-row>
-
         </v-card>
       </v-col>
     </v-row>
