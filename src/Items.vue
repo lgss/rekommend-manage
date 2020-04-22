@@ -82,19 +82,15 @@ export default {
       item: 1,
       field: {fieldType: "div"},
       interactionType: '',
-      errorMessages: []
+      errorMessages: [],
+      endpoint: "https://h7qidigeqh.execute-api.eu-west-2.amazonaws.com/dev"
     }
   },
   created() {
-    fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys')
+    fetch(this.endpoint +'/journeys')
       .then(y => y.json())
       .then(y => {
         this.journeys = y
-        })
-      .finally(() => {
-        this.journeys.forEach(journey => {
-          journey.doc = JSON.parse(journey.doc)
-        })
       })
   },
   methods: {
@@ -115,9 +111,9 @@ export default {
       this.currentJourney.doc.pages.push({title: "New page", items: []})
     },
     newJourney() {
-      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys', {
+      fetch(this.endpoint+'/journeys', {
         method: 'POST',
-        body:JSON.stringify({label:"new journey", parent:"", doc:{"pages":[]}, type: "journey"})
+        body:JSON.stringify({label:"new journey", parent:"", doc:{pages:[]}, type: "journey"})
       })
         .then((res) => res.json())
         .then((data) => {
@@ -127,7 +123,7 @@ export default {
         .catch((err)=>console.error(err))
     },
     deleteJourney() {
-      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys/'+this.currentJourneyId, {
+      fetch(this.endpoint+'/journeys/'+this.currentJourneyId, {
         method: 'DELETE'
       })
         .then((res) => res.json())
@@ -143,7 +139,7 @@ export default {
     updateJourney() {
       this.validateJourney()
       if(this.errorMessages.length === 0) {
-        fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys/'+this.currentJourney.id, {
+        fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
           method: 'PUT',
           body:JSON.stringify({
             updates:[
@@ -154,7 +150,7 @@ export default {
                 paramName: "parent", paramValue: this.currentJourney.parent
               },
               {
-                paramName: "doc", paramValue: JSON.stringify(this.currentJourney.doc)
+                paramName: "doc", paramValue: (this.currentJourney.doc)
               }
             ]
           })
