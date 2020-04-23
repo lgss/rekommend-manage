@@ -85,11 +85,12 @@ export default {
       field: {fieldType: "div"},
       interactionType: '',
       errorMessages: [],
-      endpoint: "https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev"
+      playerEndpoint: "https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev",
+      editorEndpoint: "https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev"
     }
   },
   created() {
-    fetch(this.endpoint +'/journeys')
+    fetch(this.playerEndpoint +'/journeys')
       .then(y => y.json())
       .then(y => {
         this.journeys = y
@@ -127,7 +128,7 @@ export default {
     createJourney() {
       this.validateJourney()
       if(this.errorMessages.length) { return }
-      fetch(this.endpoint+'/journeys', {
+      fetch(this.editorEndpoint+'/journeys', {
         method:"POST",
         headers: { "content-type":"application/json"},
         body: JSON.stringify(this.currentJourney)
@@ -137,7 +138,7 @@ export default {
     },
     deleteJourney() {
       if (this.currentJourney.id) {
-        fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
+        fetch(this.editorEndpoint+'/journeys/'+this.currentJourney.id, {
           method: 'DELETE'
         })
         .then((res) => res.json())
@@ -156,7 +157,7 @@ export default {
     updateJourney() {
       this.validateJourney()
       if(this.errorMessages.length === 0) {
-        fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
+        fetch(this.editorEndpoint+'/journeys/'+this.currentJourney.id, {
           method: 'PUT',
           body:JSON.stringify({
             updates:[
