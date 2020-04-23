@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1">
-      <v-select :items="journeys" v-model="currentJourneyId" item-text="label" item-value="id" label="Journey"  v-on:input="journeySelector"></v-select>
+      <v-select :items="journeys" v-model="currentJourney" item-text="label" return-object label="Journey"  v-on:input="journeySelector"></v-select>
       <v-divider></v-divider>
-      <v-container v-if="currentJourneyId !== ''">
+      <v-container v-if="currentJourney">
         <v-list-group v-for="(page, index) in currentJourney.doc.pages" :key="index">
           <template v-slot:activator>
             <v-list-item-title @click="loadEditor(page, 'page')">Page {{index + 1}} - {{page.title}}</v-list-item-title>
@@ -41,9 +41,12 @@
       </v-list-item>
     </v-navigation-drawer>
     <v-content>
-      <v-container fluid class="fill-height" v-if="currentJourneyId !== ''">
+      <v-container fluid class="fill-height" v-if="currentJourney">
         <v-container fluid class="fill-width">
-          <v-btn @click="updateJourney">Update</v-btn>
+          <v-btn-toggle>
+            <v-btn v-if="currentJourney.id" @click="updateJourney">Update</v-btn>
+            <v-btn v-else @click="createJourney">Save</v-btn>
+          </v-btn-toggle>
         </v-container>
         <v-container fluid class="fill-width">
           <h2 v-if="errorMessages.length > 0">There is a problem</h2>
@@ -77,31 +80,26 @@ export default {
   data() {
     return {
       journeys: [],
-      currentJourneyId: '',
-      currentJourney: {},
+      currentJourney: null,
       item: 1,
       field: {fieldType: "div"},
       interactionType: '',
-      errorMessages: []
+      errorMessages: [],
+      endpoint: "https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev"
     }
   },
   created() {
-    fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys')
+    fetch(this.endpoint +'/journeys')
       .then(y => y.json())
       .then(y => {
         this.journeys = y
-        })
-      .finally(() => {
-        this.journeys.forEach(journey => {
-          journey.doc = JSON.parse(journey.doc)
-        })
       })
   },
   methods: {
     journeySelector() {
       this.errorMessages = [] 
-      let arr = this.journeys.filter((journey)=>{return journey.id == this.currentJourneyId})
-      this.currentJourney = arr[0]
+      //let arr = this.journeys.filter((journey)=>{return journey.id == this.currentJourneyId})
+      //this.currentJourney = arr[0]
       this.loadEditor(this.currentJourney,'journey')
     },
     loadEditor(obj, fieldType) {
@@ -115,35 +113,50 @@ export default {
       this.currentJourney.doc.pages.push({title: "New page", items: []})
     },
     newJourney() {
-      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys', {
-        method: 'POST',
-        body:JSON.stringify({label:"new journey", parent:"", doc:{"pages":[]}, type: "journey"})
+      let journey = {
+        label: "New Journey",
+        parent: "",
+        doc: {
+          pages: []
+        }
+      }
+      this.journeys.push(journey)
+      this.currentJourney = journey;
+      this.journeySelector();
+    },
+    createJourney() {
+      this.validateJourney()
+      if(this.errorMessages.length) { return }
+      fetch(this.endpoint+'/journeys', {
+        method:"POST",
+        headers: { "content-type":"application/json"},
+        body: JSON.stringify(this.currentJourney)
       })
-        .then((res) => res.json())
-        .then((data) => {
-          data.doc = JSON.parse(data.doc)
-          this.journeys.push(data)
-        })
-        .catch((err)=>console.error(err))
+      .then(res=>res.json())
+      .then(j => {this.currentJourney = j})
     },
     deleteJourney() {
-      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys/'+this.currentJourneyId, {
-        method: 'DELETE'
-      })
+      if (this.currentJourney.id) {
+        fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
+          method: 'DELETE'
+        })
         .then((res) => res.json())
         .then(() =>  {
-          let arr = this.journeys.filter((journey)=>{return journey.id !== this.currentJourneyId})
-          this.journeys = arr
-          this.currentJourneyId = ''
-          this.currentJourney = {}
-          this.field = {fieldType: "div"}
+          this.journeys.splice(this.journeys.findIndex(j => j == this.currentJourney),1)
+          this.currentJourney = null
+          this.journeySelector()
         })
         .catch((err)=>console.error(err))
+      } else {
+        this.journeys.splice(this.journeys.findIndex(j => j == this.currentJourney),1)
+        this.currentJourney = null;
+        this.journeySelector()
+      }    
     },
     updateJourney() {
       this.validateJourney()
       if(this.errorMessages.length === 0) {
-        fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev'+'/journeys/'+this.currentJourney.id, {
+        fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
           method: 'PUT',
           body:JSON.stringify({
             updates:[
@@ -154,7 +167,7 @@ export default {
                 paramName: "parent", paramValue: this.currentJourney.parent
               },
               {
-                paramName: "doc", paramValue: JSON.stringify(this.currentJourney.doc)
+                paramName: "doc", paramValue: (this.currentJourney.doc)
               }
             ]
           })
@@ -166,7 +179,7 @@ export default {
     validateJourney() { 
       this.errorMessages = []  
       // validate journey
-      this.hasValue("journey id",this.currentJourney.id);
+      //this.hasValue("journey id",this.currentJourney.id);
       this.hasValue("journey label",this.currentJourney.label);
       this.hasValue("journey parent",this.currentJourney.parent);
       // validate pages 
