@@ -80,13 +80,12 @@ export default {
   data() {
     return {
       journeys: [],
-      currentJourneyId: '',
       currentJourney: null,
       item: 1,
       field: {fieldType: "div"},
       interactionType: '',
       errorMessages: [],
-      endpoint: "https://h7qidigeqh.execute-api.eu-west-2.amazonaws.com/dev"
+      endpoint: "https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev"
     }
   },
   created() {
