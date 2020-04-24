@@ -42,10 +42,11 @@
       resources: [],
       resourceIndex: -1,
       component: "resource-editor",
-      endpoint: 'https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev'
+      playerEndpoint: "https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev",
+      editorEndpoint: "https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev"
     }),
     created() {
-      fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev' + '/resources')
+      fetch(this.playerEndpoint+'/resources')
       .then(res => res.json())
       .then(res => { this.resources = res })
     },
@@ -70,7 +71,7 @@
             ]
           })
         }
-        fetch(this.endpoint+'/resources/'+this.currentResource.id, putReq )
+        fetch(this.editorEndpoint+'/resources/'+this.currentResource.id, putReq )
         .then((res) => res.json())
         .catch((err)=>console.error(err))
       },
@@ -83,7 +84,7 @@
           },
           body: JSON.stringify(this.currentResource.doc)
         }
-        fetch(this.endpoint+'/resources', req)
+        fetch(this.editorEndpoint+'/resources', req)
         .then((res)=> res.json())
         .then((res)=>{
           this.$set(this.resources, this.resourceIndex, res)
@@ -94,7 +95,7 @@
         let delReq = {
           method: "DELETE"
         }
-        fetch(this.endpoint + '/resources/' + this.currentResource.id, delReq)
+        fetch(this.editorEndpoint + '/resources/' + this.currentResource.id, delReq)
         .then(()=>{
           this.resources.splice(this.resourceIndex,1);
           this.resourceIndex = null;
