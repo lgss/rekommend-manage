@@ -42,11 +42,10 @@
       resources: [],
       resourceIndex: -1,
       component: "resource-editor",
-      playerEndpoint: "https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev",
-      editorEndpoint: "https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev"
+      endpoint: process.env.VUE_APP_API_ENDPOINT
     }),
     created() {
-      fetch(this.playerEndpoint+'/resources')
+      fetch(this.endpoint+'/resources')
       .then(res => res.json())
       .then(res => { this.resources = res })
     },
@@ -71,7 +70,7 @@
             ]
           })
         }
-        fetch(this.editorEndpoint+'/resources/'+this.currentResource.id, putReq )
+        fetch(this.endpoint+'/resources/'+this.currentResource.id, putReq )
         .then((res) => res.json())
         .catch((err)=>console.error(err))
       },
@@ -84,7 +83,7 @@
           },
           body: JSON.stringify(this.currentResource.doc)
         }
-        fetch(this.editorEndpoint+'/resources', req)
+        fetch(this.endpoint+'/resources', req)
         .then((res)=> res.json())
         .then((res)=>{
           this.$set(this.resources, this.resourceIndex, res)
@@ -95,7 +94,7 @@
         let delReq = {
           method: "DELETE"
         }
-        fetch(this.editorEndpoint + '/resources/' + this.currentResource.id, delReq)
+        fetch(this.endpoint + '/resources/' + this.currentResource.id, delReq)
         .then(()=>{
           this.resources.splice(this.resourceIndex,1);
           this.resourceIndex = null;
