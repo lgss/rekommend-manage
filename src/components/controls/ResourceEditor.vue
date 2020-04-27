@@ -49,7 +49,7 @@ export default {
               v => !(/^[ \t]+/.test(v)) || 'Content must not begin with an empty space',
           ],
           includeTags:[
-              v => (v && v.length) || 'At least one tag is required'
+              v => (!!v && v.length > 0) || 'At least one tag is required'
           ],
           excludeTags:[]
       }
