@@ -57,13 +57,13 @@ import {TiptapVuetify, Heading, Bold, Italic, Strike, Underline, Paragraph, Bull
 export default {
   name: 'DisclaimerEditor',
   created() {
-    fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev' + '/config/general')
+    fetch(this.endpoint + '/config/general')
       .then(x => x.json())
       .then(x => {
         this.appTitle = x.title
         this.appColor = x.primary
       })
-    fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev' + '/config/disclaimer')
+    fetch(this.endpoint + '/config/disclaimer')
       .then(x => x.json())
       .then(x => {
         this.title = x.title
@@ -115,12 +115,13 @@ export default {
       appTitle: "",
       appColor: "#1F63A3",
       loading: true,
-      emptyResults: ""
+      emptyResults: "",
+      endpoint: process.env.VUE_APP_API_ENDPOINT
     }
   },
   methods: {
     saveDisclaimer() {
-      fetch('https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev' + '/config/disclaimer', {
+      fetch(this.endpoint + '/config/disclaimer', {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"

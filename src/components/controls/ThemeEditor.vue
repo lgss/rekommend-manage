@@ -54,7 +54,7 @@ import {TiptapVuetify, Heading, Bold, Italic, Strike, Underline, Paragraph, Bull
 export default {
   name: 'ThemeEditor',
   created() {
-    fetch('https://nngfac1fjl.execute-api.eu-west-2.amazonaws.com/dev' + '/config/general')
+    fetch(this.endpoint + '/config/general')
       .then(x => x.json())
       .then(x => {
         this.title = x.title
@@ -106,12 +106,13 @@ export default {
       landing: "",
       color: "#1F63A3",
       loading: true,
-      emptyResults: ""
+      emptyResults: "",
+      endpoint: process.env.VUE_APP_API_ENDPOINT
     }
   },
   methods: {
     saveGeneral() {
-      fetch('https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev' + '/config/general', {
+      fetch(this.endpoint + '/config/general', {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
