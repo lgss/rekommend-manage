@@ -6,6 +6,11 @@
             v-model="value.name"
             :rules="rules.name"
         />
+        <html-editor
+            label="Content"
+            v-model="value.content"
+            :rules="rules.content"
+        />
         <v-textarea 
             label="Content"
             v-model="value.content"
@@ -34,6 +39,8 @@
 </template>
 
 <script>
+import HTMLEditor from './HTMLEditor'
+
 export default {
     name: 'ResourceEditor',
     data: () => ({
@@ -45,7 +52,7 @@ export default {
               v => !(/^[ \t]+/.test(v)) || 'Name must not begin with an empty space'
           ],
           content: [
-              v => !!v || 'Content is required',
+              v => (!!v || v=="<p></p>") || 'Content is required',
               v => !(/^[ \t]+/.test(v)) || 'Content must not begin with an empty space',
           ],
           includeTags:[
@@ -59,6 +66,9 @@ export default {
         validate() {
             return this.$refs.form.validate();
         }
+    },
+    components: {
+        'html-editor': HTMLEditor
     }
 
 }
