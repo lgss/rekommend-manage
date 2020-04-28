@@ -1,23 +1,23 @@
 <template>
-    <v-container>
+    <div>
         <v-label :v-if="label">{{label}}</v-label>
-        <v-input :label="label" :rules="rules" :error-messages="errorMessages" :value="content">
+        <v-input :rules="internalRules" :error-messages="errorMessages" :value="content">
             <v-container full-width>
                 <tiptap-vuetify v-model="content" :extensions="extensions"/>
             </v-container>
         </v-input>
-    </v-container>
+    </div>
 </template>
 
 <script>
 import { TiptapVuetify, Heading, Bold, Italic, Underline, Paragraph, BulletList, OrderedList, ListItem, Link, HardBreak, HorizontalRule, History } from 'tiptap-vuetify'
 
 export default {
-    props: ['value','label'],
+    props: ['value','label', 'mandatory', 'rules'],
     data() { 
         return {
             content: this.value,
-            rules: [v => false || "I AM A STRING:" +v],
+            intenralRules: this.rules,
             errorMessages: [],
             extensions: [
                 History,
@@ -42,20 +42,18 @@ export default {
             ]
         }
     },
+    created() {
+        this.internalRules = this.internalRules || [];
+        if (this.mandatory) {
+            this.internalRules.push((v) => (!!v && v !='<p></p>') || "This field is required")
+        }
+    },
     components: {
         TiptapVuetify
     },
     watch:{
         content: function(val) {
             this.$emit('input', val)
-        }
-    },
-    methods: {
-        addError() {
-            this.errorMessages.push("hello")
-        },
-        validate() {
-            console.log("validation of htmleditor")
         }
     }
 }
