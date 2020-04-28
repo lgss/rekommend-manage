@@ -18,39 +18,20 @@
       placeholder="Enter a label"
       required
     ></v-text-field>
-    <tiptap-vuetify v-model="$attrs.value.content" :extensions="extensions" />
+    <html-editor :mandatory="true" v-model="$attrs.value.content"/>
   </v-container>
 </template>
 
 <script>
-import { TiptapVuetify, Heading, Bold, Italic, Underline, Paragraph, BulletList, OrderedList, ListItem, Link, HardBreak, HorizontalRule, History } from 'tiptap-vuetify'
-
+import HTMLEditor from './HTMLEditor'
 export default {
   data() { 
     return {
-      extensions: [
-        History,
-        Link,
-        Underline,
-        Italic,
-        ListItem,
-        BulletList,
-        OrderedList,
-        [Heading, {
-          options: {
-            levels: [1, 2, 3]
-          }
-        }],
-        Bold,
-        HorizontalRule,
-        Paragraph,
-        HardBreak
-      ],
       errorMessages: ''
     }
   },
   components: {
-    TiptapVuetify
+    'html-editor' : HTMLEditor
   }
 }
 </script>
