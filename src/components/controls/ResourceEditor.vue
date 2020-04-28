@@ -10,6 +10,7 @@
             label="Content"
             v-model="value.content"
             :rules="rules.content"
+            :mandatory="true"
         />
         <v-textarea 
             label="Content"
@@ -52,7 +53,7 @@ export default {
               v => !(/^[ \t]+/.test(v)) || 'Name must not begin with an empty space'
           ],
           content: [
-              v => (!!v || v=="<p></p>") || 'Content is required',
+            //   v => (!!v || v=="<p></p>") || 'Content is required',
               v => !(/^[ \t]+/.test(v)) || 'Content must not begin with an empty space',
           ],
           includeTags:[
