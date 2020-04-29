@@ -37,8 +37,8 @@
         <v-color-picker mode="hexa" v-model="color"/>
       </v-col>
       <v-col md="12">
-        <label>Landing content</label>
-        <tiptap-vuetify v-model="landing" :extensions="extensions"/></v-col>
+        <html-editor :label="'Landing content'" v-model="landing"/>
+      </v-col>
     </v-row>
     <v-row justify="center">
       <v-col>
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import {TiptapVuetify, Heading, Bold, Italic, Strike, Underline, Paragraph, BulletList, OrderedList, ListItem, Link, Blockquote, HardBreak, HorizontalRule, History} from 'tiptap-vuetify'
+import HTMLEditor from './HTMLEditor'
 /* eslint-disable */
 export default {
   name: 'ThemeEditor',
@@ -64,44 +64,10 @@ export default {
       })
   },
   components: {
-    TiptapVuetify, 
-    Heading, 
-    Bold, 
-    Italic, 
-    Strike, 
-    Underline, 
-    Paragraph, 
-    BulletList, 
-    OrderedList, 
-    ListItem, 
-    Link, 
-    Blockquote, 
-    HardBreak, 
-    HorizontalRule, 
-    History
+    'html-editor' : HTMLEditor
   },
   data() {
     return {
-      extensions: [
-        [Heading, {
-          options: {
-            levels: [1, 2, 3]
-          }
-        }], 
-        Bold, 
-        Italic, 
-        Strike, 
-        Underline, 
-        Paragraph, 
-        BulletList, 
-        OrderedList, 
-        ListItem, 
-        Link, 
-        Blockquote, 
-        HardBreak, 
-        HorizontalRule, 
-        History
-      ],
       title: "",
       landing: "",
       color: "#1F63A3",

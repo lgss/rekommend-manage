@@ -6,10 +6,11 @@
             v-model="value.name"
             :rules="rules.name"
         />
-        <v-textarea 
+        <html-editor
             label="Content"
             v-model="value.content"
             :rules="rules.content"
+            :mandatory="true"
         />
         <v-combobox
             label="Include tags"
@@ -34,6 +35,8 @@
 </template>
 
 <script>
+import HTMLEditor from './HTMLEditor'
+
 export default {
     name: 'ResourceEditor',
     data: () => ({
@@ -45,7 +48,7 @@ export default {
               v => !(/^[ \t]+/.test(v)) || 'Name must not begin with an empty space'
           ],
           content: [
-              v => !!v || 'Content is required',
+            //   v => (!!v || v=="<p></p>") || 'Content is required',
               v => !(/^[ \t]+/.test(v)) || 'Content must not begin with an empty space',
           ],
           includeTags:[
@@ -59,6 +62,9 @@ export default {
         validate() {
             return this.$refs.form.validate();
         }
+    },
+    components: {
+        'html-editor': HTMLEditor
     }
 
 }

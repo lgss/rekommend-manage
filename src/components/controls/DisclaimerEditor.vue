@@ -39,6 +39,7 @@
         <v-text-field label="Title" v-model="title"/> 
       </v-col>
       <v-col md="12">
+        <html-editor :label="'Content'" v-model="content"/>
         <label>Content</label>
         <tiptap-vuetify v-model="content" :extensions="extensions"/></v-col>
     </v-row>
@@ -52,8 +53,7 @@
 </template>
 
 <script>
-import {TiptapVuetify, Heading, Bold, Italic, Strike, Underline, Paragraph, BulletList, OrderedList, ListItem, Link, Blockquote, HardBreak, HorizontalRule, History} from 'tiptap-vuetify'
-/* eslint-disable */
+import HTMLEditor from './HTMLEditor' /* eslint-disable */
 export default {
   name: 'DisclaimerEditor',
   created() {
@@ -72,44 +72,10 @@ export default {
       })
   },
   components: {
-    TiptapVuetify, 
-    Heading, 
-    Bold, 
-    Italic, 
-    Strike, 
-    Underline, 
-    Paragraph, 
-    BulletList, 
-    OrderedList, 
-    ListItem, 
-    Link, 
-    Blockquote, 
-    HardBreak, 
-    HorizontalRule, 
-    History
+    'html-editor' : HTMLEditor
   },
   data() {
     return {
-      extensions: [
-        [Heading, {
-          options: {
-            levels: [1, 2, 3]
-          }
-        }], 
-        Bold, 
-        Italic, 
-        Strike, 
-        Underline, 
-        Paragraph, 
-        BulletList, 
-        OrderedList, 
-        ListItem, 
-        Link, 
-        Blockquote, 
-        HardBreak, 
-        HorizontalRule, 
-        History
-      ],
       title: "",
       content: "",
       appTitle: "",
