@@ -12,11 +12,6 @@
             :rules="rules.content"
             :mandatory="true"
         />
-        <v-textarea 
-            label="Content"
-            v-model="value.content"
-            :rules="rules.content"
-        />
         <v-combobox
             label="Include tags"
             v-model="value.includeTags"
