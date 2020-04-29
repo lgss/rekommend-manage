@@ -85,7 +85,7 @@ export default {
       field: {fieldType: "div"},
       interactionType: '',
       errorMessages: [],
-      endpoint: "https://ckn8fyxtc3.execute-api.eu-west-2.amazonaws.com/dev"
+      endpoint: process.env.VUE_APP_API_ENDPOINT
     }
   },
   created() {

@@ -11,38 +11,40 @@
         <v-card>
           <v-row>
             <v-col>
-              <v-app-bar :color="color">
-                <v-toolbar-title class="white--text"><b>{{title}}</b></v-toolbar-title>
+              <v-app-bar :color="appColor">
+                <v-toolbar-title class="white--text"><b>{{appTitle}}</b></v-toolbar-title>
               </v-app-bar>
             </v-col>
           </v-row>
           <v-row>
-            <v-col v-html="landing"></v-col>
+            <v-col>
+              <h2>{{title}}</h2>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col v-html="content"></v-col>
           </v-row>
           <v-row>
             <v-col>
-              <v-btn id="btn-home-start-assessment">Go to assessment</v-btn>
+              <v-btn name='btn-start-again'>START AGAIN</v-btn>
             </v-col>
-            </v-row>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
     
     <v-row>
-      <v-col md="6">
+      <v-col md="12">
         <v-text-field label="Title" v-model="title"/> 
       </v-col>
-      <v-col>
-        <label>Theme colour</label>
-        <v-color-picker mode="hexa" v-model="color"/>
-      </v-col>
       <v-col md="12">
-        <label>Landing content</label>
-        <tiptap-vuetify v-model="landing" :extensions="extensions"/></v-col>
+        <label>Content</label>
+        <tiptap-vuetify v-model="content" :extensions="extensions"/></v-col>
     </v-row>
+
     <v-row justify="center">
       <v-col>
-        <v-btn @click="saveGeneral()" color="success">Save</v-btn>
+        <v-btn @click="savePositive()" color="success">Save</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -52,14 +54,19 @@
 import {TiptapVuetify, Heading, Bold, Italic, Strike, Underline, Paragraph, BulletList, OrderedList, ListItem, Link, Blockquote, HardBreak, HorizontalRule, History} from 'tiptap-vuetify'
 /* eslint-disable */
 export default {
-  name: 'ThemeEditor',
+  name: 'PositiveEditor',
   created() {
     fetch(this.endpoint + '/config/general')
       .then(x => x.json())
       .then(x => {
+        this.appTitle = x.title
+        this.appColor = x.primary
+      })
+    fetch(this.endpoint + '/config/positive-outcome')
+      .then(x => x.json())
+      .then(x => {
         this.title = x.title
-        this.landing = x.landing
-        this.color = x.primary
+        this.content = x.content
         this.loading = false
       })
   },
@@ -103,24 +110,24 @@ export default {
         History
       ],
       title: "",
-      landing: "",
-      color: "#1F63A3",
+      content: "",
+      appTitle: "",
+      appColor: "#1F63A3",
       loading: true,
       emptyResults: "",
       endpoint: process.env.VUE_APP_API_ENDPOINT
     }
   },
   methods: {
-    saveGeneral() {
-      fetch(this.endpoint + '/config/general', {
+    savePositive() {
+      fetch(this.endpoint + '/config/positive-outcome', {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          primary: this.color,
-          landing: this.landing,
-          title: this.title 
+          title: this.title,
+          content: this.content
         })
       })
     }
