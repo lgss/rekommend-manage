@@ -134,8 +134,9 @@ export default {
       })
       .then(res=>res.json())
       .then(j => {
-        this.$set(this.currentJourney,this.journeys,j)
-        //this.currentJourney = j
+        let index = this.journeys.indexOf(this.currentJourney);
+        this.$set(this.journeys,index,j)
+        this.currentJourney = this.journeys[index]
       })
     },
     deleteJourney() {
