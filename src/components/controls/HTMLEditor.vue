@@ -13,10 +13,10 @@
 import { TiptapVuetify, Heading, Bold, Italic, Underline, Paragraph, BulletList, OrderedList, ListItem, Link, HardBreak, HorizontalRule, History } from 'tiptap-vuetify'
 
 export default {
-    props: ['value','label', 'mandatory', 'rules'],
+    props: ['label', 'mandatory', 'rules'],
     data() { 
         return {
-            content: this.value,
+            
             intenralRules: this.rules,
             errorMessages: [],
             extensions: [
@@ -51,10 +51,16 @@ export default {
     components: {
         TiptapVuetify
     },
-    watch:{
-        content: function(val) {
-            this.$emit('input', val)
+    computed: {
+        content: {
+            get() {return this.$attrs.value},
+            set(v) { this.$attrs.value = v; this.$emit('input',v)}
         }
-    }
+    },
+    // watch:{
+    //     content: function(val) {
+    //         this.$emit('input', val)
+    //     }
+    // }
 }
 </script>
