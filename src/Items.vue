@@ -133,7 +133,11 @@ export default {
         body: JSON.stringify(this.currentJourney)
       })
       .then(res=>res.json())
-      .then(j => {this.currentJourney = j})
+      .then(j => {
+        let index = this.journeys.indexOf(this.currentJourney);
+        this.$set(this.journeys,index,j)
+        this.currentJourney = this.journeys[index]
+      })
     },
     deleteJourney() {
       if (this.currentJourney.id) {
