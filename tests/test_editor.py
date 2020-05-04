@@ -1,7 +1,7 @@
+from test_bootstrap import JerichoTest
 import unittest
 import time
 import random
-from test_bootstrap import JerichoTest
 import json
 
 class EditorTests(JerichoTest):
