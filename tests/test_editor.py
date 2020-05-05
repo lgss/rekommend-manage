@@ -6,7 +6,7 @@ import json
 
 class EditorTests(JerichoTest):
 
-    def test_example(self):
+    def test_editor(self):
         self.browser.get(self.env["root"])
 
         heading = self.browser.find_element_by_tag_name('h1')
