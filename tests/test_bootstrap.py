@@ -23,7 +23,7 @@ class JerichoTest(unittest.TestCase):
         if environment is not None:
             self.env = environment[self.__class__.__module__]
         else:
-            self.env = loadenvfile("tests/config.json")
+            self.env = loadenvfile("./config.json")
 
     def setUp(self):
         chrome_options = Options()
