@@ -46,6 +46,6 @@ class JerichoTest(unittest.TestCase):
         if environment is not None:
             self.browser = webdriver.Chrome(os.path.join(".", "pipeline", "chromedriver" + (".exe" if platform.system() == "Windows" else "")), options=chrome_options)
         else:
-            self.browser = webdriver.Chrome("./tests/chromedriver.exe", options=chrome_options)
+            self.browser = webdriver.Chrome(self.env["localChromeDriverPath"], options=chrome_options)
             
         self.addCleanup(self.browser.quit)
