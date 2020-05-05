@@ -23,3 +23,4 @@ yarn-error.log*
 # Test files
 *.pyc
 __pycache__
+chromedriver.exe
