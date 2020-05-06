@@ -1,3 +1,3 @@
 {
-  "root": "localhost:8080"
+  "root": "http://rekommend-manage-dev.s3-website.eu-west-2.amazonaws.com/"
 }
