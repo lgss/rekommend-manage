@@ -17,7 +17,7 @@ def loadenvfile(path):
 class JerichoTest(unittest.TestCase):
     def __init__(self, methodName="runTest"):
         super().__init__(methodName)
-        self.env = loadenvfile("tests/config.json")
+        self.env = loadenvfile("config.json")
 
     def setUp(self):
         chrome_options = Options()
