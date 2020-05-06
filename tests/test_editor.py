@@ -16,4 +16,4 @@ class EditorTests(JerichoTest):
         self.browser.get(self.env["root"])
 
         tab = self.browser.find_element_by_class_name('v-tab--active')
-        self.assertEqual(tab.text, 'General', 'General tab check')        
+        self.assertEqual(tab.text, 'GENERAL', 'General tab check')        
