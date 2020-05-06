@@ -37,6 +37,6 @@ class JerichoTest(unittest.TestCase):
             chrome_options.add_argument('--headless')
             chrome_options.add_argument('--single-process')
         
-        self.browser = webdriver.Chrome(os.path.join(".", "tests", "chromedriver" + (".exe" if platform.system() == "Windows" else "")), options=chrome_options)
+        self.browser = webdriver.Chrome(os.path.join(".", "chromedriver" + (".exe" if platform.system() == "Windows" else "")), options=chrome_options)
             
         self.addCleanup(self.browser.quit)
