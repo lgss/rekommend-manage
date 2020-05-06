@@ -1,29 +1,47 @@
-parameters:
-  param : ["test_editor"]
-
 steps:
-  - script: |
-      echo "##vso[task.setvariable variable=errcount]0"
-  - ${{ each p in parameters.param}}:
-    - script: |
-        python3 -m xmlrunner ${{ p }}.py -o ${{ p }}
-        echo $(ls ${{ p }} | head -1)
-        ResultFile=$(ls -t ${{ p }} | head -1)
-        TestErrors=$(python3 pipeline/parse_result.py "$(System.DefaultWorkingDirectory)/${{ p }}/$ResultFile")
-        ResultFiles="$(results)$(System.DefaultWorkingDirectory)/${{ p }}/$ResultFile "
-        RunIDs="$(runids)$(Build.BuildNumber) "
-        let TotalErrors=$TestErrors+$(errcount)
-        export TotalErrors=$TotalErrors
-        export ResultFiles=$ResultFiles
-        export RunIDs=$RunIDs
-        echo "##vso[task.setvariable variable=errcount]$TotalErrors"
-        echo "##vso[task.setvariable variable=results]$ResultFiles"
-        echo "##vso[task.setvariable variable=runids]$RunIDs"
-      displayName: 'Run ${{ p }} tests'
-      continueOnError: true
-      
-    - task: PublishTestResults@2
-      displayName: 'Publish ${{ p }} result'
-      inputs:
-        testResultsFiles: '$(System.DefaultWorkingDirectory)/${{ p }}/*.xml'
-        testRunTitle: ${{ p }}
+- task: UsePythonVersion@0
+  displayName: 'Use Python 3.7'
+  inputs:
+    versionSpec: 3.7
+
+- bash: |
+   pip install unittest-xml-reporting
+   pip install selenium
+   pip install Faker
+   pip install python-dateutil
+   pip install text-unidecode
+   sudo apt-get update -y
+   sudo apt-get install -y libgbm1
+   VERSION="`wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE`"
+   wget "https://chromedriver.storage.googleapis.com/${VERSION}/chromedriver_linux64.zip"
+   unzip chromedriver_linux64.zip
+   wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+   sudo dpkg -i google-chrome-stable_current_amd64.deb
+  workingDirectory: '$(System.DefaultWorkingDirectory)/_lgss_rekommend-manage/tests'
+  displayName: 'Install dependencies'
+
+- bash: |
+   echo "##vso[task.setvariable variable=errcount]0"
+   python3 -m xmlrunner test_editor.py -o test_editor
+   echo $(ls test_editor | head -1)
+   ResultFile=$(ls -t test_editor | head -1)
+   TestErrors=$(python3 parse_result.py "$(System.DefaultWorkingDirectory)/$ResultFile")
+   ResultFiles="$(results)$(System.DefaultWorkingDirectory)/$ResultFile"
+   RunIDs="$(runids)$(Build.BuildNumber) "
+   let TotalErrors=$TestErrors+$(errcount)
+   export TotalErrors=$TotalErrors
+   export ResultFiles=$ResultFiles
+   export RunIDs=$RunIDs
+   echo "##vso[task.setvariable variable=errcount]$TotalErrors"
+   echo "##vso[task.setvariable variable=results]$ResultFiles"
+   echo "##vso[task.setvariable variable=runids]$RunIDs"
+  workingDirectory: '$(System.DefaultWorkingDirectory)/_lgss_rekommend-manage/tests'
+  displayName: 'Run test_editor tests'
+  continueOnError: true
+
+- task: PublishTestResults@2
+  displayName: 'Publish test_editor result'
+  inputs:
+    testResultsFiles: '$(System.DefaultWorkingDirectory)/_lgss_rekommend-manage/tests/test_editor/*.xml'
+    searchFolder: '$(System.DefaultWorkingDirectory)/_lgss_rekommend-manage/tests'
+    testRunTitle: 'test_editor'
