@@ -4,6 +4,7 @@
       <v-list>
         <v-list-item color="primary" @click="changeView('theme')">Home</v-list-item>
         <v-list-item color="primary" @click="changeView('positive')">Positive outcome</v-list-item>
+        <v-list-item color="primary" @click="changeView('terms')">Terms and Conditions</v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-content>
@@ -15,9 +16,11 @@
 <script>
 import ThemeEditor from './components/controls/ThemeEditor.vue'
 import PositiveEditor from './components/controls/PositiveEditor.vue'
+import TermsEditor from './components/controls/TermsEditor'
 /* eslint-disable */
 export default {
   components: {
+    'terms': TermsEditor,
     'theme': ThemeEditor,
     'positive': PositiveEditor
   },
