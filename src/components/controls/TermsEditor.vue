@@ -2,7 +2,7 @@
     <v-container>
         <v-container v-if="loading"> </v-container>
         <v-container v-else>
-            <v-row id="home-preview">
+            <v-card id="terms-preview">
                 <v-col>
                     <v-row>
                         <v-col>
@@ -10,41 +10,52 @@
                             <br />
                         </v-col>
                     </v-row>
-                    <v-card>
-                        <v-row>
-                            <v-col>
-                                <v-app-bar :color="appColor">
-                                    <v-toolbar-title class="white--text">
-                                        <b>{{ appTitle }}</b>
-                                    </v-toolbar-title>
-                                </v-app-bar>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col>
-                                <h2>{{ title }}</h2>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col v-html="content"></v-col>
-                        </v-row>
-                    </v-card>
+                    <v-row>
+                        <v-col>
+                            <v-app-bar :color="appColor">
+                                <v-toolbar-title class="white--text"
+                                    ><b>{{ appTitle }}</b></v-toolbar-title
+                                >
+                            </v-app-bar>
+                        </v-col>
+                    </v-row>
+                    <v-container>
+                        <v-card>
+                            <div class="text-left">
+                                <v-container>
+                                    <h1 id="terms-title">{{ title }}</h1>
+                                </v-container>
+                                <v-divider />
+                                <v-container
+                                    id="terms-content"
+                                    class="text-left"
+                                    v-html="content"
+                                >
+                                </v-container>
+                            </div>
+                        </v-card>
+                    </v-container>
                 </v-col>
-            </v-row>
-            <v-row>
-                <v-col md="12">
-                    <v-text-field label="Title" v-model="title" />
-                </v-col>
-                <v-col md="12">
-                    <html-editor :label="'Content'" v-model="content" />
-                </v-col>
-            </v-row>
+            </v-card>
+            <v-divider /> <br>
+            <v-card>
+				<v-container>
+                <v-row>
+                    <v-col md="12">
+                        <v-text-field label="Title" v-model="title" />
+                    </v-col>
+                    <v-col md="12">
+                        <html-editor :label="'Content'" v-model="content" />
+                    </v-col>
+                </v-row>
 
-            <v-row justify="center">
-                <v-col>
-                    <v-btn @click="saveTerms" color="success">Save</v-btn>
-                </v-col>
-            </v-row>
+                <v-row justify="center">
+                    <v-col>
+                        <v-btn @click="saveTerms" color="success">Save</v-btn>
+                    </v-col>
+                </v-row>
+				</v-container>
+            </v-card>
         </v-container>
     </v-container>
 </template>
@@ -94,7 +105,7 @@ export default {
     },
     methods: {
         saveTerms() {
-            fetch(this.endpoint + "config/disclaimer", {
+            fetch(this.endpoint + "/config/disclaimer", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
