@@ -1,8 +1,8 @@
 <template>
 <v-container>
     <v-form ref="form" model="valid">
-        <v-text-field 
-            label="Name" 
+        <v-text-field
+            label="Name"
             v-model="value.name"
             :rules="rules.name"
             :mandatory="true"
@@ -13,9 +13,9 @@
             :rules="rules.content"
             :mandatory="true"
         />
-        <file-upload ref="fileUpload"/>
-        <v-text-field 
-            label="Link to more info" 
+        <file-upload ref="fileUpload" />
+        <v-text-field
+            label="Link to more info"
             v-model="value.moreInfoUrl"
             :rules="rules.url"
         />
@@ -27,6 +27,7 @@
             clearable
             multiple
             solo
+            hint="Include the resource in results if any of these tags have been collected during the assessment."
         />
         <v-combobox
             label="Exclude tags"
@@ -36,17 +37,28 @@
             clearable
             multiple
             solo
+            hint="Exclude the resource from results if any of these tags have been collected during the assessment."
+        />
+        <v-combobox 
+            label="Categories"
+            v-model="value.categories"
+            :rules="rules.categories"
+            chips
+            deletable-chips
+            clearable
+            multiple
+            hint="Group matching resources by category. Resources with multiple categories will appear in each group."
         />
     </v-form>
 </v-container>
 </template>
 
 <script>
-import HTMLEditor from './HTMLEditor'
-import FileUpload from './FileUpload'
+import HTMLEditor from "./HTMLEditor";
+import FileUpload from "./FileUpload";
 
 export default {
-    name: 'ResourceEditor',
+    name: "ResourceEditor",
     data: () => ({
       valid: true,
       rules: {
@@ -63,10 +75,13 @@ export default {
           includeTags:[
               v => (!!v && v.length > 0) || 'At least one tag is required'
           ],
-          excludeTags:[]
-      }
+          excludeTags:[],
+          categories: [
+            (v) => (!!v && v.length > 0) || "At least one category is required"
+          ],
+        },
     }),
-    props: ['value'],
+    props: ["value"],
     methods: {
         validate() {
             return this.$refs.form.validate();
@@ -76,9 +91,8 @@ export default {
       },
     },
     components: {
-        'html-editor': HTMLEditor,
-        'file-upload': FileUpload
+        "html-editor": HTMLEditor,
+        "file-upload": FileUpload,
     }
-
 }
 </script>
