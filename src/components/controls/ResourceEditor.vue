@@ -13,6 +13,7 @@
             :rules="rules.content"
             :mandatory="true"
         />
+        <file-upload ref="fileUpload"/>
         <v-text-field 
             label="Link to more info" 
             v-model="value.moreInfoUrl"
@@ -42,6 +43,7 @@
 
 <script>
 import HTMLEditor from './HTMLEditor'
+import FileUpload from './FileUpload'
 
 export default {
     name: 'ResourceEditor',
@@ -68,10 +70,14 @@ export default {
     methods: {
         validate() {
             return this.$refs.form.validate();
-        }
+        },
+        upload() {
+            return this.$refs.fileUpload.singleFileUpload();
+      },
     },
     components: {
-        'html-editor': HTMLEditor
+        'html-editor': HTMLEditor,
+        'file-upload': FileUpload
     }
 
 }
