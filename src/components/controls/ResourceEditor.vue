@@ -13,7 +13,18 @@
             :rules="rules.content"
             :mandatory="true"
         />
-        <file-upload ref="fileUpload"/>
+
+        <div v-if="value.imgName">
+            <v-text-field   v-model="value.imgName" label="Image" readonly></v-text-field>
+            <v-btn color="primary" depressed  @click="removeImg"> Remove </v-btn>
+        </div>
+        <file-upload v-else ref="fileUpload"/>
+        
+        <v-text-field 
+            label="Alternative image text" 
+            v-model="value.imgAltText"
+        />
+
         <v-text-field 
             label="Link to more info" 
             v-model="value.moreInfoUrl"
@@ -71,9 +82,20 @@ export default {
         validate() {
             return this.$refs.form.validate();
         },
-        upload() {
-            return this.$refs.fileUpload.singleFileUpload();
-      },
+        uploadImage() {
+            return this.$refs.fileUpload.singleFileUpload()
+                .then(x => {
+                    if(x === null) {
+                        return
+                    } else {
+                        return this.value.imgName = x
+                    }
+                })
+        },
+        removeImg() {
+            //TODO: this also needs to remove the image from s3
+            this.value.imgName = ""
+        }
     },
     components: {
         'html-editor': HTMLEditor,
