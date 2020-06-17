@@ -5,12 +5,18 @@
             label="Name" 
             v-model="value.name"
             :rules="rules.name"
+            :mandatory="true"
         />
         <html-editor
             label="Content"
             v-model="value.content"
             :rules="rules.content"
             :mandatory="true"
+        />
+        <v-text-field 
+            label="Link to more info" 
+            v-model="value.moreInfoUrl"
+            :rules="rules.url"
         />
         <v-combobox
             label="Include tags"
@@ -43,7 +49,7 @@ export default {
       valid: true,
       rules: {
           name : [
-              v => !!v || 'Name is required',
+              v => (!!v & v != "New resource") || 'Name is required',
               v => (v && v.length <= 200) || 'Name must be less than 200 characters',
               v => !(/^[ \t]+/.test(v)) || 'Name must not begin with an empty space'
           ],
@@ -51,6 +57,7 @@ export default {
             //   v => (!!v || v=="<p></p>") || 'Content is required',
               v => !(/^[ \t]+/.test(v)) || 'Content must not begin with an empty space',
           ],
+          url: [],
           includeTags:[
               v => (!!v && v.length > 0) || 'At least one tag is required'
           ],
