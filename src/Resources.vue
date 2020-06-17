@@ -58,37 +58,50 @@
       validate() {
         return this.$refs.resourceComponent.validate()
       },
+      checkResourceImage() {
+        return this.$refs.resourceComponent.uploadImage()
+      },
       updateResource() {
-        if (!this.validate()) return;
-        let putReq = {
-          method: 'PUT',
-          body:JSON.stringify({
-            updates:[
-              {
-                paramName: "doc", paramValue: this.currentResource.doc
+        this.checkResourceImage()
+          .then(x => {
+              console.log(x)
+              console.log(this.currentResource)
+              if (!this.validate()) return;
+              let putReq = {
+                method: 'PUT',
+                body:JSON.stringify({
+                  updates:[
+                    {
+                      paramName: "doc", paramValue: this.currentResource.doc
+                    }
+                  ]
+                })
               }
-            ]
+              fetch(this.endpoint+'/resources/'+this.currentResource.id, putReq )
+                .then((res) => res.json())
+                .catch((err)=>console.error(err))
           })
-        }
-        fetch(this.endpoint+'/resources/'+this.currentResource.id, putReq )
-        .then((res) => res.json())
-        .catch((err)=>console.error(err))
       },
       createResource() {
-        if (!this.validate()) return;
-        let req = {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(this.currentResource.doc)
-        }
-        fetch(this.endpoint+'/resources', req)
-        .then((res)=> res.json())
-        .then((res)=>{
-          this.$set(this.resources, this.resourceIndex, res)
-        })
-        .catch(console.log)
+        this.checkResourceImage()
+          .then(x => {
+            console.log(x)
+            console.log(this.currentResource)
+            if (!this.validate()) return;
+            let req = {
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(this.currentResource.doc)
+            }
+            fetch(this.endpoint+'/resources', req)
+            .then((res)=> res.json())
+            .then((res)=>{
+              this.$set(this.resources, this.resourceIndex, res)
+            })
+            .catch(console.log)
+          })
       },
       deleteResource() {
         let delReq = {
