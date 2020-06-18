@@ -58,14 +58,10 @@
       validate() {
         return this.$refs.resourceComponent.validate()
       },
-      checkResourceImage() {
-        return this.$refs.resourceComponent.uploadImage()
-      },
       updateResource() {
-        this.checkResourceImage()
+        this.$refs.resourceComponent.checkImage()
           .then(x => {
               console.log(x)
-              console.log(this.currentResource)
               if (!this.validate()) return;
               let putReq = {
                 method: 'PUT',
@@ -83,10 +79,9 @@
           })
       },
       createResource() {
-        this.checkResourceImage()
+        this.$refs.resourceComponent.checkImage()
           .then(x => {
             console.log(x)
-            console.log(this.currentResource)
             if (!this.validate()) return;
             let req = {
               method: "POST",

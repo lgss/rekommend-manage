@@ -13,11 +13,8 @@
             :rules="rules.content"
             :mandatory="true"
         />
-        <div v-if="value.imgName">
-            <v-text-field   v-model="value.imgName" label="Image" readonly></v-text-field>
-            <v-btn color="primary" depressed  @click="removeImg"> Remove </v-btn>
-        </div>
-        <file-upload v-else ref="fileUpload"/>
+
+        <file-upload ref="fileUpload" v-model="value.imgName"/>
         
         <v-text-field 
             label="Alternative image text" 
@@ -73,7 +70,7 @@ export default {
       valid: true,
       rules: {
           name : [
-              v => (!!v & v != "New resource") || 'Name is required',
+              v => (!!v && v != "New resource") || 'Name is required',
               v => (v && v.length <= 200) || 'Name must be less than 200 characters',
               v => !(/^[ \t]+/.test(v)) || 'Name must not begin with an empty space'
           ],
@@ -96,24 +93,21 @@ export default {
         validate() {
             return this.$refs.form.validate();
         },
-        uploadImage() {
-            return this.$refs.fileUpload.singleFileUpload()
-                .then(x => {
-                    if(x === null) {
-                        return
+        checkImage() {
+            return this.$refs.fileUpload.save()
+                .then(x => { 
+                    if(x === undefined) {
+                        this.value.imgName = undefined
                     } else {
-                        return this.value.imgName = x
+                        this.value.imgName = x
                     }
+                    return Promise.resolve(x) 
                 })
-        },
-        removeImg() {
-            //TODO: this also needs to remove the image from s3
-            this.value.imgName = ""
         }
     },
     components: {
         "html-editor": HTMLEditor,
-        "file-upload": FileUpload,
+        "file-upload": FileUpload
     }
 }
 </script>
