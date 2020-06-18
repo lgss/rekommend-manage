@@ -14,27 +14,27 @@
             singleFileUpload() {
                 if (this.file.length === 0) {
                     console.log("no files to be uploaded")
-                    return
+                    return Promise.resolve(null)
                 }
                 else if (this.file[0].type.split('/').length < 2) {
                     console.log("unable to determine file type and subtype")
-                    return
+                    return Promise.resolve(null)
                 }
                 else {
                     let type = this.file[0].type.split('/')[0]
                     let subtype = this.file[0].type.split('/')[1]
                     if(type !== "image") {
                         console.log("Not an image")
-                        return
+                        return Promise.resolve(null)
                     }
-                    fetch(this.endpoint + "/set-file-url/" + subtype)
+                    return fetch(this.endpoint + "/set-file-url/" + subtype)
                     .then(x => x.json())
                     .then(doc => {
                         fetch(doc.uploadURL, {
                             method: "PUT",
                             body: this.file[0]
                         })
-                        return doc.filename;
+                        return doc.filename
                     })
                 }
             }
