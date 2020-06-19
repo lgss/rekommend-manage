@@ -1,103 +1,97 @@
 <template>
-    <div v-if="this.displayUploader">
-        <v-file-input label="Resource Image" v-model="newFile"></v-file-input>
-    </div>
-    <div v-else>
-        <v-text-field v-model="currentFile" label="Image" readonly></v-text-field>
-        <v-btn color="primary" depressed  @click="remove">Remove</v-btn>
-    </div>
+    <v-form ref="form">
+        <v-file-input
+            v-if="!val.src"
+            label="Resource Image"
+            v-model="fileObj"
+            :rules="rules.file"
+            required
+        />
+        <v-text-field v-else v-model="val.name" label="File" readonly />
+        <!-- <v-text-field v-model="val.src" label="source" readonly /> -->
+        <v-text-field
+            ref="altText"
+            label="Description"
+            v-model="val.alt"
+            :rules="rules.altText"
+            required
+        />
+        <v-btn v-if="val.src" color="primary" depressed @click="remove"
+            >Remove</v-btn
+        >
+        <!-- <v-btn @click="save">Save</v-btn> -->
+    </v-form>
 </template>
 
 <script>
-    export default {
-        name: 'FileUpload',
-        props: ['value'],
-        data: () => ({
-            newFile:{},
-            displayUploader: true,
-            endpoint: process.env.VUE_APP_API_ENDPOINT
-        }),
-        computed:{
-            currentFile() {
-                return this.value
-            }
+export default {
+    name: "file-upload",
+    props: ["value"],
+    data: () => ({
+        val: {},
+        removeObj: null,
+        fileObj: null,
+        endpoint: process.env.VUE_APP_API_ENDPOINT,
+        rules: {
+            altText: [(v) => !!v || "A description is required"],
+            file: [],
         },
-        watch:{
-            currentFile: {
-                deep: true,
-                handler: function(newVal) {
-                    if(newVal === undefined) {
-                        this.displayUploader = true
-                    } else {
-                        this.displayUploader = false
-                    }
-                }
-            },
-            newFile: {
-                deep: true,
-                handler:function(newVal) {
-                    if(newVal === undefined) {
-                        this.newFile = {}
-                    }
-                }
-            }
+    }),
+    created() {
+        this.val = this.value || {};
+    },
+    watch: {
+        value: function(val) {
+            this.val = val || {};
         },
-        methods: {
-            remove(){
-                this.displayUploader = true
-            },
-            save() {
-                if(this.currentFile == undefined && this.newFile.name !== undefined){
-                    console.log("new file")
-                    return this.upload()
-                        .then(x => {
-                            return x;
-                        });
-                }
-                if(this.currentFile !== undefined && this.newFile.name !== undefined) {
-                    console.log("replace file")
-                    this.delete();
-                    return this.upload()
-                        .then(x => {
-                            return x;
-                        });
-                }
-                if(this.currentFile !== undefined && this.displayUploader == true) {
-                    console.log("delete file")
-                    this.delete();
-                    return Promise.resolve(undefined);
-                }
-                console.log("no change")
-                return Promise.resolve(this.currentFile);
-            },
-            upload() {
-                let meme = this.newFile.type.split('/')
-
-                if (meme.length < 2) {
-                    console.log("unable to determine file type and subtype")
-                    return Promise.resolve(undefined)
-                }
-                let type = meme[0]
-                let subtype = meme[1]
-
-                if(type !== "image") {
-                    console.log("Not an image")
-                    return Promise.resolve(undefined)
-                }
-
-                return fetch(this.endpoint + "/set-file-url/" + subtype)
-                .then(x => x.json())
-                .then(doc => {
+    },
+    methods: {
+        remove() {
+            this.removeObj = this.val;
+            this.val = {};
+        },
+        save() {
+            if (this.removeObj) {
+                return this.delete()
+                .then(()=> this.upload());
+            }
+            return this.upload();
+        },
+        upload() {
+            if (!this.$refs.form.validate()) {
+                return Promise.reject("Attachment not present");
+            }
+            if (!this.fileObj) {
+                return Promise.reject("No file detected");
+            }
+            let mime = this.fileObj.type.split("/");
+            if (mime.length < 2) {
+                return Promise.reject("Unknown file type");
+            }
+            let type = mime[0];
+            let subtype = mime[1];
+            if (type !== "image") {
+                return Promise.reject("Not an image");
+            }
+            this.val.name = this.fileObj.name;
+            return fetch(this.endpoint + "/set-file-url/" + subtype)
+                .then((x) => x.json())
+                .then((doc) => {
                     fetch(doc.uploadURL, {
                         method: "PUT",
-                        body: this.newFile
+                        body: this.fileObj,
                     })
-                    return doc.filename
-                })
-            },
-            delete() {
-                return fetch(this.endpoint + "/delete-file/" + this.currentFile);
-            }
-        }
-    }
+                    .then(()=>{
+                        this.fileObj = null;
+                    });
+                    this.$set(this.val, "src", doc.filename);
+                    this.$emit('input',this.val)
+                    return this.val;
+                });
+        },
+        delete() {
+            return fetch(this.endpoint + "/delete-file/" + this.removeObj.src);
+        },
+    },
+};
 </script>

@@ -1,63 +1,58 @@
 <template>
-<v-container>
-    <v-form ref="form" model="valid">
-        <v-text-field
-            label="Name"
-            v-model="value.name"
-            :rules="rules.name"
-            :mandatory="true"
-        />
-        <html-editor
-            label="Content"
-            v-model="value.content"
-            :rules="rules.content"
-            :mandatory="true"
-        />
+    <v-container>
+        <v-form ref="form" model="valid">
+            <v-text-field
+                label="Name"
+                v-model="value.name"
+                :rules="rules.name"
+                :mandatory="true"
+            />
+            <html-editor
+                label="Content"
+                v-model="value.content"
+                :rules="rules.content"
+                :mandatory="true"
+            />
 
-        <file-upload ref="fileUpload" v-model="value.imgName"/>
-        
-        <v-text-field 
-            label="Alternative image text" 
-            v-model="value.imgAltText"
-        />
+            <file-upload ref="fileUpload" v-model="value.img" />
 
-        <v-text-field 
-            label="Link to more info" 
-            v-model="value.moreInfoUrl"
-            :rules="rules.url"
-        />
-        <v-combobox
-            label="Include tags"
-            v-model="value.includeTags"
-            :rules="rules.includeTags"
-            chips
-            clearable
-            multiple
-            solo
-            hint="Include the resource in results if any of these tags have been collected during the assessment."
-        />
-        <v-combobox
-            label="Exclude tags"
-            v-model="value.excludeTags"
-            :rules="rules.excludeTags"
-            chips
-            clearable
-            multiple
-            solo
-            hint="Exclude the resource from results if any of these tags have been collected during the assessment."
-        />
-        <v-combobox 
-            label="Categories"
-            v-model="value.categories"
-            :rules="rules.categories"
-            chips
-            deletable-chips
-            clearable
-            multiple
-            hint="Group matching resources by category. Resources with multiple categories will appear in each group."
-        />
-    </v-form>
-</v-container>
+            <v-text-field
+                label="Link to more info"
+                v-model="value.moreInfoUrl"
+                :rules="rules.url"
+            />
+            <v-combobox
+                label="Include tags"
+                v-model="value.includeTags"
+                :rules="rules.includeTags"
+                chips
+                clearable
+                multiple
+                solo
+                hint="Include the resource in results if any of these tags have been collected during the assessment."
+            />
+            <v-combobox
+                label="Exclude tags"
+                v-model="value.excludeTags"
+                :rules="rules.excludeTags"
+                chips
+                clearable
+                multiple
+                solo
+                hint="Exclude the resource from results if any of these tags have been collected during the assessment."
+            />
+            <v-combobox
+                label="Categories"
+                v-model="value.categories"
+                :rules="rules.categories"
+                chips
+                deletable-chips
+                clearable
+                multiple
+                hint="Group matching resources by category. Resources with multiple categories will appear in each group."
+            />
+        </v-form>
+    </v-container>
 </template>
 
 <script>
@@ -95,19 +90,19 @@ export default {
         },
         checkImage() {
             return this.$refs.fileUpload.save()
-                .then(x => { 
+                .then(x => {
                     if(x === undefined) {
-                        this.value.imgName = undefined
+                        this.value.img = undefined
                     } else {
-                        this.value.imgName = x
+                        this.value.img = x
                     }
-                    return Promise.resolve(x) 
+                    return Promise.resolve(x)
                 })
         }
     },
     components: {
         "html-editor": HTMLEditor,
         "file-upload": FileUpload
-    }
+    },
 }
 </script>
