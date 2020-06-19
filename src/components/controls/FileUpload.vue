@@ -43,9 +43,6 @@
             }
         },
         methods: {
-            set() {
-                this.displayUploader = false
-            },
             remove(){
                 this.displayUploader = true
             },
