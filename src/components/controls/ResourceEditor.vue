@@ -7,15 +7,23 @@
                 :rules="rules.name"
                 :mandatory="true"
             />
+            <v-combobox
+                label="Categories"
+                v-model="value.categories"
+                :rules="rules.categories"
+                chips
+                deletable-chips
+                clearable
+                multiple
+                hint="Group matching resources by category. Resources with multiple categories will appear in each group."
+            />
             <html-editor
                 label="Content"
                 v-model="value.content"
                 :rules="rules.content"
                 :mandatory="true"
             />
-
             <file-upload ref="fileUpload" v-model="value.img" />
-
             <v-text-field
                 label="Link to more info"
                 v-model="value.moreInfoUrl"
@@ -40,16 +48,6 @@
                 multiple
                 solo
                 hint="Exclude the resource from results if any of these tags have been collected during the assessment."
-            />
-            <v-combobox
-                label="Categories"
-                v-model="value.categories"
-                :rules="rules.categories"
-                chips
-                deletable-chips
-                clearable
-                multiple
-                hint="Group matching resources by category. Resources with multiple categories will appear in each group."
             />
         </v-form>
     </v-container>
