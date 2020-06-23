@@ -1,25 +1,27 @@
 <template>
     <v-form ref="form">
-        <v-file-input
-            v-if="!val.src"
-            label="Resource Image"
-            v-model="fileObj"
-            :rules="rules.file"
-            required
-        />
-        <v-text-field v-else v-model="val.name" label="File" readonly />
-        <!-- <v-text-field v-model="val.src" label="source" readonly /> -->
-        <v-text-field
-            ref="altText"
-            label="Description"
-            v-model="val.alt"
-            :rules="rules.altText"
-            required
-        />
-        <v-btn v-if="val.src" color="primary" depressed @click="remove"
-            >Remove</v-btn
-        >
-        <!-- <v-btn @click="save">Save</v-btn> -->
+        <v-row>
+            <v-col cols="6">
+                <v-file-input
+                    v-if="!val.src"
+                    label="Image"
+                    v-model="fileObj"
+                    :rules="rules.file"
+                />
+                <v-text-field v-else v-model="val.name" label="File" readonly />
+            </v-col>
+            <v-col>
+                <v-text-field
+                    ref="altText"
+                    label="Image description"
+                    v-model="val.alt"
+                    :rules="rules.altText"
+                />
+            </v-col>
+            <v-col>
+                <v-btn v-if="val.src" color="primary" depressed @click="remove"> Remove</v-btn>
+            </v-col>
+        </v-row>  
     </v-form>
 </template>
 
@@ -51,19 +53,24 @@ export default {
             this.val = {};
         },
         save() {
-            if (this.removeObj) {
+            if (this.removeObj && this.fileObj) {
                 return this.delete()
                 .then(()=> this.upload());
             }
-            return this.upload();
+            if (this.fileObj) {
+                return this.upload();
+            }
+            if (this.removeObj) {
+                return this.delete();
+            }
         },
         upload() {
-            if (!this.$refs.form.validate()) {
-                return Promise.reject("Attachment not present");
-            }
-            if (!this.fileObj) {
-                return Promise.reject("No file detected");
-            }
+            // if (!this.$refs.form.validate()) {
+            //     return Promise.reject("Attachment not present");
+            // }
+            // if (!this.fileObj) {
+            //     return Promise.reject("No file detected");
+            // }
             let mime = this.fileObj.type.split("/");
             if (mime.length < 2) {
                 return Promise.reject("Unknown file type");
