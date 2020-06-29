@@ -14,7 +14,7 @@ def loadenv(json_str):
 def loadenvfile(path):
     return loadenv(open(path).read())
 
-class JerichoTest(unittest.TestCase):
+class SetupTest(unittest.TestCase):
     def __init__(self, methodName="runTest"):
         super().__init__(methodName)
         if environment == "local":
