@@ -1,3 +1,4 @@
 {
-  "root": "http://rekommend-manage-dev.s3-website.eu-west-2.amazonaws.com/"
+  "root": "",
+  "chrome_driver_path": ""
 }
