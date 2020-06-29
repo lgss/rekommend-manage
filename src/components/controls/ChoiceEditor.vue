@@ -68,6 +68,37 @@
                 label="Tags"
                 multiple
                 solo/>
+              <v-expansion-panels>
+                <v-expansion-panel :key="'true'" @click="expandDialog(index)">
+                  <v-expansion-panel-header style="width: 100%">
+                    <template>
+                      <v-fade-transition leave-absolute >
+                        <span>
+                          Dialog
+                        </span>
+                      </v-fade-transition>
+                      <v-spacer/>
+                    </template>
+                    <template #actions v-if="choice.dialog">
+                      <v-btn icon @click.stop="removeDialog(index)">
+                        <v-icon>mdi-close</v-icon>
+                      </v-btn>
+                      <v-icon color="primary">$vuetify.icons.expand</v-icon>
+                    </template>
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content v-if="choice.dialog">
+                    <v-text-field 
+                      v-model="choice.dialog.title"
+                      label="Title"/>
+                    <v-textarea 
+                      v-model="choice.dialog.content"
+                      label="Content"/>
+                    <v-switch 
+                      v-model="choice.dialog.fullscreen"
+                      label="Fullscreen"/>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </transition-group>
@@ -135,6 +166,14 @@
         this.value.choices.splice(index, 1)
         this.$forceUpdate();  // temp fix as component doesn't 
                               // appear to be updating when data changes
+      },
+      expandDialog(index) {
+        if (!this.value.choices[index].dialog) {
+          this.$set(this.value.choices[index], "dialog", {})
+        }
+      },
+      removeDialog(index) {
+        this.$delete(this.value.choices[index], "dialog")
       }
     }
   }

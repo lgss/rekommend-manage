@@ -1,29 +1,5 @@
 # rekommend-manage
 
-## Project setup
-```
-npm install
-```
+This project provides an interface for users to administrate journeys, resources and themeing. Data is provided to this service by setting up the [rekommend-api](https://github.com/lgss/rekommend-editor-api/) service.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+More information about this service can be found in the [wiki](https://github.com/lgss/rekommend-manage/wiki/)
