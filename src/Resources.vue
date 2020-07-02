@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1">
+    <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1" v-model="drawer">
+      <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-left </v-icon>
       <v-list>
         <v-list-item-group v-if="resources.length" v-model="resourceIndex" color="primary">
           <v-list-item v-for="(resource, i) in resources" :key="i">
@@ -16,6 +17,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+    <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-right </v-icon>
     <v-content>
       <v-container fluid class="fill-height" v-if="currentResource">
         <v-btn-toggle>
@@ -42,7 +44,9 @@
       resources: [],
       resourceIndex: -1,
       component: "resource-editor",
-      endpoint: process.env.VUE_APP_API_ENDPOINT
+      endpoint: process.env.VUE_APP_API_ENDPOINT,
+      drawer: true,
+      group: null
     }),
     created() {
       fetch(this.endpoint+'/resources')
@@ -112,6 +116,11 @@
         }
         this.resources.push(item);
         this.resourceIndex = this.resources.length - 1
+      }
+    },
+    watch: {
+      group () {
+          this.drawer = false
       }
     }
   }

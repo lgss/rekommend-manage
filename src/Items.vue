@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1">
+    <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1" v-model="drawer">
+      <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-left </v-icon>
       <v-select :items="journeys" v-model="currentJourney" item-text="label" return-object label="Journey"  v-on:input="journeySelector"></v-select>
       <v-divider></v-divider>
       <v-container v-if="currentJourney">
@@ -40,6 +41,7 @@
         New journey
       </v-list-item>
     </v-navigation-drawer>
+    <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-right </v-icon>
     <v-content>
       <v-container fluid class="fill-height" v-if="currentJourney">
         <v-container fluid class="fill-width">
@@ -85,7 +87,9 @@ export default {
       field: {fieldType: "div"},
       interactionType: '',
       errorMessages: [],
-      endpoint: process.env.VUE_APP_API_ENDPOINT
+      endpoint: process.env.VUE_APP_API_ENDPOINT,
+      drawer: true,
+      group: null
     }
   },
   created() {
@@ -212,6 +216,11 @@ export default {
     },
     hasMinimum(key,value,minLength) {
       if(value.length < minLength) {this.errorMessages.push({key:key, message:key + " require at least " + minLength + " value(s)"})}
+    }
+  },
+  watch: {
+    group () {
+        this.drawer = false
     }
   }
 }
