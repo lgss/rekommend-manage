@@ -20,12 +20,14 @@
     <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-right </v-icon>
     <v-content>
       <v-container fluid class="fill-height" v-if="currentResource">
-        <v-btn-toggle>
-          <v-btn @click="validate">Validate</v-btn>
-          <v-btn v-if="currentResource.id" @click="updateResource">Update</v-btn>
-          <v-btn v-else @click="createResource">Save</v-btn>
-          <v-btn @click="deleteResource">Delete</v-btn>
-        </v-btn-toggle>
+        <v-container>
+          <v-btn-toggle>
+            <v-btn @click="validate">Validate</v-btn>
+            <v-btn v-if="currentResource.id" @click="updateResource">Update</v-btn>
+            <v-btn v-else @click="createResource">Save</v-btn>
+            <v-btn @click="deleteResource">Delete</v-btn>
+          </v-btn-toggle>
+        </v-container>
         <component ref="resourceComponent" :is="component" v-model="currentResource.doc"/>
       </v-container>
     </v-content>

@@ -44,13 +44,13 @@
     <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-right </v-icon>
     <v-content>
       <v-container fluid class="fill-height" v-if="currentJourney">
-        <v-container fluid class="fill-width">
+        <v-container>
           <v-btn-toggle>
             <v-btn v-if="currentJourney.id" @click="updateJourney">Update</v-btn>
             <v-btn v-else @click="createJourney">Save</v-btn>
           </v-btn-toggle>
         </v-container>
-        <v-container fluid class="fill-width">
+        <v-container>
           <h2 v-if="errorMessages.length > 0">There is a problem</h2>
           <v-list v-if="errorMessages.length > 0">
             <v-list-item v-for="(error, index) in errorMessages" :key="index">
