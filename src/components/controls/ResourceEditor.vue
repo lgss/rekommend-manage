@@ -23,7 +23,7 @@
                 :rules="rules.content"
                 :mandatory="true"
             />
-            <file-upload ref="fileUpload" v-model="value.img" />
+            <file-upload ref="fileUpload" v-model="value.img"/>
             <v-text-field
                 label="Link to more info"
                 v-model="value.moreInfoUrl"
@@ -85,17 +85,6 @@ export default {
     methods: {
         validate() {
             return this.$refs.form.validate();
-        },
-        checkImage() {
-            return this.$refs.fileUpload.save()
-                .then(x => {
-                    if(x === undefined) {
-                        this.value.img = undefined
-                    } else {
-                        this.value.img = x
-                    }
-                    return Promise.resolve(x)
-                })
         }
     },
     components: {
