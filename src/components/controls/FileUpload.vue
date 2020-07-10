@@ -2,12 +2,14 @@
     <v-form ref="form">
         <v-row v-if="value.src">
             <v-col>
-                <v-img max-height="100" max-width="100" :contain="true" :src="displayImage()"/>
+                <v-card width="116" class="pa-2">
+                    <v-img max-height="100" max-width="100" :contain="true" :src="displayImage()"/>
+                </v-card>
             </v-col>
         </v-row>
         <v-row>
             <v-col cols="6">
-                <v-file-input :loading="loading" accept="image/*" label="Choose an image" @change="selectImage"/>
+                <v-file-input :show-size="true" :loading="loading" accept="image/*" label="Choose an image" @change="selectImage"/>
             </v-col>
             <v-col>
                 <v-text-field
