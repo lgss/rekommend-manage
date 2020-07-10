@@ -7,7 +7,7 @@
         </v-row>
         <v-row>
             <v-col cols="6">
-                <v-file-input accept="image/*" label="Choose an image" @change="selectImage"/>
+                <v-file-input :loading="loading" accept="image/*" label="Choose an image" @change="selectImage"/>
             </v-col>
             <v-col>
                 <v-text-field
@@ -34,11 +34,17 @@ const endpoint = process.env.VUE_APP_API_ENDPOINT
 export default {
     name: "file-upload",
     props: ["value"],
+    data() {
+        return {
+            loading: false
+        }
+    },
     methods: {
         displayImage() {
             return endpoint + '/image/' + this.value.src
         },
         selectImage(image) {
+            this.loading = true
             uploadImage(image)
                 .then(async fn => {
                     // delete the prior image
@@ -46,6 +52,7 @@ export default {
                      if (this.value.src) 
                         await this.remove()
                     this.value.src = fn
+                    this.loading = false
                     return fn
                 })
         },
