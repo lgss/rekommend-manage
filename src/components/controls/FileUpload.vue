@@ -2,7 +2,7 @@
     <v-form ref="form">
         <v-row v-if="value.src">
             <v-col>
-                <img height="100" width="100" :src="displayImage()"/>
+                <v-img max-height="100" max-width="100" :contain="true" :src="displayImage()"/>
             </v-col>
         </v-row>
         <v-row>
