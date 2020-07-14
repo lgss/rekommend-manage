@@ -47,8 +47,7 @@
       resourceIndex: -1,
       component: "resource-editor",
       endpoint: process.env.VUE_APP_API_ENDPOINT,
-      drawer: true,
-      group: null
+      drawer: true
     }),
     created() {
       fetch(this.endpoint+'/resources')
@@ -118,11 +117,6 @@
         }
         this.resources.push(item);
         this.resourceIndex = this.resources.length - 1
-      }
-    },
-    watch: {
-      group () {
-          this.drawer = false
       }
     }
   }

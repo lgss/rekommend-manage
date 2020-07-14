@@ -88,8 +88,7 @@ export default {
       interactionType: '',
       errorMessages: [],
       endpoint: process.env.VUE_APP_API_ENDPOINT,
-      drawer: true,
-      group: null
+      drawer: true
     }
   },
   created() {
@@ -216,11 +215,6 @@ export default {
     },
     hasMinimum(key,value,minLength) {
       if(value.length < minLength) {this.errorMessages.push({key:key, message:key + " require at least " + minLength + " value(s)"})}
-    }
-  },
-  watch: {
-    group () {
-        this.drawer = false
     }
   }
 }

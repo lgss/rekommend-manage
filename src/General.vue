@@ -27,17 +27,11 @@ export default {
     return {
       interactionType: '',
       drawer: true,
-      group: null
     }
   },
   methods: {
     changeView(view) {
       this.interactionType = view;
-    }
-  },
-  watch: {
-    group () {
-        this.drawer = false
     }
   }
 }
