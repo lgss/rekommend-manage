@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 /dist
+.vscode/
+.aws-sam/
 
 # local env files
 .env
@@ -20,3 +22,5 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+__pycache__
+*.pyc

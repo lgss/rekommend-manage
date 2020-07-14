@@ -76,8 +76,8 @@
           })
         }
         fetch(this.endpoint+'/resources/'+this.currentResource.id, putReq )
-        .then((res) => res.json())
-        .catch((err)=>console.error(err))
+          .then((res) => res.json())
+          .catch((err)=>console.error(err))
       },
       createResource() {
         if (!this.validate()) return;
@@ -112,7 +112,8 @@
             name: "New resource",
             content: "",
             includeTags: [],
-            excludeTags: []
+            excludeTags: [],
+            img: {}
           }
         }
         this.resources.push(item);
