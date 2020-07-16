@@ -3,7 +3,9 @@
     <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1" v-model="drawer">
       <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-left </v-icon>
       <v-list>
-        <v-list-item color="primary" @click="changeView('theme')">Home</v-list-item>
+        <v-list-item color="primary" @click="changeView('theme')">Theme</v-list-item>
+        <v-list-item color="primary" @click="changeView('landing')">Landing</v-list-item>
+        <v-list-item color="primary" @click="changeView('completed')">Assessment completed</v-list-item>
         <v-list-item color="primary" @click="changeView('positive')">Positive outcome</v-list-item>
         <v-list-item color="primary" @click="changeView('terms')">Terms and Conditions</v-list-item>
       </v-list>
@@ -17,14 +19,18 @@
 
 <script>
 import ThemeEditor from './components/controls/ThemeEditor.vue'
+import LandingEditor from './components/controls/LandingEditor.vue'
 import PositiveEditor from './components/controls/PositiveEditor.vue'
-import TermsEditor from './components/controls/TermsEditor'
+import TermsEditor from './components/controls/TermsEditor.vue'
+import CompletedEditor from './components/controls/CompletedEditor.vue'
 /* eslint-disable */
 export default {
   components: {
-    'terms': TermsEditor,
     'theme': ThemeEditor,
-    'positive': PositiveEditor
+    'terms': TermsEditor,
+    'landing': LandingEditor,
+    'positive': PositiveEditor,
+    'completed': CompletedEditor
   },
   data() {
     return {
