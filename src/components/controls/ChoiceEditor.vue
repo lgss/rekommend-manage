@@ -37,6 +37,7 @@
       label="Exclude tags"
       multiple
       solo/>
+    <file-upload :v-model="value.img"/>
     <v-subheader>Choices</v-subheader>
     <v-expansion-panels accordion>
       <draggable v-model="choiceOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
