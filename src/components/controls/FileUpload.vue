@@ -1,6 +1,6 @@
 <template>
     <v-form ref="form">
-        <v-row v-if="value.src">
+        <v-row>
             <v-col>
                 <v-card width="116" class="pa-2">
                     <v-img max-height="100" max-width="100" :contain="true" :src="displayImage()"/>
@@ -41,18 +41,30 @@ export default {
             loading: false
         }
     },
+    created() { 
+        // This is a bit of a hack to handle when an undefined value is passed.
+        // I'm open to suggestions on better behaviour...
+        if (!this.value) 
+            this.value = {
+                src: null,
+                alt: ''
+            }
+    },
     methods: {
         displayImage() {
-            return endpoint + '/image/' + this.value.src
+            if (this.value && this.value.src)
+                return endpoint + '/image/' + this.value.src
+            
+            return "/img/image-placeholder.png"
         },
         selectImage(image) {
             this.loading = true
             uploadImage(image)
                 .then(async fn => {
                     // delete the prior image
-
                      if (this.value.src) 
                         await this.remove()
+
                     this.value.src = fn
                     this.loading = false
                     return fn
