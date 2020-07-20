@@ -82,6 +82,12 @@ export default {
         },
     }),
     props: ["value"],
+    watch: {
+        value: function() {
+            if (!this.value.img)
+                this.value.img = {}
+        }
+    },
     methods: {
         validate() {
             return this.$refs.form.validate();
