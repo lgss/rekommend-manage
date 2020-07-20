@@ -37,7 +37,7 @@
       label="Exclude tags"
       multiple
       solo/>
-    <file-upload :v-model="value.img"/>
+    <file-upload v-model="value.img"/>
     <v-subheader>Choices</v-subheader>
     <v-expansion-panels accordion>
       <draggable v-model="choiceOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
@@ -121,7 +121,7 @@
     name: 'ChoiceEditor',
     components: {
       draggable,
-      "file-upload": FileUpload
+      FileUpload
     },
     data() {
       return {
@@ -129,12 +129,13 @@
         errorMessages: ''
       }
     },
-    created() {
-      if(this.value.choices === undefined) {
-        this.value.choices = []
-      }
-      else
-        this.value.choices = this.value.choices.map(x => {x.id = this.uuidv4(); x.img = {}; return x})
+    watch: {
+        value: function() {
+            if (!this.value.choices)
+                this.value.choices = []  
+            else
+              this.value.choices = this.value.choices.map(x => {x.id = this.uuidv4(); x.img = {}; return x})
+        }
     },
     props: ['value'],
     computed: {
