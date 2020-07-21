@@ -20,7 +20,7 @@
             placeholder="Enter journey parent"
             required
           ></v-text-field>
-        <file-upload :v-model="value.img"/>
+        <file-upload v-model="value.img"/>
         <v-subheader>Pages</v-subheader>
         <v-expansion-panels accordion>
             <draggable v-model="pageOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
@@ -70,7 +70,7 @@ export default {
     },
     components: {
       draggable,
-      "file-upload": FileUpload
+      FileUpload
     },
     props: ['value'],
     computed: {

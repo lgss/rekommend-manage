@@ -93,9 +93,16 @@ export default {
   },
   created() {
     fetch(this.endpoint +'/journeys')
-      .then(y => y.json())
-      .then(y => {
-        this.journeys = y
+      .then(reply => reply.json())
+      .then(data => {
+        this.journeys = data.map(journey => {
+          if (!journey.img) 
+              journey.img = {}; 
+          for (const page of journey.doc.pages) 
+              for (let item of page.items)
+                  if (!item.img)
+                    item.img = {}       
+          return journey})
       })
   },
   methods: {
