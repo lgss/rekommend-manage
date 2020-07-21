@@ -41,15 +41,6 @@ export default {
             loading: false
         }
     },
-    created() { 
-        // This is a bit of a hack to handle when an undefined value is passed.
-        // I'm open to suggestions on better behaviour...
-        if (!this.value) 
-            this.value = {
-                src: null,
-                alt: ''
-            }
-    },
     methods: {
         displayImage() {
             if (this.value && this.value.src)
