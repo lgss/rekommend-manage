@@ -31,7 +31,7 @@
 // with a prefix, so that it has a TTL and then changing it to a permanent file
 import {uploadImage, deleteFile} from '@/utils/file.js'
 
-const public_endpoint = process.env.VUE_APP_PUBLIC_ENDPOINT
+const endpoint = process.env.VUE_APP_API_ENDPOINT
 
 export default {
     name: "file-upload",
@@ -44,7 +44,7 @@ export default {
     methods: {
         displayImage() {
             if (this.value && this.value.src)
-                return public_endpoint + '/image/' + this.value.src
+                return endpoint + '/image/' + this.value.src
             
             return "/img/image-placeholder.png"
         },
