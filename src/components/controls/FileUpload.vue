@@ -31,7 +31,7 @@
 // with a prefix, so that it has a TTL and then changing it to a permanent file
 import {uploadImage, deleteFile} from '@/utils/file.js'
 
-cconst endpoint = process.env.VUE_APP_API_ENDPOINT
+const endpoint = process.env.VUE_APP_API_ENDPOINT
 
 export default {
     name: "file-upload",
