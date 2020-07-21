@@ -15,7 +15,7 @@
                 <v-text-field
                     ref="altText"
                     label="Image description (alt text)"
-                    v-model="value.alt"
+                    v-model="altText"
                 />
             </v-col>
             <v-col>
@@ -39,6 +39,19 @@ export default {
     data() {
         return {
             loading: false
+        }
+    },
+    computed: {
+        altText: {
+            get: function() {
+                if (this.value && this.value.alt) {
+                    return this.value.alt
+                }
+                return ""
+            },
+            set: function(newValue) {
+                this.value.alt = newValue
+            }
         }
     },
     methods: {
