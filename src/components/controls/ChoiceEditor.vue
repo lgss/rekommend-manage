@@ -170,6 +170,7 @@
         this.value.choices.push({
           value: "New choice",
           id: this.uuidv4(),
+          img: {},
           choices: [],
           tags: []
         })
