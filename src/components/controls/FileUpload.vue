@@ -39,15 +39,8 @@ export default {
     },
     computed: {
         image: {
-            get: function() {
-                if (this.value) {
-                    return this.value
-                }
-                return {}
-            },
-            set: function(newValue) {
-                this.$emit('input', newValue)
-            }
+            get: () => this.value || {},
+            set: (newValue) => this.$emit('input', newValue)
         }
     },
     methods: {
