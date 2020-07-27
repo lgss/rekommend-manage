@@ -73,6 +73,7 @@ export default {
         remove() {
             return deleteFile(this.image.src)
                 .then(() => {
+                    // there's probably a better way of triggering the reactivity...
                     this.image = Object.assign({}, this.image, {src: null})
                 })
         },
