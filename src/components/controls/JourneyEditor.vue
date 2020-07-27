@@ -20,6 +20,7 @@
             placeholder="Enter journey parent"
             required
           ></v-text-field>
+        <file-upload v-model="value.img"/>
         <v-subheader>Pages</v-subheader>
         <v-expansion-panels accordion>
             <draggable v-model="pageOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
@@ -56,6 +57,8 @@
 
 <script>
 import draggable from 'vuedraggable'
+ import FileUpload from "./FileUpload";
+
 
 export default {
     name: 'JourneyEditor',
@@ -66,7 +69,8 @@ export default {
         }
     },
     components: {
-      draggable
+      draggable,
+      FileUpload
     },
     props: ['value'],
     computed: {
@@ -85,7 +89,7 @@ export default {
 			set: function(value) {
                 this.value.doc.pages = value
 			},
-        }
+        },
     },
   methods: {
     remove(index) {

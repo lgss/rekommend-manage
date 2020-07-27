@@ -6,10 +6,9 @@
                 <v-col>
                     <v-row>
                         <v-col>
-                            <h1 class="float-left">PREVIEW</h1><br/>
+                            <h1 class="float-left">PREVIEW</h1>
                         </v-col>
                     </v-row>
-
                     <v-card>
                         <v-row>
                             <v-col>
@@ -29,20 +28,16 @@
                                 </v-app-bar>
                             </v-col>
                         </v-row>
-                       <v-row>
+                        <v-row class="text-left">
                             <v-container>
                                     <h1 id="title">{{ title }}</h1>
                             </v-container>
                             <v-divider />
                             <v-container
                                 id="content"
+                                class="text-left"
                                 v-html="content"
                             ></v-container>
-                        </v-row>
-                        <v-row>
-                            <v-col>
-                                <v-btn name='btn-start-again'>START AGAIN</v-btn>
-                            </v-col>
                         </v-row>
                         <v-footer :color="appSecondary" class="justify-center">
                             <v-card flat tile :color="appSecondary">
@@ -56,7 +51,6 @@
                     </v-card>
                 </v-col>
             </v-row>
-
             <v-row>
                 <v-col md="6">
                     <v-text-field label="Title" v-model="title"/> 
@@ -67,9 +61,9 @@
                     <html-editor label="Content" v-model="content"/>
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row justify="center">
                 <v-col>
-                    <v-btn @click="savePositive()" color="success">Save</v-btn>
+                    <v-btn @click="saveTerms" color="success">Save</v-btn>
                 </v-col>
             </v-row>
         </v-container>
@@ -77,10 +71,10 @@
 </template>
 
 <script>
-import HTMLEditor from './HTMLEditor'
+import HTMLEditor from "./HTMLEditor"; 
 /* eslint-disable */
 export default {
-    name: 'PositiveEditor',
+    name: "TermsEditor",
     created() {
         Promise.all([
             fetch(this.endpoint + "/theme")
@@ -90,7 +84,7 @@ export default {
                     this.appPrimary = x.primary;
                     this.appSecondary = x.secondary;
                 }),
-            fetch(this.endpoint + '/content/positive')
+            fetch(this.endpoint + "/content/disclaimer")
                 .then((x) => (x.ok ? x.json() : Promise.reject(x)))
                 .then((x) => {
                     this.title = x.title;
@@ -108,7 +102,7 @@ export default {
         });
     },
     components: {
-        'html-editor': HTMLEditor
+        "html-editor": HTMLEditor,
     },
     data() {
         return {
@@ -119,24 +113,24 @@ export default {
             appSecondary: "#1F63A3",
             title: "",
             content: "",
-            loading: true
-        }
+            loading: true,
+        };
     },
     methods: {
-        savePositive() {
-            fetch(this.endpoint + '/content/positive', {
+        saveTerms() {
+            fetch(this.endpoint + "/content/disclaimer", {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     title: this.title,
-                    content: this.content
-                })
-            })
-        }
+                    content: this.content,
+                }),
+            });
+        },
     }
-}
+};
 </script>
 <style scoped>
     #preview .v-card:hover {

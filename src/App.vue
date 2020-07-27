@@ -5,16 +5,7 @@
       color="primary"
       dark
     >
-      <template v-slot:extension>
-        <v-tabs align-with-title v-model="tab">
-          <v-tab key="general">General</v-tab>
-          <v-tab key="journeys">Journeys</v-tab>
-          <v-tab key="resources">Resources</v-tab>
-        </v-tabs>
-      </template>
-      <div class="d-flex align-center">
-        <h1>Rekommend Management</h1>
-      </div>
+      <v-toolbar-title>Rekommend Management</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -26,6 +17,15 @@
         <span class="mr-2">Latest Release</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
+
+      <template v-slot:extension>
+        <v-tabs grow v-model="tab">
+          <v-tab key="general">General</v-tab>
+          <v-tab key="journeys">Journeys</v-tab>
+          <v-tab key="resources">Resources</v-tab>
+        </v-tabs>
+      </template>
+
     </v-app-bar>
     <v-tabs-items v-model="tab" class="fill-height">
       <v-tab-item key="general">
@@ -57,6 +57,6 @@ export default {
 
   data: () => ({
     tab: 'journeys'
-  }),
+  })
 };
 </script>

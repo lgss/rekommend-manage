@@ -37,11 +37,12 @@
       label="Exclude tags"
       multiple
       solo/>
+    <file-upload v-model="value.img"/>
     <v-subheader>Choices</v-subheader>
     <v-expansion-panels accordion>
       <draggable v-model="choiceOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
         <transition-group type="transition" :name="!drag ? 'flip-list' : null">
-          <v-expansion-panel v-for="(choice, index) in value.choices" :key="index" >
+          <v-expansion-panel v-for="(choice, index) in value.choices" :key="choice.id">
             <v-expansion-panel-header style="width: 100%">
               <template #default="{open}">
                 <v-icon class="handle flex-grow-0" >mdi-drag</v-icon>
@@ -61,6 +62,7 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <v-text-field label="Choice label" v-model="choice.value"/>
+              <file-upload v-model="choice.img"/>
               <v-combobox
                 v-model="choice.tags"
                 chips
@@ -111,13 +113,15 @@
 </template>
 
 <script>
- import draggable from 'vuedraggable'
- import typeName from '../../utils/types.js'
+  import draggable from 'vuedraggable'
+  import FileUpload from "./FileUpload";
+  import typeName from '../../utils/types.js'
 
   export default {
     name: 'ChoiceEditor',
     components: {
-      draggable
+      draggable,
+      FileUpload
     },
     data() {
       return {
@@ -125,10 +129,13 @@
         errorMessages: ''
       }
     },
-    created() {
-      if(this.value.choices === undefined) {
-        this.value.choices = []
-      }
+    watch: {
+        value: function() {
+            if (!this.value.choices)
+                this.value.choices = []  
+            else
+              this.value.choices = this.value.choices.map(x => {x.id = this.uuidv4(); x.img = {}; return x})
+        }
     },
     props: ['value'],
     computed: {
@@ -153,9 +160,17 @@
       }
     },
     methods: {
+      uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+      },
       append() {
         this.value.choices.push({
           value: "New choice",
+          id: this.uuidv4(),
+          img: {},
           choices: [],
           tags: []
         })
