@@ -1,7 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1" v-model="drawer">
-      <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-left </v-icon>
+    <v-navigation-drawer app absolute permanent fixed disable-resize-watcher :clipped="true" color="blue--lighten-1">
       <v-select :items="journeys" v-model="currentJourney" item-text="label" return-object label="Journey"  v-on:input="journeySelector"></v-select>
       <v-divider></v-divider>
       <v-container v-if="currentJourney">
@@ -41,9 +40,8 @@
         New journey
       </v-list-item>
     </v-navigation-drawer>
-    <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-right </v-icon>
     <v-content>
-      <v-container fluid class="fill-height" v-if="currentJourney">
+      <v-container class="fill-height" v-if="currentJourney">
         <v-container>
           <v-btn-toggle>
             <v-btn v-if="currentJourney.id" @click="updateJourney">Update</v-btn>
@@ -87,8 +85,7 @@ export default {
       field: {fieldType: "div"},
       interactionType: '',
       errorMessages: [],
-      endpoint: process.env.VUE_APP_API_ENDPOINT,
-      drawer: true
+      endpoint: process.env.VUE_APP_API_ENDPOINT
     }
   },
   created() {
@@ -182,6 +179,9 @@ export default {
               },
               {
                 paramName: "doc", paramValue: (this.currentJourney.doc)
+              },
+              {
+                paramName: "img", paramValue: (this.currentJourney.img)
               }
             ]
           })
