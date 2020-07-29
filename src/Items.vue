@@ -41,7 +41,7 @@
       </v-list-item>
     </v-navigation-drawer>
     <v-content>
-      <v-container class="fill-height" v-if="currentJourney">
+      <v-container fluid class="fill-height" v-if="currentJourney">
         <v-container>
           <v-btn-toggle>
             <v-btn v-if="currentJourney.id" @click="updateJourney">Update</v-btn>
