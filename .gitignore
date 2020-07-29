@@ -5,7 +5,6 @@ node_modules
 .aws-sam/
 
 # local env files
-.env
 .env.local
 .env.*.local
 
