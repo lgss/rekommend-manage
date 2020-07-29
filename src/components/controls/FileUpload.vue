@@ -39,8 +39,8 @@ export default {
     },
     computed: {
         image: {
-            get: () => this.value || {},
-            set: (newValue) => this.$emit('input', newValue)
+            get: function() {return this.value || {}},
+            set: function(newValue) {return this.$emit('input', newValue)}
         }
     },
     methods: {
