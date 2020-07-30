@@ -19,12 +19,6 @@
             </v-list-item-icon>
           New page
         </v-list-item>
-        <v-list-item @click="copy">
-          <v-list-item-icon>
-              <v-icon>mdi-content-copy</v-icon>
-          </v-list-item-icon>
-          Copy JSON
-        </v-list-item>
         <v-list-item color="primary" @click="deleteJourney">
           <v-list-item-icon>
               <v-icon>mdi-delete</v-icon>
@@ -67,7 +61,7 @@
 import ChoiceEditor from './components/controls/ChoiceEditor.vue'
 import TextBlockEditor from './components/controls/TextBlockEditor.vue'
 import PageEditor from './components/controls/PageEditor.vue'
-import JouryneyEditor from './components/controls/JourneyEditor.vue'
+import JourneyEditor from './components/controls/JourneyEditor.vue'
 
 export default {
   components: {
@@ -75,7 +69,7 @@ export default {
     'multiple-choice-input': ChoiceEditor,
     'page': PageEditor,
     'stimulus': TextBlockEditor,
-    'journey': JouryneyEditor
+    'journey': JourneyEditor
   },
   data() {
     return {
@@ -112,9 +106,6 @@ export default {
     loadEditor(obj, fieldType) {
       this.field = obj
       this.interactionType = fieldType || obj.fieldType
-    },
-    copy() {
-      // navigator.clipboard.writeText(JSON.stringify(this.pages, null, 2))
     },
     newPage() {
       this.currentJourney.doc.pages.push({title: "New page", items: []})
@@ -226,3 +217,12 @@ export default {
   }
 }
 </script>
+
+<!-- this is a bit of hack but it fixes an issue where if you resize the viewport to a 
+ width of less 1264px, it'll hide content behind the navigation drawer. I think it'<style scoped>
+ a bug in Vuetify... -->
+<style scoped>
+  main {
+    padding-left: 256px !important;
+  }
+</style>
