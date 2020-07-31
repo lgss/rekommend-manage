@@ -1,25 +1,21 @@
 <template>
     <v-form ref="form">
         <v-row>
-            <v-col>
+            <v-col md="auto">
                 <v-card width="116" class="pa-2">
-                    <v-img max-height="100" max-width="100" :contain="true" :src="displayImage()"/>
+                    <v-progress-circular :indeterminate="true" v-if="loading" />
+                    <label class="upl" v-else for="img-upload">
+                        <input id="img-upload" title="upload a new image" v-show="false" 
+                            @change="selectImage" accept="image/*" type="file"/>
+                        <v-img max-height="100" max-width="100" :contain="true" :src="displayImage()"/>
+                    </label>
+                    <v-btn v-if="image.src" class="delete" top absolute small fab @click="remove">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
                 </v-card>
             </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="6">
-                <v-file-input :show-size="true" :loading="loading" accept="image/*" label="Choose an image" @change="selectImage"/>
-            </v-col>
-            <v-col>
-                <v-text-field
-                    ref="altText"
-                    label="Image description (alt text)"
-                    v-model="altText"
-                />
-            </v-col>
-            <v-col>
-                <v-btn v-if="value" color="primary" depressed @click="remove"> Remove</v-btn>
+            <v-col v-show="image.src">
+                <v-text-field ref="altText" label="Image description (alt text)" v-model="image.alt" />
             </v-col>
         </v-row>  
     </v-form>
@@ -42,16 +38,9 @@ export default {
         }
     },
     computed: {
-        altText: {
-            get: function() {
-                if (this.value && this.value.alt) {
-                    return this.value.alt
-                }
-                return ""
-            },
-            set: function(newValue) {
-                this.value.alt = newValue
-            }
+        image: {
+            get: function() {return this.value || {}},
+            set: function(newValue) {return this.$emit('input', newValue)}
         }
     },
     methods: {
@@ -63,23 +52,34 @@ export default {
         },
         selectImage(image) {
             this.loading = true
-            uploadImage(image)
+            uploadImage(image.target.files[0])
                 .then(async fn => {
                     // delete the prior image
-                     if (this.value.src) 
+                     if (this.image.src) 
                         await this.remove()
 
-                    this.value.src = fn
+                    this.image.src = fn
                     this.loading = false
                     return fn
                 })
         },
         remove() {
-            return deleteFile(this.value.src)
+            return deleteFile(this.image.src)
                 .then(() => {
-                    this.value.src = null
+                    // there's probably a better way of triggering the reactivity...
+                    this.image = Object.assign({}, this.image, {src: null})
                 })
         },
     },
 };
 </script>
+
+<style scoped>
+  .upl {
+      cursor: pointer;
+  }
+
+  .delete {
+      right: -20px
+  }
+</style>

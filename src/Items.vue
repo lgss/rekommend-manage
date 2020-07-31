@@ -1,7 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1" v-model="drawer">
-      <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-left </v-icon>
+    <v-navigation-drawer app absolute permanent fixed disable-resize-watcher :clipped="true" color="blue--lighten-1">
       <v-select :items="journeys" v-model="currentJourney" item-text="label" return-object label="Journey"  v-on:input="journeySelector"></v-select>
       <v-divider></v-divider>
       <v-container v-if="currentJourney">
@@ -20,12 +19,6 @@
             </v-list-item-icon>
           New page
         </v-list-item>
-        <v-list-item @click="copy">
-          <v-list-item-icon>
-              <v-icon>mdi-content-copy</v-icon>
-          </v-list-item-icon>
-          Copy JSON
-        </v-list-item>
         <v-list-item color="primary" @click="deleteJourney">
           <v-list-item-icon>
               <v-icon>mdi-delete</v-icon>
@@ -41,7 +34,6 @@
         New journey
       </v-list-item>
     </v-navigation-drawer>
-    <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-right </v-icon>
     <v-content>
       <v-container fluid class="fill-height" v-if="currentJourney">
         <v-container>
@@ -69,7 +61,7 @@
 import ChoiceEditor from './components/controls/ChoiceEditor.vue'
 import TextBlockEditor from './components/controls/TextBlockEditor.vue'
 import PageEditor from './components/controls/PageEditor.vue'
-import JouryneyEditor from './components/controls/JourneyEditor.vue'
+import JourneyEditor from './components/controls/JourneyEditor.vue'
 
 export default {
   components: {
@@ -77,7 +69,7 @@ export default {
     'multiple-choice-input': ChoiceEditor,
     'page': PageEditor,
     'stimulus': TextBlockEditor,
-    'journey': JouryneyEditor
+    'journey': JourneyEditor
   },
   data() {
     return {
@@ -87,8 +79,7 @@ export default {
       field: {fieldType: "div"},
       interactionType: '',
       errorMessages: [],
-      endpoint: process.env.VUE_APP_API_ENDPOINT,
-      drawer: true
+      endpoint: process.env.VUE_APP_API_ENDPOINT
     }
   },
   created() {
@@ -115,9 +106,6 @@ export default {
     loadEditor(obj, fieldType) {
       this.field = obj
       this.interactionType = fieldType || obj.fieldType
-    },
-    copy() {
-      // navigator.clipboard.writeText(JSON.stringify(this.pages, null, 2))
     },
     newPage() {
       this.currentJourney.doc.pages.push({title: "New page", items: []})
@@ -182,6 +170,9 @@ export default {
               },
               {
                 paramName: "doc", paramValue: (this.currentJourney.doc)
+              },
+              {
+                paramName: "img", paramValue: (this.currentJourney.img)
               }
             ]
           })
@@ -226,3 +217,12 @@ export default {
   }
 }
 </script>
+
+<!-- this is a bit of hack but it fixes an issue where if you resize the viewport to a 
+ width of less 1264px, it'll hide content behind the navigation drawer. I think it'<style scoped>
+ a bug in Vuetify... -->
+<style scoped>
+  main {
+    padding-left: 256px !important;
+  }
+</style>

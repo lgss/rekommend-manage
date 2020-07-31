@@ -4,11 +4,10 @@ exports.doUpload = (extension, content, endpoint) => {
   const endpnt = endpoint || defEndpoint
   return this.getUpload(extension, endpnt)
     .then((doc) => {
-        fetch(doc.uploadURL, {
+        return fetch(doc.uploadURL, {
             method: "PUT",
             body: content
-        })
-        return doc.filename;
+        }).then(() => doc.filename);
     });
 }
 
