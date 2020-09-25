@@ -64,6 +64,7 @@ export default {
       errorMessages: ''
     }
   },
+  name: "page-editor",
   props: ['value'],
   methods: {
     append(index) {
