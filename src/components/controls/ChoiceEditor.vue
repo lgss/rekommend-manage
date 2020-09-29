@@ -19,6 +19,15 @@
       placeholder="Enter a label"
       required
     ></v-text-field>
+    <v-text-field
+      ref="Label"
+      v-model="value.example"
+      :rules="[() => !!value.example || 'This field is required']"
+      :error-messages="errorMessages"
+      label="Example"
+      placeholder="Enter an example"
+      required
+    ></v-text-field>
     <v-switch
       v-model="value.isMandatory"
       label="is mandatory?"
