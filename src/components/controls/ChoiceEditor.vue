@@ -20,13 +20,10 @@
       required
     ></v-text-field>
     <v-text-field
-      ref="Label"
+      ref="Example"
       v-model="value.example"
-      :rules="[() => !!value.example || 'This field is required']"
-      :error-messages="errorMessages"
       label="Example"
       placeholder="Enter an example"
-      required
     ></v-text-field>
     <v-switch
       v-model="value.isMandatory"
