@@ -28,7 +28,7 @@
                                 </v-app-bar>
                             </v-col>
                         </v-row>
-                        <v-row class="">
+                        <v-row class="mx-5">
                             <v-container>
                                     <h1 id="title">{{ title }}</h1>
                             </v-container>

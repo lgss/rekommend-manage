@@ -10,7 +10,7 @@
                 </v-col>
                 </v-row>
                 <v-card>
-                    <v-row>
+                    <v-row class="mx-5"> 
                         <v-container>
                                 <h1 id="title">{{ title }}</h1>
                         </v-container>
@@ -20,7 +20,7 @@
                             v-html="content"
                         ></v-container>
                     </v-row>
-                    <v-row>
+                    <v-row class="mx-5">
                         <v-col>
                             <v-btn id="btn-view-resources">View resources</v-btn>
                             <v-btn id="btn-cancel">Cancel</v-btn>

@@ -29,7 +29,7 @@
                                 </v-app-bar>
                             </v-col>
                         </v-row>
-                       <v-row>
+                       <v-row class="mx-5">
                             <v-container>
                                     <h1 id="title">{{ title }}</h1>
                             </v-container>
@@ -39,7 +39,7 @@
                                 v-html="content"
                             ></v-container>
                         </v-row>
-                        <v-row>
+                        <v-row class="mx-5">
                             <v-col>
                                 <v-btn name='btn-start-again'>START AGAIN</v-btn>
                             </v-col>
