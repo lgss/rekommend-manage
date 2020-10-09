@@ -28,14 +28,14 @@
                                 </v-app-bar>
                             </v-col>
                         </v-row>
-                        <v-row class="text-left">
+                        <v-row class="mx-5">
                             <v-container>
                                     <h1 id="title">{{ title }}</h1>
                             </v-container>
                             <v-divider />
                             <v-container
                                 id="content"
-                                class="text-left"
+                                class=""
                                 v-html="content"
                             ></v-container>
                         </v-row>
@@ -138,7 +138,6 @@ export default {
     }
     #preview {
         transform: matrix(0.75, 0, 0, 0.75, 0, 0);
-        text-align: center;
         margin-top: 0px;
         margin-left: 20px;
         margin-right: 20px;
