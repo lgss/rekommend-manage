@@ -16,6 +16,7 @@
     "sass": "^1.26.2",
     "sass-loader": "^8.0.2",
     "tiptap-vuetify": "^2.13.2",
+    "uuid": "^8.3.1",
     "vue": "^2.6.11",
     "vuedraggable": "^2.23.2",
     "vuetify": "^2.2.15",
