@@ -9,6 +9,7 @@
         <v-list-item color="primary" @click="changeView('positive')">Positive outcome</v-list-item>
         <v-list-item color="primary" @click="changeView('terms')">Terms and Conditions</v-list-item>
         <v-list-item color="primary" @click="changeView('transition')">Journey transition</v-list-item>
+        <v-list-item color="primary" @click="changeView('a11y')">Accessibility statement</v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-right </v-icon>
@@ -25,7 +26,7 @@ import PositiveEditor from './components/controls/PositiveEditor.vue'
 import TermsEditor from './components/controls/TermsEditor.vue'
 import CompletedEditor from './components/controls/CompletedEditor.vue'
 import TransitionEditor from "./components/controls/TransitionEditor.vue"
-
+import A11yEditor from './components/controls/A11yEditor.vue'
 /* eslint-disable */
 export default {
   components: {
@@ -34,7 +35,8 @@ export default {
     'landing': LandingEditor,
     'positive': PositiveEditor,
     'completed': CompletedEditor,
-    "transition": TransitionEditor
+    "transition": TransitionEditor,
+    'a11y': A11yEditor
   },
   data() {
     return {

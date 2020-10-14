@@ -120,7 +120,6 @@ export default {
     }
     #preview {
         transform: matrix(0.75, 0, 0, 0.75, 0, 0);
-        text-align: center;
         margin-top: 0px;
         margin-left: 20px;
         margin-right: 20px;

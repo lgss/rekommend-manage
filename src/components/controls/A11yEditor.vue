@@ -28,14 +28,14 @@
                                 </v-app-bar>
                             </v-col>
                         </v-row>
-                        <v-row class="mx-5">
+                        <v-row class="text-left">
                             <v-container>
                                     <h1 id="title">{{ title }}</h1>
                             </v-container>
                             <v-divider />
                             <v-container
                                 id="content"
-                                class=""
+                                class="text-left"
                                 v-html="content"
                             ></v-container>
                         </v-row>
@@ -43,7 +43,7 @@
                             <v-card flat tile :color="appSecondary">
                                 <v-card-text>
                                     <a class="white--text">
-                                        Terms and Conditions
+                                        Accessibility statement
                                     </a>
                                 </v-card-text>
                             </v-card>
@@ -63,7 +63,7 @@
             </v-row>
             <v-row justify="center">
                 <v-col>
-                    <v-btn @click="saveTerms" color="success">Save</v-btn>
+                    <v-btn @click="saveA11y" color="success">Save</v-btn>
                 </v-col>
             </v-row>
         </v-container>
@@ -74,7 +74,7 @@
 import HTMLEditor from "./HTMLEditor"; 
 /* eslint-disable */
 export default {
-    name: "TermsEditor",
+    name: "A11yEditor",
     created() {
         Promise.all([
             fetch(this.endpoint + "/theme")
@@ -84,7 +84,7 @@ export default {
                     this.appPrimary = x.primary;
                     this.appSecondary = x.secondary;
                 }),
-            fetch(this.endpoint + "/content/disclaimer")
+            fetch(this.endpoint + "/content/a11y")
                 .then((x) => (x.ok ? x.json() : Promise.reject(x)))
                 .then((x) => {
                     this.title = x.title;
@@ -117,8 +117,8 @@ export default {
         };
     },
     methods: {
-        saveTerms() {
-            fetch(this.endpoint + "/content/disclaimer", {
+        saveA11y() {
+            fetch(this.endpoint + "/content/a11y", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -138,6 +138,7 @@ export default {
     }
     #preview {
         transform: matrix(0.75, 0, 0, 0.75, 0, 0);
+        text-align: center;
         margin-top: 0px;
         margin-left: 20px;
         margin-right: 20px;

@@ -29,7 +29,7 @@
                         </v-app-bar>
                     </v-col>
                 </v-row>
-                <v-row>
+                <v-row class="mx-5">
                     <v-container>
                             <h1 id="title">{{ title }}</h1>
                     </v-container>
@@ -39,7 +39,7 @@
                         v-html="content"
                     ></v-container>
                 </v-row>
-                <v-row>
+                <v-row class="mx-5">
                     <v-col>
                         <v-btn id="btn-home-start-assessment">Go to assessment</v-btn>
                     </v-col>
@@ -144,7 +144,6 @@ export default {
     }
     #preview {
         transform: matrix(0.75, 0, 0, 0.75, 0, 0);
-        text-align: center;
         margin-top: 0px;
         margin-left: 20px;
         margin-right: 20px;
