@@ -48,6 +48,7 @@ export default {
     name: "ParentEditor",
     data: () => ({
         valid: true,
+        endpoint: process.env.VUE_APP_API_ENDPOINT,
         rules: {
             label : [
                 v => (!!v && v != "New parent") || 'Name is required',
@@ -55,12 +56,15 @@ export default {
                 v => !(/^[ \t]+/.test(v)) || 'Name must not begin with an empty space'
             ]
         },
-        journeyLookup: [
-            { name: 'Journey One', id: '52c3fe65-3b38-440c-959d-66bd10d4b900'},
-            { name: 'Journey Two', id: '22a5773f-9d31-4c98-8390-e43fcabe6997'},
-            { name: 'Journey Three', id: '84f7361e-49de-4c6a-abbb-f76cb31f2fe1'}
-        ]
+        journeyLookup: []
     }),
+    created() {
+        fetch(this.endpoint + "/journeys")
+            .then((x) => x.json())
+            .then((x) => {
+                this.journeyLookup = x.map((j) => ({ id: j.id, name: j.label }));
+            });
+    },
     props: ["value"],
     watch: {
         value: function() {
