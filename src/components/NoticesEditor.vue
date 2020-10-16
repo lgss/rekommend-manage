@@ -2,9 +2,7 @@
     <div>
         <h2>Notices</h2>
         <div v-for="notice in notices" :key="notice">
-            <Notice :content="notice.content" @content="notice.content = $event">
-
-            </Notice>
+            <Notice :content="notice.content" @content="notice.content = $event"/>
             {{notice.content}}
             <v-btn @click="deleteNotice(notice.id)">Delete</v-btn>
         </div>

@@ -1,8 +1,6 @@
 <template>
     <div>
-        <HTMLEditor :value="content" @input="$emit('content', $event)">
-
-        </HTMLEditor>
+        <HTMLEditor :value="content" @input="$emit('content', $event)"/>
     </div>
 </template>
 
