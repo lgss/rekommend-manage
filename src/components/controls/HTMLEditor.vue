@@ -3,7 +3,7 @@
         <v-label :v-if="label">{{label}}</v-label>
         <v-input :rules="internalRules" :error-messages="errorMessages" :value="content">
             <v-container full-width>
-                <tiptap-vuetify v-model="content" :extensions="extensions"/>
+                <tiptap-vuetify v-model="content" :extensions="extensions" :native-extensions="nativeExtensions"/>
             </v-container>
         </v-input>
     </div>
@@ -11,6 +11,7 @@
 
 <script>
 import { TiptapVuetify, Heading, Bold, Italic, Underline, Paragraph, BulletList, OrderedList, ListItem, Link, HardBreak, HorizontalRule, History } from 'tiptap-vuetify'
+import CaptionImage from '@/plugins/caption-images-editor.js'
 
 export default {
     props: ['label', 'mandatory', 'rules'],
@@ -39,6 +40,9 @@ export default {
                 HorizontalRule,
                 Paragraph,
                 HardBreak
+            ],
+            nativeExtensions: [
+                new CaptionImage()
             ]
         }
     },
