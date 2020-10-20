@@ -13,7 +13,7 @@
         <v-list-item color="primary" @click="newParent">
           <v-list-item-icon>
             <v-icon>mdi-plus</v-icon>
-          </v-list-item-icon>New Parent
+          </v-list-item-icon>New Category
         </v-list-item>
       </v-list>
     </v-navigation-drawer>

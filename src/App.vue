@@ -21,7 +21,7 @@
       <template v-slot:extension>
         <v-tabs grow v-model="tab">
           <v-tab key="general">General</v-tab>
-          <v-tab key="parents">Journey Parents</v-tab>
+          <v-tab key="parents">Journey Categories</v-tab>
           <v-tab key="journeys">Journeys</v-tab>
           <v-tab key="resources">Resources</v-tab>
         </v-tabs>
