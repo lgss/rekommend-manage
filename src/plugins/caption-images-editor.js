@@ -27,14 +27,14 @@ export default class CaptionImagesEditor extends Node {
           src: dom.querySelector('img').src,
           alt: dom.querySelector('img').alt,
           title: dom.querySelector('img').title,
-          caption: dom.textContent,
+          caption: dom.querySelector('span') ? dom.querySelector('span').textContent : '',
         })
       }],
       toDOM: (node) => {
         return ['div', 
           {class: 'caption-image'},
           ['img', {src: node.attrs.src, alt: node.attrs.alt, title: node.attrs.title, height: '100px'}],
-          //['span', 0]
+          ['span', node.attrs.caption]
         ]
       },
     }
@@ -77,9 +77,6 @@ export default class CaptionImagesEditor extends Node {
       // Because the version of vue doesn't ship with
       // the template compiler
       render: function(createElement) {
-           console.log(this.node)
-           console.log(`Computed src: ${this.src}`)
-          // Wrap it all in a div
           return createElement('div', {
               class: 'caption-image',
               style: 'border: solid grey 1px; display: flex; align-items: center'
