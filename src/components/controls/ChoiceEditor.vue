@@ -7,7 +7,6 @@
       :rules="[() => !!value.name || 'This field is required']"
       :error-messages="errorMessages"
       label="Name"
-      placeholder="Enter a name"
       required
     ></v-text-field>
     <v-text-field
@@ -16,14 +15,12 @@
       :rules="[() => !!value.label || 'This field is required']"
       :error-messages="errorMessages"
       label="Label"
-      placeholder="Enter a label"
       required
     ></v-text-field>
     <v-text-field
       ref="Example"
       v-model="value.example"
-      label="Example"
-      placeholder="Enter an example"
+      label="Example or rubric"
     ></v-text-field>
     <v-switch
       v-model="value.isMandatory"
