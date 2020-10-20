@@ -10,16 +10,7 @@
             label="Label"
             placeholder="Enter journey name"
             required
-          ></v-text-field>
-        <v-text-field
-            ref="Parent"
-            v-model="value.parent"
-            :rules="[() => !!value.parent || 'This field is required']"
-            :error-messages="errorMessages"
-            label="Parent"
-            placeholder="Enter journey parent"
-            required
-          ></v-text-field>
+        ></v-text-field>
         <file-upload v-model="value.img"/>
         <v-subheader>Pages</v-subheader>
         <v-expansion-panels accordion>

@@ -113,7 +113,7 @@ export default {
     newJourney() {
       let journey = {
         label: "New Journey",
-        parent: "",
+        img: {},
         doc: {
           pages: []
         }
@@ -166,9 +166,6 @@ export default {
                 paramName: "label", paramValue: this.currentJourney.label
               },
               {
-                paramName: "parent", paramValue: this.currentJourney.parent
-              },
-              {
                 paramName: "doc", paramValue: (this.currentJourney.doc)
               },
               {
@@ -186,7 +183,6 @@ export default {
       // validate journey
       //this.hasValue("journey id",this.currentJourney.id);
       this.hasValue("journey label",this.currentJourney.label);
-      this.hasValue("journey parent",this.currentJourney.parent);
       // validate pages 
       this.hasMinimum("journey pages",this.currentJourney.doc.pages, 1); // check there are pages
       this.currentJourney.doc.pages.forEach(page => {
