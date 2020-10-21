@@ -71,12 +71,13 @@ export default {
                          this.remove(this.image.src)
 
                     this.image.src = fn
-                    this.loading = false
                     return fn
                 })
                 .catch(err => {
                     console.log(err)
                     this.image.src = ''
+                })
+                .finally(() => {
                     this.loading = false
                 })
         },
