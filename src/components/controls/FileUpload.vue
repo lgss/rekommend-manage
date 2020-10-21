@@ -4,18 +4,19 @@
             <v-col md="auto">
                 <v-card width="116" class="pa-2">
                     <v-progress-circular :indeterminate="true" v-if="loading" />
-                    <label class="upl" v-else for="img-upload">
-                        <input id="img-upload" title="upload a new image" v-show="false" 
+                    <label class="upl" v-else >
+                        <input title="upload a new image" v-show="false" 
                             @change="selectImage" accept="image/*" type="file"/>
                         <v-img max-height="100" max-width="100" :contain="true" :src="displayImage()"/>
                     </label>
-                    <v-btn v-if="image.src" class="delete" top absolute small fab @click="remove">
+                    <v-btn v-if="image.src" class="delete" top absolute small fab @click="remove()">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                 </v-card>
             </v-col>
             <v-col v-show="image.src">
-                <v-text-field ref="altText" label="Image description (alt text)" v-model="image.alt" />
+                <v-text-field label="Image description (alt text)" v-model="image.alt" />
+                <v-text-field label="Image mouseover (title)" v-model="image.title" />
             </v-col>
         </v-row>  
     </v-form>
@@ -34,43 +35,65 @@ export default {
     props: ["value"],
     data() {
         return {
-            loading: false
+            loading: false,
+            internal_image: {
+                src: '',
+                alt: '',
+                title: ''
+            }
         }
     },
     computed: {
         image: {
-            get: function() {return this.value || {}},
-            set: function(newValue) {return this.$emit('input', newValue)}
+            get: function() {return this.internal_image},
+            set: function(newValue) {
+                this.internal_image = newValue
+                return this.$emit('input', newValue)
+            }
         }
+    },
+    created() {
+        this.internal_image = this.value
     },
     methods: {
         displayImage() {
-            if (this.value && this.value.src)
-                return endpoint + '/image/' + this.value.src
+            if (this.internal_image && this.internal_image.src)
+                return endpoint + '/image/' + this.internal_image.src
             
             return "/img/image-placeholder.png"
         },
         selectImage(image) {
             this.loading = true
             uploadImage(image.target.files[0])
-                .then(async fn => {
+                .then(fn => {
+                    console.log(fn)
                     // delete the prior image
                      if (this.image.src) 
-                        await this.remove()
+                         this.remove(this.image.src)
 
                     this.image.src = fn
                     this.loading = false
                     return fn
                 })
+                .catch(err => {
+                    console.log(err)
+                    this.image.src = ''
+                    this.loading = false
+                })
         },
-        remove() {
-            return deleteFile(this.image.src)
-                .then(() => {
-                    // there's probably a better way of triggering the reactivity...
-                    this.image = Object.assign({}, this.image, {src: null})
+        remove(url) {
+            return deleteFile(url || this.image.src)
+                .finally(() => {
+                    if (!url)
+                        this.image = Object.assign({}, this.image, {src: null})
                 })
         },
     },
+    watch: {
+        value(newValue) {
+            this.internal_image = newValue
+        }
+    }
 };
 </script>
 
