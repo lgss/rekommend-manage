@@ -66,7 +66,6 @@ export default {
             this.loading = true
             uploadImage(image.target.files[0])
                 .then(fn => {
-                    console.log(fn)
                     // delete the prior image
                      if (this.image.src) 
                          this.remove(this.image.src)
