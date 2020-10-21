@@ -1,22 +1,48 @@
 import { Node } from 'tiptap'
-// eslint-disable-next-line no-unused-vars
-import VTextField from 'vuetify'
-//import FileUpload from '@/components/controls/FileUpload'
+import { nodeInputRule } from 'tiptap-commands'
+
+const IMAGE_INPUT_REGEX = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/
 
 export default class CaptionImagesEditor extends Node {
   commands({ type }) {
-    return () => (state, dispatch) => dispatch(state.tr.replaceSelectionWith(type.create()))
+    return attrs => (state, dispatch) => {
+      const { selection } = state
+      const position = selection.$cursor ? selection.$cursor.pos : selection.$to.pos
+      const node = type.create(attrs)
+      const transaction = state.tr.insert(position, node)
+      dispatch(transaction)
+    }
   }
 
-  get name() {return 'CaptionImagesEditor'}
+  get name() {return 'caption_image'}
+
+
+  inputRules({ type }) {
+    return [
+      nodeInputRule(IMAGE_INPUT_REGEX, type, match => {
+        const [, alt, src, title] = match
+        return {
+          src,
+          alt,
+          title,
+        }
+      }),
+    ]
+  }
 
   get schema() {
     return {
       attrs: {
         src: {},
-        alt: {},
-        title: {},
-        caption: {}
+        alt: {
+          default: ''
+        },
+        title: {
+          default: ''
+        },
+        caption: {
+          default: ''
+        }
       },
       group: 'block',
       selectable: true,
