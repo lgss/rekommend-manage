@@ -90,7 +90,6 @@ export default {
                 },
                 content: this.value
             }),
-            activeBtns: [],
             intenralRules: this.rules,
             errorMessages: []
         }
