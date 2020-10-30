@@ -1,55 +1,43 @@
 <template>
   <div>
     <v-navigation-drawer app absolute permanent fixed disable-resize-watcher :clipped="true" color="blue--lighten-1">
-      <v-select :items="journeys" v-model="currentJourney" item-text="label" return-object label="Journey"  v-on:input="journeySelector"></v-select>
-      <v-divider></v-divider>
-      <v-container v-if="currentJourney">
-        <v-list-group v-for="(page, index) in currentJourney.doc.pages" :key="index">
-          <template v-slot:activator>
-            <v-list-item-title @click="loadEditor(page, 'page')">Page {{index + 1}} - {{page.title}}</v-list-item-title>
-          </template>
-          <v-list-item @click="loadEditor(item)" link v-for="(item, itemIndex) in page.items" :key="itemIndex">
-            <v-list-item-title>{{item.fieldType}}</v-list-item-title>
-            <v-list-item-subtitle>{{item.label}}</v-list-item-subtitle>
-          </v-list-item>
-        </v-list-group>
-        <v-list-item color="primary" @click="newPage" >
+      <v-list>
+        <v-list-item color="primary" @click="newJourney">
           <v-list-item-icon>
               <v-icon>mdi-plus</v-icon>
-            </v-list-item-icon>
-          New page
+          </v-list-item-icon>
+          New journey
         </v-list-item>
-        <v-list-item color="primary" @click="deleteJourney">
-          <v-list-item-icon>
-              <v-icon>mdi-delete</v-icon>
-            </v-list-item-icon>
-          Delete journey
-        </v-list-item>
-        <v-divider></v-divider>
-      </v-container>
-      <v-list-item color="primary" @click="newJourney">
-        <v-list-item-icon>
-            <v-icon>mdi-plus</v-icon>
-        </v-list-item-icon>
-        New journey
-      </v-list-item>
+        <v-divider/>
+        <v-list-group v-for="(journey, index) in journeys" :key="'j' + index" prepend-icon="mdi-transit-connection-variant">
+          <template v-slot:activator>
+            <v-list-item-title @click="loadJourney(journey)">{{journey.label}}</v-list-item-title>
+          </template>
+
+          <v-list-group sub-group no-action v-for="(page, index) in journey.doc.pages" :key="index" append-icon="mdi-list-status">
+            <template v-slot:activator>
+              <v-list-item-title @click="loadEditor(page, 'page')">{{index + 1}}. {{page.title}}</v-list-item-title>
+            </template>
+            <v-list-item @click="loadEditor(item)" link v-for="(item, itemIndex) in page.items" :key="itemIndex">
+              <v-list-item-title>{{itemType(item.fieldType)}}</v-list-item-title>
+              <v-list-item-icon>
+                <v-icon>mdi-format-list-checks</v-icon>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list-group>
+        </v-list-group>
+      </v-list>
     </v-navigation-drawer>
     <v-content>
-      <v-container fluid class="fill-height" v-if="currentJourney">
-        <v-container>
-          <v-btn-toggle>
-            <v-btn v-if="currentJourney.id" @click="updateJourney">Update</v-btn>
-            <v-btn v-else @click="createJourney">Save</v-btn>
-          </v-btn-toggle>
-        </v-container>
-        <v-container>
-          <h2 v-if="errorMessages.length > 0">There is a problem</h2>
-          <v-list v-if="errorMessages.length > 0">
-            <v-list-item v-for="(error, index) in errorMessages" :key="index">
-              <v-list-item-title>{{error.message}}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-container>
+      <v-container fluid class="fill-height">
+          <div v-if="errorMessages.length > 0">
+            <h2>There is a problem</h2>
+            <ul>
+              <li v-for="(error, index) in errorMessages" :key="index">
+                {{error.message}}
+              </li>
+            </ul>
+          </div>
         <component :is="interactionType" v-model="field"/>
       </v-container>
     </v-content>
@@ -61,7 +49,9 @@
 import ChoiceEditor from './components/controls/ChoiceEditor.vue'
 import TextBlockEditor from './components/controls/TextBlockEditor.vue'
 import PageEditor from './components/controls/PageEditor.vue'
-import JourneyEditor from './components/controls/JourneyEditor.vue'
+import JourneyEditor from './components/JourneyEditor.vue'
+// eslint-disable-next-line no-unused-vars
+import { itemTypeName } from './utils/itemTypes'
 
 export default {
   components: {
@@ -73,8 +63,8 @@ export default {
   },
   data() {
     return {
-      journeys: [],
       currentJourney: null,
+      journeys: [],
       item: 1,
       field: {fieldType: "div"},
       interactionType: '',
@@ -86,29 +76,27 @@ export default {
     fetch(this.endpoint +'/journeys')
       .then(reply => reply.json())
       .then(data => {
-        this.journeys = data.map(journey => {
-          if (!journey.img) 
-              journey.img = {}; 
-          for (const page of journey.doc.pages) 
-              for (let item of page.items)
-                  if (!item.img)
-                    item.img = {}       
-          return journey})
+        this.journeys = data
       })
   },
   methods: {
+    itemType(typeName) {
+      return itemTypeName(typeName)
+    },
     journeySelector() {
       this.errorMessages = [] 
-      //let arr = this.journeys.filter((journey)=>{return journey.id == this.currentJourneyId})
-      //this.currentJourney = arr[0]
-      this.loadEditor(this.currentJourney,'journey')
+      //this.loadEditor(this.currentJourney,'journey')
+    },
+
+    loadJourney(journey) {
+      this.loadEditor(journey, 'journey')
     },
     loadEditor(obj, fieldType) {
       this.field = obj
       this.interactionType = fieldType || obj.fieldType
     },
     newPage() {
-      this.currentJourney.doc.pages.push({title: "New page", items: []})
+      //this.currentJourney.doc.pages.push({title: "New page", items: []})
     },
     newJourney() {
       let journey = {
@@ -119,7 +107,7 @@ export default {
         }
       }
       this.journeys.push(journey)
-      this.currentJourney = journey;
+      //this.currentJourney = journey;
       this.journeySelector();
     },
     createJourney() {
@@ -128,30 +116,30 @@ export default {
       fetch(this.endpoint+'/journeys', {
         method:"POST",
         headers: { "content-type":"application/json"},
-        body: JSON.stringify(this.currentJourney)
+        //body: JSON.stringify(this.currentJourney)
       })
       .then(res=>res.json())
       .then(j => {
-        let index = this.journeys.indexOf(this.currentJourney);
+        let index = this.journeys.indexOf(0) //this.currentJourney);
         this.$set(this.journeys,index,j)
-        this.currentJourney = this.journeys[index]
+        //this.currentJourney = this.journeys[index]
       })
     },
-    deleteJourney() {
-      if (this.currentJourney.id) {
-        fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
+    deleteJourney(id) {
+      if (id) {
+        fetch(this.endpoint + '/journeys/' + id, {
           method: 'DELETE'
         })
         .then((res) => res.json())
         .then(() =>  {
-          this.journeys.splice(this.journeys.findIndex(j => j == this.currentJourney),1)
-          this.currentJourney = null
+          //this.journeys.splice(this.journeys.findIndex(j => j == this.currentJourney),1)
+          //this.currentJourney = null
           this.journeySelector()
         })
         .catch((err)=>console.error(err))
       } else {
         this.journeys.splice(this.journeys.findIndex(j => j == this.currentJourney),1)
-        this.currentJourney = null;
+        //this.currentJourney = null;
         this.journeySelector()
       }    
     },

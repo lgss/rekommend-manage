@@ -1,6 +1,6 @@
 <template>
   <v-container >
-    <h2>{{value.fieldType}}</h2>
+    <h2>{{typeName(value.fieldType)}}</h2>
     <v-text-field
       ref="Name"
       v-model="value.name"
@@ -118,7 +118,7 @@
 <script>
   import draggable from 'vuedraggable'
   import FileUpload from "./FileUpload";
-  import typeName from '../../utils/types.js'
+  import {itemTypeName} from '../../utils/itemTypes.js'
 
   export default {
     name: 'ChoiceEditor',
@@ -150,9 +150,6 @@
           ghostClass: "ghost"
         }
       },
-      interactionTypeName() {
-        return typeName(this.value.fieldType)
-      },
       choiceOrder: {
         get: function() {
           return this.value.choices
@@ -168,6 +165,9 @@
           var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
           return v.toString(16);
         });
+      },
+      typeName(typeId) {
+        return itemTypeName(typeId)
       },
       append() {
         this.value.choices.push({

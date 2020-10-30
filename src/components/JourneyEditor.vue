@@ -1,7 +1,8 @@
 <template>
     <v-container>
         <v-spacer/>
-        <h2>Journey</h2>
+        
+        <h2><v-icon>mdi-transit-connection-variant</v-icon>Journey</h2>
         <v-text-field
             ref="Label"
             v-model="value.label"
@@ -48,7 +49,7 @@
 
 <script>
 import draggable from 'vuedraggable'
- import FileUpload from "./FileUpload";
+ import FileUpload from "./controls/FileUpload";
 
 
 export default {

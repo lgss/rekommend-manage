@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import interactionTypes from '../../utils/types';
+import interactionTypes from '@/utils/itemTypes';
 
 export default {
   data() {
