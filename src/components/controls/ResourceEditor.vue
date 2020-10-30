@@ -20,8 +20,6 @@
             <html-editor
                 label="Content"
                 v-model="value.content"
-                :rules="rules.content"
-                :mandatory="true"
             />
             <file-upload ref="fileUpload" v-model="value.img"/>
             <v-text-field
