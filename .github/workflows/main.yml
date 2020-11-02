@@ -17,7 +17,21 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          VUE_APP_API_ENDPOINT: https://utnu872keb.execute-api.eu-west-2.amazonaws.com/dev/
+          TITLE: rekommend-manage
         run: |
           npm install
           npm run build
           aws s3 sync ./dist/ s3://rekommend-manage-dev
+
+      - name: Run tests
+        run: |
+          pip3 install unittest-xml-reporting
+          pip3 install selenium
+          VERSION="`wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE`"
+          wget "https://chromedriver.storage.googleapis.com/${VERSION}/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb
+          cd tests
+          python3 -m xmlrunner test_editor -o test_editor_results
