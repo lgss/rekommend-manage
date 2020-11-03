@@ -111,6 +111,11 @@ export default {
             command({ src })
         }
       },
+    },
+    watch: {
+        value(newValue) {
+            this.editor.setContent(newValue)
+        }
     }
 }
 </script>

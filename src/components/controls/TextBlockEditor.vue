@@ -19,7 +19,7 @@
       placeholder="Enter a label"
       required
     ></v-text-field>
-    <html-editor :mandatory="true" v-model="value.content"/>
+    <html-editor v-model="value.content"/>
   </v-container>
 </template>
 
