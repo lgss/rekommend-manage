@@ -1,29 +1,37 @@
 <template>
     <v-container>
         <v-spacer/>
-        
-        <h2><v-icon>mdi-transit-connection-variant</v-icon>Journey</h2>
-        <v-text-field
-            ref="Label"
-            v-model="value.label"
-            :rules="[() => !!value.label || 'This field is required']"
-            :error-messages="errorMessages"
-            label="Label"
-            placeholder="Enter journey name"
-            required
-        ></v-text-field>
+        <v-row>
+            <v-col cols="9">
+                <v-text-field
+                    ref="Label"
+                    prepend-icon="mdi-transit-connection-variant"
+                    v-model="value.label"
+                    :rules="[() => !!value.label || 'This field is required']"
+                    :error-messages="errorMessages"
+                    label="Journey name"
+                    placeholder="Enter journey name"
+                    required
+                ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+                <v-btn width="100%">Delete Journey</v-btn>
+            </v-col>
+        </v-row>
         <file-upload v-model="value.img"/>
         <v-subheader>Pages</v-subheader>
         <v-expansion-panels accordion>
             <draggable v-model="pageOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
                 <transition-group type="transition" :name="!drag ? 'flip-list' : null">
-                    <v-expansion-panel v-for="(x, index) in value.doc.pages" :key="index" >
+                    <v-expansion-panel v-for="(page, index) in value.doc.pages" :key="index" >
                         <v-expansion-panel-header style="width: 100%">
-                        <template>
+                        <template #default="{open}">
                             <v-icon class="handle flex-grow-0" >mdi-drag</v-icon>
-                            <!-- <v-fade-transition leave-absolute > -->
-                                {{x.title}}
-                            <!-- </v-fade-transition> -->
+                            <v-fade-transition leave>
+                                <span v-if="!open">
+                                  {{page.title}}
+                                </span>
+                            </v-fade-transition> 
                             <v-spacer/>
                         </template>
                         <template #actions>
@@ -35,6 +43,7 @@
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
                             <!-- content -->
+                            <page-editor embedded :value="page" />
                         </v-expansion-panel-content>
                     </v-expansion-panel>
                 </transition-group>
@@ -49,8 +58,8 @@
 
 <script>
 import draggable from 'vuedraggable'
- import FileUpload from "./controls/FileUpload";
-
+import FileUpload from "./controls/FileUpload";
+import PageEditor from '@/components/controls/PageEditor'
 
 export default {
     name: 'JourneyEditor',
@@ -62,7 +71,8 @@ export default {
     },
     components: {
       draggable,
-      FileUpload
+      FileUpload,
+      PageEditor
     },
     props: ['value'],
     computed: {

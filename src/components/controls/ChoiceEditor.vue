@@ -1,6 +1,6 @@
 <template>
   <v-container >
-    <h2>{{typeName(value.fieldType)}}</h2>
+    <b>{{typeName(value.fieldType)}}</b>
     <v-text-field
       ref="Name"
       v-model="value.name"
@@ -74,10 +74,10 @@
                 multiple
                 solo/>
               <v-expansion-panels>
-                <v-expansion-panel :key="'true'" @click="expandDialog(index)">
+                <v-expansion-panel :key="'c_'+choice.id" @click="expandDialog(index)">
                   <v-expansion-panel-header style="width: 100%">
                     <template>
-                      <v-fade-transition leave-absolute >
+                      <v-fade-transition leave >
                         <span>
                           Dialog
                         </span>
@@ -118,7 +118,7 @@
 <script>
   import draggable from 'vuedraggable'
   import FileUpload from "./FileUpload";
-  import {itemTypeName} from '../../utils/itemTypes.js'
+  import {itemTypeName} from '@/utils/itemTypes.js'
 
   export default {
     name: 'ChoiceEditor',

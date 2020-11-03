@@ -1,15 +1,24 @@
-exports.interactionTypes = {
+import ChoiceEditor from '@/components/controls/ChoiceEditor';
+import TextBlockEditor from '@/components/controls/TextBlockEditor';
+
+export const interactionTypes = {
   'single-choice-input': "Single choice input",
   'multiple-choice-input': "Multiple choice input",
   'stimulus': 'Stimulus'
 }
 
-exports.interactionIcons = {
+export const components = {
+  'single-choice-input': ChoiceEditor,
+  'multiple-choice-input': ChoiceEditor,
+  'stimulus': TextBlockEditor,
+}
+
+export const interactionIcons = {
   'single-choice-input': "Single choice input",
   'multiple-choice-input': "Multiple choice input",
   'stimulus': 'Stimulus'
 }
 
-exports.itemTypeName = id => this.interactionTypes[id]
+export function itemTypeName(id) {return interactionTypes[id]}
 
-exports.itemIcon = id => this.interactionIcon[id]
+export function itemIcon(id) {return interactionIcons[id]}

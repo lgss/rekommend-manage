@@ -45,7 +45,7 @@ export default {
     },
     computed: {
         image: {
-            get: function() {return this.internal_image},
+            get: function() {return this.internal_image || {}},
             set: function(newValue) {
                 this.internal_image = newValue
                 return this.$emit('input', newValue)

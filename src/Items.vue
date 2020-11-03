@@ -46,19 +46,14 @@
 
 <script>
 
-import ChoiceEditor from './components/controls/ChoiceEditor.vue'
-import TextBlockEditor from './components/controls/TextBlockEditor.vue'
 import PageEditor from './components/controls/PageEditor.vue'
 import JourneyEditor from './components/JourneyEditor.vue'
-// eslint-disable-next-line no-unused-vars
-import { itemTypeName } from './utils/itemTypes'
+import { itemTypeName, components as itemComponents } from './utils/itemTypes'
 
 export default {
   components: {
-    'single-choice-input': ChoiceEditor,
-    'multiple-choice-input': ChoiceEditor,
+    ...itemComponents,
     'page': PageEditor,
-    'stimulus': TextBlockEditor,
     'journey': JourneyEditor
   },
   data() {
