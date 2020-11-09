@@ -25,12 +25,27 @@
             <v-btn @click="validate">Validate</v-btn>
             <v-btn v-if="currentResource.id" @click="updateResource">Update</v-btn>
             <v-btn v-else @click="createResource">Save</v-btn>
-            <v-btn @click="deleteResource">Delete</v-btn>
+            <v-dialog v-model="deleteConfirmation" width="500">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn v-bind="attrs" v-on="on">Delete</v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="headline grey lighten-2">Delete Resource</v-card-title>
+                <v-card-text><br>Are you sure you want to delete this resource? This action cannot be undone.</v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn text @click="deleteConfirmation = false">Cancel</v-btn>
+                  <v-btn text @click="deleteResource">Yes, Delete</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-btn-toggle>
         </v-container>
         <component ref="resourceComponent" :is="component" v-model="currentResource.doc"/>
       </v-container>
     </v-content>
+    
   </div>
 </template>
 
@@ -47,7 +62,8 @@
       resourceIndex: -1,
       component: "resource-editor",
       endpoint: process.env.VUE_APP_API_ENDPOINT,
-      drawer: true
+      drawer: true,
+      deleteConfirmation: false
     }),
     created() {
       fetch(this.endpoint+'/resources')
@@ -103,6 +119,7 @@
         .then(()=>{
           this.resources.splice(this.resourceIndex,1);
           this.resourceIndex = null;
+          this.deleteConfirmation = false
         })
       },
       newResource() {
