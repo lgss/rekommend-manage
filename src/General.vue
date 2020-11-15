@@ -8,6 +8,7 @@
         <v-list-item color="primary" @click="changeView('completed')">Assessment completed</v-list-item>
         <v-list-item color="primary" @click="changeView('positive')">Positive outcome</v-list-item>
         <v-list-item color="primary" @click="changeView('terms')">Terms and Conditions</v-list-item>
+        <v-list-item color="primary" @click="changeView('transition')">Journey transition</v-list-item>
         <v-list-item color="primary" @click="changeView('a11y')">Accessibility statement</v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -24,6 +25,7 @@ import LandingEditor from './components/controls/LandingEditor.vue'
 import PositiveEditor from './components/controls/PositiveEditor.vue'
 import TermsEditor from './components/controls/TermsEditor.vue'
 import CompletedEditor from './components/controls/CompletedEditor.vue'
+import TransitionEditor from "./components/controls/TransitionEditor.vue"
 import A11yEditor from './components/controls/A11yEditor.vue'
 /* eslint-disable */
 export default {
@@ -33,6 +35,7 @@ export default {
     'landing': LandingEditor,
     'positive': PositiveEditor,
     'completed': CompletedEditor,
+    "transition": TransitionEditor,
     'a11y': A11yEditor
   },
   data() {
