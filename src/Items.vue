@@ -62,6 +62,7 @@ import ChoiceEditor from './components/controls/ChoiceEditor.vue'
 import TextBlockEditor from './components/controls/TextBlockEditor.vue'
 import PageEditor from './components/controls/PageEditor.vue'
 import JourneyEditor from './components/controls/JourneyEditor.vue'
+import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
 
 export default {
   components: {
@@ -78,12 +79,11 @@ export default {
       item: 1,
       field: {fieldType: "div"},
       interactionType: '',
-      errorMessages: [],
-      endpoint: process.env.VUE_APP_API_ENDPOINT
+      errorMessages: []
     }
   },
   created() {
-    fetch(this.endpoint +'/journeys')
+    fetch(playerEndpoint + '/journeys')
       .then(reply => reply.json())
       .then(data => {
         this.journeys = data.map(journey => {
@@ -125,7 +125,7 @@ export default {
     createJourney() {
       this.validateJourney()
       if(this.errorMessages.length) { return }
-      fetch(this.endpoint+'/journeys', {
+      fetch(editorEndpoint + '/journeys', {
         method:"POST",
         headers: { "content-type":"application/json"},
         body: JSON.stringify(this.currentJourney)
@@ -139,7 +139,7 @@ export default {
     },
     deleteJourney() {
       if (this.currentJourney.id) {
-        fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
+        fetch(`${editorEndpoint}/journeys/${this.currentJourney.id}`, {
           method: 'DELETE'
         })
         .then((res) => res.json())
@@ -158,7 +158,7 @@ export default {
     updateJourney() {
       this.validateJourney()
       if(this.errorMessages.length === 0) {
-        fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
+        fetch(`${editorEndpoint}/journeys/${this.currentJourney.id}`, {
           method: 'PUT',
           body:JSON.stringify({
             updates:[

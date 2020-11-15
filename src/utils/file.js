@@ -1,7 +1,7 @@
-const defEndpoint = process.env.VUE_APP_API_ENDPOINT
+import {editorEndpoint} from '@/utils/endpoints.js'
 
 exports.doUpload = (extension, content, endpoint) => {
-  const endpnt = endpoint || defEndpoint
+  const endpnt = endpoint || editorEndpoint
   return this.getUpload(extension, endpnt)
     .then((doc) => {
         return fetch(doc.uploadURL, {
@@ -12,7 +12,7 @@ exports.doUpload = (extension, content, endpoint) => {
 }
 
 exports.getUpload = (extension, endpoint) => {
-  const endpnt = endpoint || defEndpoint
+  const endpnt = endpoint || editorEndpoint
   return fetch(endpnt + "/file/" + extension, {method: 'POST'})
     .then((x) => x.json())
 }
@@ -44,7 +44,7 @@ exports.uploadImage = (imageFile, endpoint) => {
 }
 
 exports.deleteFile = (file, endpoint) => {
-  const endpnt = endpoint || defEndpoint
+  const endpnt = endpoint || editorEndpoint
 
   return fetch(endpnt + "/file/" + file, {method: 'DELETE'});
 }
