@@ -2,32 +2,39 @@
   <div>
     <v-navigation-drawer app absolute permanent fixed disable-resize-watcher :clipped="true" color="blue--lighten-1">
       <v-list>
-        <v-list-item color="primary" @click="newJourney">
-          <v-list-item-icon>
-              <v-icon>mdi-plus</v-icon>
-          </v-list-item-icon>
-          New journey
-        </v-list-item>
-        <v-divider/>
-        <div v-for="(journey, index) in journeys" :key="'j' + index">
-          <v-list-group @click="loadJourney(journey)" prepend-icon="mdi-transit-connection-variant">
-            <template v-slot:activator>
-              <v-list-item-title >{{journey.label}}</v-list-item-title>
-            </template>
-            <div v-for="(page, index) in journey.doc.pages" :key="index" >
-              <v-list-group sub-group no-action append-icon="mdi-list-status" @click="loadEditor(page, 'page')">
-                <template v-slot:activator>
-                  <v-list-item-title>{{index + 1}}. {{page.title}}</v-list-item-title>
-                </template>
-                <v-list-item @click="loadEditor(item)" link v-for="(item, itemIndex) in page.items" :key="itemIndex">
-                  <v-list-item-title>{{itemType(item.fieldType)}}</v-list-item-title>
-                  <v-list-item-icon>
-                    <v-icon>{{iconName(item.fieldType)}}</v-icon>
-                  </v-list-item-icon>
-                </v-list-item>
-              </v-list-group>
-            </div>
-          </v-list-group>
+        <div v-if="loading">
+          <v-skeleton-loader type="list-item"/>
+          <v-divider/>
+          <v-skeleton-loader v-for="n in 5" :key="n" type="list-item-avatar"/>
+        </div>
+        <div v-else>
+          <v-list-item color="primary" @click="newJourney">
+            <v-list-item-icon>
+                <v-icon>mdi-plus</v-icon>
+            </v-list-item-icon>
+            New journey
+          </v-list-item>
+          <v-divider/>
+          <div v-for="(journey, index) in journeys" :key="'j' + index">
+            <v-list-group @click="loadJourney(journey)" prepend-icon="mdi-transit-connection-variant">
+              <template v-slot:activator>
+                <v-list-item-title >{{journey.label}}</v-list-item-title>
+              </template>
+              <div v-for="(page, index) in journey.doc.pages" :key="index" >
+                <v-list-group sub-group no-action append-icon="mdi-list-status" @click="loadEditor(page, 'page')">
+                  <template v-slot:activator>
+                    <v-list-item-title>{{index + 1}}. {{page.title}}</v-list-item-title>
+                  </template>
+                  <v-list-item @click="loadEditor(item)" link v-for="(item, itemIndex) in page.items" :key="itemIndex">
+                    <v-list-item-title>{{itemType(item.fieldType)}}</v-list-item-title>
+                    <v-list-item-icon>
+                      <v-icon>{{iconName(item.fieldType)}}</v-icon>
+                    </v-list-item-icon>
+                  </v-list-item>
+                </v-list-group>
+              </div>
+            </v-list-group>
+          </div>
         </div>
       </v-list>
     </v-navigation-drawer>
@@ -62,6 +69,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       currentJourney: null,
       journeys: [],
       item: 1,
@@ -77,6 +85,7 @@ export default {
       .then(data => {
         this.journeys = data
       })
+      .finally(() => this.loading = false)
   },
   methods: {
     itemType(typeName) {
