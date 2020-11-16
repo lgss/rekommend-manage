@@ -50,7 +50,7 @@
 <script>
 
 import PageEditor from './components/controls/PageEditor.vue'
-import JourneyEditor from './components/controls/JourneyEditor.vue'
+import JourneyEditor from './components/JourneyEditor.vue'
 import { itemTypeName, itemIcon, components as itemComponents } from './utils/itemTypes'
 import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
 

@@ -63,6 +63,7 @@
 import draggable from 'vuedraggable'
 import FileUpload from "./controls/FileUpload";
 import PageEditor from '@/components/controls/PageEditor'
+import {editorEndpoint} from '@/utils/endpoints.js'
 
 export default {
     name: 'JourneyEditor',
@@ -106,20 +107,21 @@ export default {
     },
     save() {
         this.saving = true;
-        fetch(this.endpoint+'/journeys/'+this.value.id, {
-        method: 'PUT',
-        body:JSON.stringify({
-            updates:[
-            {
-                paramName: "label", paramValue: this.value.label
-            },
-            {
-                paramName: "doc", paramValue: (this.value.doc)
-            },
-            {
-                paramName: "img", paramValue: (this.value.img)
-            }
-            ]})
+        fetch(`${editorEndpoint}/journeys/${this.value.id}`, {
+            method: 'PUT',
+            body:JSON.stringify({
+                updates:[
+                {
+                    paramName: "label", paramValue: this.value.label
+                },
+                {
+                    paramName: "doc", paramValue: (this.value.doc)
+                },
+                {
+                    paramName: "img", paramValue: (this.value.img)
+                }
+                ]}
+            )
         })
         .then(() => {}) // TODO: replace with vuetify alert
         .finally(() => this.saving = false)

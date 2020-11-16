@@ -4,7 +4,6 @@
     <v-text-field
       ref="Header"
       v-model="value.title"
-      :rules="[() => !!value.name || 'This field is required']"
       :error-messages="errorMessages"
       label="Header"
       placeholder="Enter a header"
@@ -37,7 +36,7 @@
     </v-expansion-panels>
     <v-menu offset-y>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" fab small color="primary">
+        <v-btn v-on="on" small color="primary">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
