@@ -43,7 +43,7 @@
 
 <script>
 import FileUpload from "./FileUpload";
-import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
+import {playerEndpoint} from '@/utils/endpoints.js'
 
 export default {
     name: "ParentEditor",

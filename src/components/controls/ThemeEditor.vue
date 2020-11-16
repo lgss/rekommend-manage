@@ -42,7 +42,6 @@
                         </v-card>
                     </v-footer>
                 </v-card>
-
             </v-col>
             </v-row>    
             <v-row>
@@ -70,7 +69,6 @@
 </template>
 
 <script>
-import HTMLEditor from './HTMLEditor'
 import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
 
 export default {
@@ -84,9 +82,6 @@ export default {
             this.appSecondary = x.secondary;
             this.loading = false
         })
-    },
-    components: {
-        'html-editor' : HTMLEditor
     },
     data() {
         return {
