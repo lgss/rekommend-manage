@@ -50,8 +50,9 @@
 <script>
 
 import PageEditor from './components/controls/PageEditor.vue'
-import JourneyEditor from './components/JourneyEditor.vue'
+import JourneyEditor from './components/controls/JourneyEditor.vue'
 import { itemTypeName, itemIcon, components as itemComponents } from './utils/itemTypes'
+import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
 
 export default {
   components: {
@@ -67,12 +68,11 @@ export default {
       field: {fieldType: "div"},
       interactionType: '',
       errorMessages: [],
-      endpoint: process.env.VUE_APP_API_ENDPOINT,
       saving: false
     }
   },
   created() {
-    fetch(this.endpoint +'/journeys')
+    fetch(playerEndpoint + '/journeys')
       .then(reply => reply.json())
       .then(data => {
         this.journeys = data
@@ -135,7 +135,7 @@ export default {
     createJourney() {
       this.validateJourney()
       if(this.errorMessages.length) { return }
-      fetch(this.endpoint+'/journeys', {
+      fetch(editorEndpoint + '/journeys', {
         method:"POST",
         headers: { "content-type":"application/json"},
         //body: JSON.stringify(this.currentJourney)
@@ -149,7 +149,7 @@ export default {
     },
     deleteJourney(id) {
       if (id) {
-        fetch(this.endpoint + '/journeys/' + id, {
+        fetch(`${editorEndpoint}/journeys/${id}`, {
           method: 'DELETE'
         })
         .then((res) => res.json())
@@ -168,7 +168,7 @@ export default {
     updateJourney() {
       this.validateJourney()
       if(this.errorMessages.length === 0) {
-        fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
+        fetch(`${editorEndpoint}/journeys/${this.currentJourney.id}`, {
           method: 'PUT',
           body:JSON.stringify({
             updates:[

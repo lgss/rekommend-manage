@@ -27,8 +27,7 @@
 // So, how to fix it? I'm inclined to think that marking the files as temporary 
 // with a prefix, so that it has a TTL and then changing it to a permanent file
 import {uploadImage, deleteFile} from '@/utils/file.js'
-
-const endpoint = process.env.VUE_APP_API_ENDPOINT
+import {playerEndpoint} from '@/utils/endpoints.js'
 
 export default {
     name: "file-upload",
@@ -58,7 +57,7 @@ export default {
     methods: {
         displayImage() {
             if (this.internal_image && this.internal_image.src)
-                return endpoint + '/image/' + this.internal_image.src
+                return playerEndpoint + '/image/' + this.internal_image.src
             
             return "/img/image-placeholder.png"
         },
