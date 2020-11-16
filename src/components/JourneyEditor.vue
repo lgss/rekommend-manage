@@ -2,7 +2,7 @@
     <v-container>
         <v-spacer/>
         <v-row>
-            <v-col cols="9">
+            <v-col cols="6">
                 <v-text-field
                     ref="Label"
                     prepend-icon="mdi-transit-connection-variant"
@@ -15,7 +15,10 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="3">
-                <v-btn width="100%">Delete Journey</v-btn>
+                <v-btn block :loading="saving" @click="save">Save</v-btn>
+            </v-col>
+            <v-col cols="3" class="pl-2">
+                <v-btn block>Delete Journey</v-btn>
             </v-col>
         </v-row>
         <file-upload v-model="value.img"/>
@@ -66,7 +69,8 @@ export default {
     data() {
         return {
             drag: false,
-            errorMessages: ''
+            errorMessages: '',
+            saving: false
         }
     },
     components: {
@@ -99,6 +103,30 @@ export default {
     },
     append() {
         this.value.doc.pages.push({title: "New page", items: []})
+    },
+    save() {
+        this.saving = true;
+        fetch(this.endpoint+'/journeys/'+this.value.id, {
+        method: 'PUT',
+        body:JSON.stringify({
+            updates:[
+            {
+                paramName: "label", paramValue: this.value.label
+            },
+            {
+                paramName: "doc", paramValue: (this.value.doc)
+            },
+            {
+                paramName: "img", paramValue: (this.value.img)
+            }
+            ]})
+        })
+        .then(() => {}) // TODO: replace with vuetify alert
+        .finally(() => this.saving = false)
+        .catch((err)=> {
+            console.error(err);
+            alert("There was a problem saving the journey") //TODO: replace with vuetify alert
+        })
     }
   }
 }

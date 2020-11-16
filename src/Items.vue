@@ -9,23 +9,26 @@
           New journey
         </v-list-item>
         <v-divider/>
-        <v-list-group v-for="(journey, index) in journeys" :key="'j' + index" prepend-icon="mdi-transit-connection-variant">
-          <template v-slot:activator>
-            <v-list-item-title @click="loadJourney(journey)">{{journey.label}}</v-list-item-title>
-          </template>
-
-          <v-list-group sub-group no-action v-for="(page, index) in journey.doc.pages" :key="index" append-icon="mdi-list-status">
+        <div v-for="(journey, index) in journeys" :key="'j' + index">
+          <v-list-group @click="loadJourney(journey)" prepend-icon="mdi-transit-connection-variant">
             <template v-slot:activator>
-              <v-list-item-title @click="loadEditor(page, 'page')">{{index + 1}}. {{page.title}}</v-list-item-title>
+              <v-list-item-title >{{journey.label}}</v-list-item-title>
             </template>
-            <v-list-item @click="loadEditor(item)" link v-for="(item, itemIndex) in page.items" :key="itemIndex">
-              <v-list-item-title>{{itemType(item.fieldType)}}</v-list-item-title>
-              <v-list-item-icon>
-                <v-icon>mdi-format-list-checks</v-icon>
-              </v-list-item-icon>
-            </v-list-item>
+            <div v-for="(page, index) in journey.doc.pages" :key="index" >
+              <v-list-group sub-group no-action append-icon="mdi-list-status" @click="loadEditor(page, 'page')">
+                <template v-slot:activator>
+                  <v-list-item-title>{{index + 1}}. {{page.title}}</v-list-item-title>
+                </template>
+                <v-list-item @click="loadEditor(item)" link v-for="(item, itemIndex) in page.items" :key="itemIndex">
+                  <v-list-item-title>{{itemType(item.fieldType)}}</v-list-item-title>
+                  <v-list-item-icon>
+                    <v-icon>{{iconName(item.fieldType)}}</v-icon>
+                  </v-list-item-icon>
+                </v-list-item>
+              </v-list-group>
+            </div>
           </v-list-group>
-        </v-list-group>
+        </div>
       </v-list>
     </v-navigation-drawer>
     <v-content>
@@ -48,7 +51,7 @@
 
 import PageEditor from './components/controls/PageEditor.vue'
 import JourneyEditor from './components/JourneyEditor.vue'
-import { itemTypeName, components as itemComponents } from './utils/itemTypes'
+import { itemTypeName, itemIcon, components as itemComponents } from './utils/itemTypes'
 
 export default {
   components: {
@@ -64,7 +67,8 @@ export default {
       field: {fieldType: "div"},
       interactionType: '',
       errorMessages: [],
-      endpoint: process.env.VUE_APP_API_ENDPOINT
+      endpoint: process.env.VUE_APP_API_ENDPOINT,
+      saving: false
     }
   },
   created() {
@@ -82,7 +86,9 @@ export default {
       this.errorMessages = [] 
       //this.loadEditor(this.currentJourney,'journey')
     },
-
+    iconName(typeName) {
+      return itemIcon(typeName)
+    },
     loadJourney(journey) {
       this.loadEditor(journey, 'journey')
     },
@@ -92,6 +98,27 @@ export default {
     },
     newPage() {
       //this.currentJourney.doc.pages.push({title: "New page", items: []})
+    },
+    save() {
+      this.saving = true
+      fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
+        method: 'PUT',
+        body: JSON.stringify({
+          updates:[
+            {
+              paramName: "label", paramValue: this.currentJourney.label
+            },
+            {
+              paramName: "doc", paramValue: (this.currentJourney.doc)
+            },
+            {
+              paramName: "img", paramValue: (this.currentJourney.img)
+            }
+          ]
+        })
+      })
+      .then(() => this.saving = false)
+      .catch((err)=>console.error(err))
     },
     newJourney() {
       let journey = {
@@ -162,7 +189,7 @@ export default {
       }
     },
     validateJourney() { 
-      this.errorMessages = []  
+      /*this.errorMessages = []  
       // validate journey
       //this.hasValue("journey id",this.currentJourney.id);
       this.hasValue("journey label",this.currentJourney.label);
@@ -185,7 +212,7 @@ export default {
             })
           }
         })
-      })
+      })*/
     },
     hasValue(key,value) {
       if(!value){this.errorMessages.push({key:key, message:key + " cannot be empty"})}
