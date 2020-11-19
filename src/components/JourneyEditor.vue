@@ -1,28 +1,28 @@
 <template>
     <v-container>
-        <v-spacer/>
         <v-row>
             <v-col cols="6">
-                <v-text-field
+                <label>Journey picture</label>
+                <info>This will display next to the Name to help user identify what it means</info>
+                <file-upload v-model="value.img"/>
+            </v-col>
+            <v-col cols="6">
+                <label>Journey name</label>
+                <info>The situation that this journey helps with e.g. 'My health'</info>
+                <v-text-field outlined
                     ref="Label"
-                    prepend-icon="mdi-transit-connection-variant"
+                    eprepend-icon="mdi-transit-connection-variant"
                     v-model="value.label"
                     :rules="[() => !!value.label || 'This field is required']"
                     :error-messages="errorMessages"
-                    label="Journey name"
                     placeholder="Enter journey name"
                     required
                 ></v-text-field>
-            </v-col>
-            <v-col cols="3">
-                <v-btn block :loading="saving" @click="save">Save</v-btn>
-            </v-col>
-            <v-col cols="3" class="pl-2">
-                <v-btn block>Delete Journey</v-btn>
+                <v-btn class="my-2" :loading="saving" @click="save">Save</v-btn>
+                <v-btn class="my-2 ml-4" >Delete Journey</v-btn>
             </v-col>
         </v-row>
-        <file-upload v-model="value.img"/>
-        <v-subheader>Pages</v-subheader>
+        <h3>Pages</h3>
         <v-expansion-panels accordion>
             <draggable v-model="pageOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
                 <transition-group type="transition" :name="!drag ? 'flip-list' : null">
@@ -54,6 +54,7 @@
         </v-expansion-panels>
         <v-btn color="primary" @click="append">
             <v-icon>mdi-plus</v-icon>
+            Add a question page
         </v-btn>
     </v-container>
 </template>
@@ -64,6 +65,7 @@ import draggable from 'vuedraggable'
 import FileUpload from "./controls/FileUpload";
 import PageEditor from '@/components/controls/PageEditor'
 import {editorEndpoint} from '@/utils/endpoints.js'
+import Info from '@/components/controls/Info'
 
 export default {
     name: 'JourneyEditor',
@@ -77,7 +79,8 @@ export default {
     components: {
       draggable,
       FileUpload,
-      PageEditor
+      PageEditor,
+      Info
     },
     props: ['value'],
     computed: {

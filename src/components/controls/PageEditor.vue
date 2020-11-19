@@ -1,15 +1,16 @@
 <template>
   <v-container class="pa-0">
     <h2 v-if="!embedded">Page</h2>
-    <v-text-field
+    <label>Page title</label>
+    <info>This will be displayed at the top of the page</info>
+    <v-text-field outlined
       ref="Header"
       v-model="value.title"
       :error-messages="errorMessages"
-      label="Header"
       placeholder="Enter a header"
       required
     ></v-text-field>
-    <v-subheader>Items</v-subheader>
+    <label>Items (questions and stimulus content)</label>
     <v-expansion-panels>
       <v-expansion-panel v-for="(item, index) in value.items" :key="index" >
         <v-expansion-panel-header style="width: 100%">
@@ -38,6 +39,7 @@
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" small color="primary">
           <v-icon>mdi-plus</v-icon>
+          Add an item...
         </v-btn>
       </template>
       <v-list>
@@ -55,9 +57,13 @@
 
 <script>
 import {interactionTypes, components} from '@/utils/itemTypes';
+import Info from '@/components/controls/Info'
 
 export default {
-  components,
+  components: {
+    Info,
+    ...components
+  },
   data() {
     return {
       interactionTypes,

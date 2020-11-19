@@ -15,8 +15,8 @@
                 </v-card>
             </v-col>
             <v-col v-show="image.src">
-                <v-text-field label="Image description (alt text)" v-model="image.alt" />
-                <v-text-field label="Image mouseover (title)" v-model="image.title" />
+                <v-text-field outlined label="Image description (alt text)" v-model="image.alt" />
+                <v-text-field outlined label="Image mouseover (title)" v-model="image.title" />
             </v-col>
         </v-row>  
     </v-form>
