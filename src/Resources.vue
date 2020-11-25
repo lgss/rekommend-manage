@@ -24,7 +24,7 @@
         <v-container>
           <v-btn-toggle>
             <v-btn @click="validate">Validate</v-btn>
-            <v-btn v-if="currentResource.id" @click="updateResource">Update</v-btn>
+            <v-btn v-if="currentResource.id" @click="updateResource" :loading="updateLoading">Update</v-btn>
             <v-btn v-else @click="createResource">Save</v-btn>
             <v-btn @click="deleteResource">Delete</v-btn>
           </v-btn-toggle>
@@ -32,6 +32,12 @@
         <component ref="resourceComponent" :is="component" v-model="currentResource.doc"/>
       </v-container>
     </v-content>
+    <v-snackbar
+      v-model="showSnackbar"
+      :timeout="snackbarTimout"
+      :color="snackbarColour"
+    > {{ snackbarText }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -49,7 +55,12 @@
       component: "resource-editor",
       endpoint: process.env.VUE_APP_API_ENDPOINT,
       drawer: true,
-      searchText: ""
+      searchText: "",
+      updateLoading: false,
+      showSnackbar: false,
+      snackbarColour: null,
+      snackbarText: "",
+      snackbarTimout: 2000
     }),
     created() {
       fetch(this.endpoint+'/resources')
@@ -74,6 +85,7 @@
       },
       updateResource() {
         if (!this.validate()) return;
+        this.updateLoading = true;
         let putReq = {
           method: 'PUT',
           body:JSON.stringify({
@@ -85,8 +97,16 @@
           })
         }
         fetch(this.endpoint+'/resources/'+this.currentResource.id, putReq )
-          .then((res) => res.json())
-          .catch((err)=>console.error(err))
+          .then((res) => {
+            res.json();
+            this.updateLoading = false;
+            this.toast("✔️ Changes saved", "success")
+          })
+          .catch((err) => {
+            console.error(err);
+            this.updateLoading = false;
+            this.toast("❌ Changes have not been saved", "error")
+          })
       },
       createResource() {
         if (!this.validate()) return;
@@ -127,6 +147,11 @@
         }
         this.resources.push(item);
         this.resourceIndex = this.resources.length - 1
+      },
+      toast(message, colour) {
+        this.showSnackbar = true;
+        this.snackbarColour = colour;
+        this.snackbarText = message;
       }
     }
   }

@@ -23,7 +23,7 @@
         <v-container>
           <v-btn-toggle>
             <v-btn @click="validate">Validate</v-btn>
-            <v-btn v-if="currentParent.id" @click="updateParent">Update</v-btn>
+            <v-btn v-if="currentParent.id" @click="updateParent" :loading="updateLoading">Update</v-btn>
             <v-btn v-else @click="createParent">Save</v-btn>
             <v-btn @click="deleteParent">Delete</v-btn>
           </v-btn-toggle>
@@ -31,6 +31,12 @@
         <parent ref="parentComponent" v-model="currentParent"/>
       </v-container>
     </v-content>
+    <v-snackbar
+      v-model="showSnackbar"
+      :timeout="snackbarTimout"
+      :color="snackbarColour"
+    > {{ snackbarText }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -46,7 +52,12 @@
       parents: [],
       parentIndex: -1,
       endpoint: process.env.VUE_APP_API_ENDPOINT,
-      drawer: true
+      drawer: true,
+      updateLoading: false,
+      showSnackbar: false,
+      snackbarColour: null,
+      snackbarText: "",
+      snackbarTimout: 2000
     }),
     created() {
       fetch(this.endpoint+'/journey-parents')
@@ -64,6 +75,7 @@
       },
       updateParent() {
         if (!this.validate()) return;
+        this.updateLoading = true;
         let putReq = {
           method: 'PUT',
           body:JSON.stringify({
@@ -81,8 +93,16 @@
           })
         }
         fetch(this.endpoint+'/journey-parent/'+this.currentParent.id, putReq )
-          .then((res) => res.json())
-          .catch((err)=>console.error(err))
+          .then((res) => {
+            res.json();
+            this.updateLoading = false;
+            this.toast("✔️ Changes saved", "success")
+          })
+          .catch((err) => {
+            console.error(err);
+            this.updateLoading = false;
+            this.toast("❌ Changes have not been saved", "error")
+          })
       },
       createParent() {
         let req = {
@@ -118,6 +138,11 @@
         }
         this.parents.push(item);
         this.parentIndex = this.parents.length - 1
+      },
+      toast(message, colour) {
+        this.showSnackbar = true;
+        this.snackbarColour = colour;
+        this.snackbarText = message;
       }
     }
   }

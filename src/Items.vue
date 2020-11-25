@@ -38,7 +38,7 @@
       <v-container fluid class="fill-height" v-if="currentJourney">
         <v-container>
           <v-btn-toggle>
-            <v-btn v-if="currentJourney.id" @click="updateJourney">Update</v-btn>
+            <v-btn v-if="currentJourney.id" @click="updateJourney" :loading="updateLoading">Update</v-btn>
             <v-btn v-else @click="createJourney">Save</v-btn>
           </v-btn-toggle>
         </v-container>
@@ -53,6 +53,12 @@
         <component :is="interactionType" v-model="field"/>
       </v-container>
     </v-content>
+    <v-snackbar
+      v-model="showSnackbar"
+      :timeout="snackbarTimout"
+      :color="snackbarColour"
+    > {{ snackbarText }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -79,7 +85,12 @@ export default {
       field: {fieldType: "div"},
       interactionType: '',
       errorMessages: [],
-      endpoint: process.env.VUE_APP_API_ENDPOINT
+      endpoint: process.env.VUE_APP_API_ENDPOINT,
+      updateLoading: false,
+      showSnackbar: false,
+      snackbarColour: null,
+      snackbarText: "",
+      snackbarTimout: 2000
     }
   },
   created() {
@@ -156,6 +167,7 @@ export default {
       }    
     },
     updateJourney() {
+      this.updateLoading = true;
       this.validateJourney()
       if(this.errorMessages.length === 0) {
         fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
@@ -174,8 +186,16 @@ export default {
             ]
           })
         })
-        .then((res) => res.json())
-        .catch((err)=>console.error(err))
+        .then((res) => {
+          res.json();
+          this.updateLoading = false;
+          this.toast("✔️ Changes saved", "success")
+        })
+        .catch((err)=> {
+          console.error(err);
+          this.updateLoading = false;
+          this.toast("❌ Changes have not been saved", "error")
+        })
       }
     },
     validateJourney() { 
@@ -209,6 +229,11 @@ export default {
     },
     hasMinimum(key,value,minLength) {
       if(value.length < minLength) {this.errorMessages.push({key:key, message:key + " require at least " + minLength + " value(s)"})}
+    },
+    toast(message, colour) {
+      this.showSnackbar = true;
+      this.snackbarColour = colour;
+      this.snackbarText = message;
     }
   }
 }
