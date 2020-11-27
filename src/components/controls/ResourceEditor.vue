@@ -1,52 +1,104 @@
 <template>
     <v-container>
         <v-form ref="form" model="valid">
-            <v-text-field
-                label="Name"
-                v-model="value.name"
-                :rules="rules.name"
-                :mandatory="true"
-            />
-            <v-combobox
-                label="Categories"
-                v-model="value.categories"
-                :rules="rules.categories"
-                chips
-                deletable-chips
-                clearable
-                multiple
-                hint="Group matching resources by category. Resources with multiple categories will appear in each group."
-            />
+            <v-row>
+                <v-col>
+                    Resource name or title
+                    <div class="v-label theme--light">
+                        🛈 Will help user identify the resource
+                    </div>
+                    <v-text-field
+                        v-model="value.name"
+                        :rules="rules.name"
+                        :mandatory="true"
+                    />
+                </v-col>
+                <v-col>
+                    Resource category
+                    <div class="v-label theme--light">
+                        🛈 Will help user identify what situation the resource can help them in
+                    </div>
+                    <v-combobox
+                        label=""
+                        v-model="value.categories"
+                        :rules="rules.categories"
+                        chips
+                        deletable-chips
+                        clearable
+                        multiple
+                        hint="Group matching resources by category. Resources with multiple categories will appear in each group."
+                    />
+                </v-col>
+            </v-row>
+            
+            Resource description
             <html-editor
-                label="Content"
+                label="🛈 Brief description of what the resource does and what it should help the user with"
                 v-model="value.content"
             />
-            <file-upload ref="fileUpload" v-model="value.img"/>
-            <v-text-field
-                label="Link to more info"
-                v-model="value.moreInfoUrl"
-                :rules="rules.url"
-            />
-            <v-combobox
-                label="Include tags"
-                v-model="value.includeTags"
-                :rules="rules.includeTags"
-                chips
-                clearable
-                multiple
-                solo
-                hint="Include the resource in results if any of these tags have been collected during the assessment."
-            />
-            <v-combobox
-                label="Exclude tags"
-                v-model="value.excludeTags"
-                :rules="rules.excludeTags"
-                chips
-                clearable
-                multiple
-                solo
-                hint="Exclude the resource from results if any of these tags have been collected during the assessment."
-            />
+            <v-row>
+                <v-col>
+                    Resource logo
+                    <div class="v-label theme--light">
+                        🛈 Will help user identify the resource
+                    </div>
+                    <file-upload 
+                        label=""
+                        ref="fileUpload" 
+                        v-model="value.img"
+                    />
+                </v-col>
+                <v-col>
+                    Resource link
+                    <div class="v-label theme--light">
+                        🛈 Link is displayed as a button which when clicked will open a new tab
+                    </div>
+                    <v-text-field
+                        v-model="value.moreInfoUrl"
+                        :rules="rules.url"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col>
+                    Include tags
+                </v-col>
+                <v-col>
+                    Exclude tags
+                </v-col>
+                </v-row>
+            <v-row>
+                <div class="v-label theme--light" style="padding-left:12px">
+                    🛈 Tags are how we link an answer to a resource. Include tags when matched with tags in questions will make the resource appear. Exclude tags will do the opposite
+                </div>
+            </v-row>
+            <v-row>
+                <v-col>
+                    
+                    <v-combobox
+                        label=""
+                        v-model="value.includeTags"
+                        :rules="rules.includeTags"
+                        chips
+                        clearable
+                        multiple
+                        solo
+                        hint="Include the resource in results if any of these tags have been collected during the assessment."
+                    />
+                </v-col>
+                <v-col>
+                    <v-combobox
+                        label=""
+                        v-model="value.excludeTags"
+                        :rules="rules.excludeTags"
+                        chips
+                        clearable
+                        multiple
+                        solo
+                        hint="Exclude the resource from results if any of these tags have been collected during the assessment."
+                    />
+                </v-col>
+            </v-row>
         </v-form>
     </v-container>
 </template>
