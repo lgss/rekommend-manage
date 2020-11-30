@@ -11,18 +11,14 @@
                         <v-btn @click="commands.redo">
                             <v-icon>mdi-redo</v-icon>
                         </v-btn>
-
                         <v-btn :class="{'v-btn--active': isActive.bold()}" @click="commands.bold">
                             <v-icon>mdi-format-bold</v-icon>
                         </v-btn>
-                        <v-btn :class="{'v-btn--active': isActive.italic()}" @click="commands.italic">
+                        <v-btn v-show="false" :class="{'v-btn--active': isActive.italic()}" @click="commands.italic">
                             <v-icon>mdi-format-italic</v-icon>
                         </v-btn>
                         <v-btn :class="{'v-btn--active': isActive.underline()}" @click="commands.underline">
                             <v-icon>mdi-format-underline</v-icon>
-                        </v-btn>
-                        <v-btn :class="{'v-btn--active': isActive.paragraph()}" @click="commands.paragraph">
-                            <v-icon>mdi-format-paragraph</v-icon>
                         </v-btn>
                         <v-btn @click="showImagePrompt(commands.caption_image)">
                             <v-icon>mdi-signature-image</v-icon>
