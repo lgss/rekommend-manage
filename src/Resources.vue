@@ -2,9 +2,10 @@
   <div>
     <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1" v-model="drawer">
       <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-left </v-icon>
+      <v-text-field v-model="searchText" filled label="Search" clearable ></v-text-field>
       <v-list>
         <v-list-item-group v-if="resources.length" v-model="resourceIndex" color="primary">
-          <v-list-item v-for="(resource, i) in resources" :key="i">
+          <v-list-item v-for="(resource, i) in filteredResourceList" :key="i">
             <v-list-item-content>
               <v-list-item-title v-if="resource.doc" v-html="resource.doc.name">Hello</v-list-item-title>
             </v-list-item-content>
@@ -47,7 +48,8 @@
       resources: [],
       resourceIndex: -1,
       component: "resource-editor",
-      drawer: true
+      drawer: true,
+      searchText: ""
     }),
     created() {
       fetch(playerEndpoint + '/resources')
@@ -57,6 +59,13 @@
     computed: {
       currentResource() {
         return this.resources.length && this.resourceIndex > -1 ? this.resources[this.resourceIndex] : null
+      },
+      filteredResourceList() {
+        if (!this.searchText) return this.resources;
+        else
+          return this.resources.filter((r) =>
+            r.doc.name.toLowerCase().includes(this.searchText.toLowerCase())
+          );
       }
     },
     methods: {
