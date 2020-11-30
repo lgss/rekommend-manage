@@ -6,7 +6,8 @@
                 <v-col>
                     <v-row>
                         <v-col>
-                            <h1 class="float-left">PREVIEW</h1>
+                            <h1 class="float-left">Live preview</h1><br/>
+                            <br/>🛈 <span class="v-label font-italic">You cannot click and edit this preview pane</span><br/>
                         </v-col>
                     </v-row>
                     <v-card>
@@ -50,15 +51,13 @@
                         </v-footer>
                     </v-card>
                 </v-col>
-            </v-row>
-            <v-row>
-                <v-col md="6">
-                    <v-text-field label="Title" v-model="title"/> 
+                <v-col md="4">
+                    <v-text-field label="Page Title" v-model="title"/> 
                 </v-col>
             </v-row>
-            <v-row>
+              <v-row>
                 <v-col md="12">
-                    <html-editor label="Content" v-model="content"/>
+                    <html-editor label="Edit page content" v-model="content"/>
                 </v-col>
             </v-row>
             <v-row justify="center">

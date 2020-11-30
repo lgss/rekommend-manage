@@ -3,74 +3,71 @@
         <v-container v-if="loading"> </v-container>
         <v-container v-else>  
             <v-row id="preview">
-            <v-col>
-                <v-row>
                 <v-col>
-                    <h1 class="float-left">PREVIEW</h1><br/>
-                </v-col>
-                </v-row>
-
-                <v-card>
-                <v-row>
-                    <v-col>
-                        <v-app-bar :color="appPrimary" prominent>
-                            <v-container class="d-flex flex-column align-center">
-                                <a>
-                                    <v-toolbar-title class="white--text">
-                                        <div role="heading" aria-level="1" class="font-weight-black">{{ appTitle }}</div>
-                                    </v-toolbar-title>
-                                </a>
-                                <v-container class="d-flex flex-column align-center">
-                                    <h2 role="heading" aria-level="2" tabindex="0" class="white--text subheader">
-                                        Subheader
-                                    </h2>
-                                </v-container>
+                    <v-row>
+                        <v-col>
+                            <h1 class="float-left">Live preview</h1><br/>
+                            <br/>🛈 <span class="v-label font-italic">You cannot click and edit this preview pane</span><br/>
+                        </v-col>
+                    </v-row>
+                    <v-card>
+                        <v-row>
+                            <v-col>
+                                <v-app-bar :color="appPrimary" prominent>
+                                    <v-container class="d-flex flex-column align-center">
+                                        <a>
+                                            <v-toolbar-title class="white--text">
+                                                <div role="heading" aria-level="1" class="font-weight-black">{{ appTitle }}</div>
+                                            </v-toolbar-title>
+                                        </a>
+                                        <v-container class="d-flex flex-column align-center">
+                                            <h2 role="heading" aria-level="2" tabindex="0" class="white--text subheader">
+                                                Subheader
+                                            </h2>
+                                        </v-container>
+                                    </v-container>
+                                </v-app-bar>
+                            </v-col>
+                        </v-row>
+                        <v-row class="mx-5">
+                            <v-container>
+                                    <h1 id="title">{{ title }}</h1>
                             </v-container>
-                        </v-app-bar>
-                    </v-col>
-                </v-row>
-                <v-row class="mx-5">
-                    <v-container>
-                            <h1 id="title">{{ title }}</h1>
-                    </v-container>
-                    <v-divider />
-                    <v-container
-                        id="content"
-                        v-html="content"
-                    ></v-container>
-                </v-row>
-                <v-row class="mx-5">
-                    <v-col>
-                        <v-btn id="btn-home-start-assessment">Go to assessment</v-btn>
-                    </v-col>
-                </v-row>
-                <v-footer :color="appSecondary" class="justify-center">
-                    <v-card flat tile :color="appSecondary">
-                        <v-card-text>
-                            <a class="white--text">
-                                Terms and Conditions
-                            </a>
-                        </v-card-text>
+                            <v-divider />
+                            <v-container
+                                id="content"
+                                v-html="content"
+                            ></v-container>
+                        </v-row>
+                        <v-row class="mx-5">
+                            <v-col>
+                                <v-btn id="btn-home-start-assessment">Go to assessment</v-btn>
+                            </v-col>
+                        </v-row>
+                        <v-footer :color="appSecondary" class="justify-center">
+                            <v-card flat tile :color="appSecondary">
+                                <v-card-text>
+                                    <a class="white--text">
+                                        Terms and Conditions
+                                    </a>
+                                </v-card-text>
+                            </v-card>
+                        </v-footer>
                     </v-card>
-                </v-footer>
-                </v-card>
-            </v-col>
-            </v-row>
-            
-            <v-row>
-            <v-col md="6">
-                <v-text-field label="Title" v-model="title"/> 
-            </v-col>
+                </v-col>
+                <v-col md="4">
+                    <v-text-field label="Page Title" v-model="title"/> 
+                </v-col>
             </v-row>
             <v-row>
-            <v-col md="12">
-                <html-editor label="Content" v-model="content"/>
-            </v-col>
+                <v-col md="12">
+                    <html-editor label="Edit page content" v-model="content"/>
+                </v-col>
             </v-row>
             <v-row justify="center">
-            <v-col>
-                <v-btn @click="saveLanding()" color="success">Save</v-btn>
-            </v-col>
+                <v-col>
+                    <v-btn @click="saveLanding()" color="success">Save</v-btn>
+                </v-col>
             </v-row>
         </v-container>
     </v-container>
