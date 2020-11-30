@@ -6,7 +6,8 @@
                 <v-col>
                     <v-row>
                         <v-col>
-                            <h1 class="float-left">PREVIEW</h1><br/>
+                            <h1 class="float-left">Live preview</h1><br/>
+                            <br/>🛈 <span class="v-label font-italic">You cannot click and edit this preview pane</span><br/>
                         </v-col>
                     </v-row>
                     <v-card>
@@ -45,16 +46,16 @@
                 <v-col>
                     <v-row>
                         <v-col md="6">
-                            <v-text-field label="Application name" v-model="appTitle"/> 
+                            <v-text-field label="System name" v-model="appTitle"/> 
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col md="3">
-                            <label>Primary colour</label>
+                            <label>Header colour</label>
                             <v-color-picker mode="hexa" v-model="appPrimary"/>
                         </v-col>
                         <v-col md="3">
-                        <label>Secondary colour</label>
+                        <label>Footer colour</label>
                             <v-color-picker mode="hexa" v-model="appSecondary"/>
                         </v-col>
                     </v-row>
