@@ -1,10 +1,9 @@
 <template>
-  <v-container >
-    <h2>Page</h2>
+  <v-container class="pa-0">
+    <h2 v-if="!embedded">Page</h2>
     <v-text-field
       ref="Header"
       v-model="value.title"
-      :rules="[() => !!value.name || 'This field is required']"
       :error-messages="errorMessages"
       label="Header"
       placeholder="Enter a header"
@@ -15,8 +14,8 @@
       <v-expansion-panel v-for="(item, index) in value.items" :key="index" >
         <v-expansion-panel-header style="width: 100%">
           <template #default="{open}">
-            <!--v-icon class="handle flex-grow-0" >mdi-drag</v-icon-->
-            <v-fade-transition leave-absolute >
+            <v-icon class="handle flex-grow-0" >mdi-drag</v-icon>
+            <v-fade-transition leave >
               <span v-if="!open">
                 {{item.label}}
               </span>
@@ -31,13 +30,13 @@
           </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <!--component :is="item.fieldType" v-model="item"/-->
+          <component :is="item.fieldType" :value="item"/>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
     <v-menu offset-y>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" fab small color="primary">
+        <v-btn v-on="on" small color="primary">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
@@ -55,16 +54,17 @@
 </template>
 
 <script>
-import interactionTypes from '../../utils/types';
+import {interactionTypes, components} from '@/utils/itemTypes';
 
 export default {
+  components,
   data() {
     return {
       interactionTypes,
       errorMessages: ''
     }
   },
-  props: ['value'],
+  props: {'value': {}, 'embedded': Boolean},
   methods: {
     append(index) {
       this.value.items.push({fieldType: index})
