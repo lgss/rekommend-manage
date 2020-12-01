@@ -1,38 +1,38 @@
 <template>
   <v-container >
-    <b>{{typeName(value.fieldType)}}</b>
-    <v-text-field
-      ref="Name"
-      v-model="value.name"
-      :rules="[() => !!value.name || 'This field is required']"
-      :error-messages="errorMessages"
-      label="Name"
-      required
-    ></v-text-field>
-    <v-text-field
-      ref="Label"
-      v-model="value.label"
-      :rules="[() => !!value.label || 'This field is required']"
-      :error-messages="errorMessages"
-      label="Label"
-      required
-    ></v-text-field>
-    <v-text-field
-      ref="Example"
-      v-model="value.example"
-      label="Example or rubric"
-    ></v-text-field>
+    <h3>{{typeName(value.fieldType)}}</h3>
+    <v-row>
+      <v-col cols="6">
+        <label>Question picture</label>
+        <info>This will display next to the Name to help user identify what it means</info>
+        <file-upload v-model="value.img"/>
+      </v-col>
+      <v-col>
+        <label>Question title</label>
+        <info>What the question should be asking the user</info>
+        <v-text-field ref="Label" v-model="value.label"
+          :rules="[() => !!value.label || 'This field is required']"
+          :error-messages="errorMessages"
+          outlined required/>
+        <label>Question prompt</label>
+        <info>This tells the user how to answer e.g. Please select one option</info>
+        <v-text-field outlined ref="Example" v-model="value.example" />
+        </v-col>
+    </v-row>
     <v-switch
       v-model="value.isMandatory"
-      label="is mandatory?"
+      label="A response will be required"
     ></v-switch>
+    <label>Match tags</label>
+    <info>Enter a word. If matched with an answer tag for another question this will show the question. Can be left blank.</info>
     <v-combobox
       v-model="value.includeTags"
       chips
       clearable
-      label="Include tags"
       multiple
       solo/>
+    <label>Exclude tags</label>
+    <info>Enter a word. If matched with an answer tag for another question this will hide this question. Can be left blank.</info>
     <v-combobox
       v-model="value.excludeTags"
       chips
@@ -40,8 +40,7 @@
       label="Exclude tags"
       multiple
       solo/>
-    <file-upload v-model="value.img"/>
-    <v-subheader>Choices</v-subheader>
+    <h3>Choices</h3>
     <v-expansion-panels accordion>
       <draggable v-model="choiceOrder" v-bind="dragOptions" @start="drag = true" @end="drag = false" handle=".handle">
         <transition-group type="transition" :name="!drag ? 'flip-list' : null">
@@ -64,8 +63,10 @@
               </template>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-text-field label="Choice label" v-model="choice.value"/>
+              <label>Choice label</label>
+              <v-text-field outlined v-model="choice.value"/>
               <file-upload v-model="choice.img"/>
+              <label>Choice tags</label>
               <v-combobox
                 v-model="choice.tags"
                 chips
@@ -92,15 +93,11 @@
                     </template>
                   </v-expansion-panel-header>
                   <v-expansion-panel-content v-if="choice.dialog">
-                    <v-text-field 
-                      v-model="choice.dialog.title"
-                      label="Title"/>
-                    <v-textarea 
-                      v-model="choice.dialog.content"
-                      label="Content"/>
-                    <v-switch 
-                      v-model="choice.dialog.fullscreen"
-                      label="Fullscreen"/>
+                    <info>If this filled in for a choice, it will be displayed when the user selects this choice</info>
+                    <label>Title</label>
+                    <v-text-field outlined v-model="choice.dialog.title"/>
+                    <v-textarea outlined v-model="choice.dialog.content"/>
+                    <v-switch outlined v-model="choice.dialog.fullscreen" label="Show fullscreen"/>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
@@ -119,12 +116,14 @@
   import draggable from 'vuedraggable'
   import FileUpload from "./FileUpload";
   import {itemTypeName} from '@/utils/itemTypes.js'
+  import Info from '@/components/controls/Info'
 
   export default {
     name: 'ChoiceEditor',
     components: {
       draggable,
-      FileUpload
+      FileUpload,
+      Info
     },
     data() {
       return {
