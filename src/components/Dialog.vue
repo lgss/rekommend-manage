@@ -31,11 +31,6 @@ export default {
           default: false
       }
     },
-    mounted() {
-      setTimeout(() => {
-          this.$refs.dialogTitle.focus()
-      })
-    },
     methods: {
       choose(value) {
         this.$emit('result', value)
