@@ -26,7 +26,7 @@
             <v-btn @click="validate">Validate</v-btn>
             <v-btn v-if="currentResource.id" @click="updateResource" :loading="updateLoading">Update</v-btn>
             <v-btn v-else @click="createResource">Save</v-btn>
-            <v-btn @click="deleteResource">Delete</v-btn>
+            <v-btn @click="confirmDelete">Delete</v-btn>
           </v-btn-toggle>
         </v-container>
         <component ref="resourceComponent" :is="component" v-model="currentResource.doc"/>
@@ -54,6 +54,7 @@
       resources: [],
       resourceIndex: -1,
       component: "resource-editor",
+      endpoint: process.env.VUE_APP_API_ENDPOINT,
       drawer: true,
       searchText: "",
       updateLoading: false,
@@ -124,6 +125,17 @@
         })
         .catch(console.log)
       },
+      confirmDelete() {
+            this.$dialog
+                .display(
+                    "Delete Resource",
+                    "Are you sure you want to delete this resource? This action cannot be undone",
+                    [{text:'Cancel', color:''}, {text:'Yes, Delete', color:''}]
+                )
+                .then((result) => {
+                    if (result === 1) this.deleteResource();
+                });
+        },
       deleteResource() {
         let delReq = {
           method: "DELETE"
@@ -132,6 +144,7 @@
         .then(()=>{
           this.resources.splice(this.resourceIndex,1);
           this.resourceIndex = null;
+          this.deleteConfirmation = false
         })
       },
       newResource() {
