@@ -1,20 +1,10 @@
 <template>  
     <v-dialog persistent :input="change" :fullscreen="fullscreen" id="modal-dialog" v-model="dialog" width="500px">
         <v-card>
-            <v-card-title 
-              ref="dialog-title"
-              id="dialog-title" 
-              role="heading" 
-              aria-level="3" 
-              class="text-h4 mb-2"
-              tabindex="0"
-              v-html="title"
-            ></v-card-title>
-            <v-card-text 
-              id="dialog-content"
-              tabindex="0"
-              v-html="message"
-            ></v-card-text>
+            <v-card-title id='dialog-title' ref="dialogTitle" role="heading" aria-level="3" class="text-h4 mb-2" tabindex="0">
+              {{title}}
+            </v-card-title>
+            <v-card-text id="dialog-content" tabindex="0" v-html="message" />
             <v-card-actions>
               <v-btn 
                 role="button"
@@ -41,9 +31,9 @@ export default {
           default: false
       }
     },
-    created() {
-      this.$nextTick(()=> {
-          this.$refs[`dialog-title`].focus()
+    mounted() {
+      setTimeout(() => {
+          this.$refs.dialogTitle.focus()
       })
     },
     methods: {
@@ -69,7 +59,7 @@ export default {
     background-color: rgba(33, 33, 33, 0.9);
   }
 
-  .v-card__subtitle, .v-card__text {
+  #dialog-content {
     font-size: 1rem;
   }
 </style>
