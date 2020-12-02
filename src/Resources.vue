@@ -2,9 +2,10 @@
   <div>
     <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1" v-model="drawer">
       <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-left </v-icon>
+      <v-text-field v-model="searchText" filled label="Search" clearable ></v-text-field>
       <v-list>
         <v-list-item-group v-if="resources.length" v-model="resourceIndex" color="primary">
-          <v-list-item v-for="(resource, i) in resources" :key="i">
+          <v-list-item v-for="(resource, i) in filteredResourceList" :key="i">
             <v-list-item-content>
               <v-list-item-title v-if="resource.doc" v-html="resource.doc.name">Hello</v-list-item-title>
             </v-list-item-content>
@@ -38,6 +39,7 @@
 
 <script>
   import ResourceEditor from './components/controls/ResourceEditor'
+  import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
   
   export default {
     components :{
@@ -49,16 +51,23 @@
       component: "resource-editor",
       endpoint: process.env.VUE_APP_API_ENDPOINT,
       drawer: true,
-      deleteConfirmation: false
+      searchText: ""
     }),
     created() {
-      fetch(this.endpoint+'/resources')
+      fetch(playerEndpoint + '/resources')
       .then(res => res.json())
       .then(res => { this.resources = res })
     },
     computed: {
       currentResource() {
         return this.resources.length && this.resourceIndex > -1 ? this.resources[this.resourceIndex] : null
+      },
+      filteredResourceList() {
+        if (!this.searchText) return this.resources;
+        else
+          return this.resources.filter((r) =>
+            r.doc.name.toLowerCase().includes(this.searchText.toLowerCase())
+          );
       }
     },
     methods: {
@@ -77,7 +86,7 @@
             ]
           })
         }
-        fetch(this.endpoint+'/resources/'+this.currentResource.id, putReq )
+        fetch(`${editorEndpoint}/resources/${this.currentResource.id}`, putReq )
           .then((res) => res.json())
           .catch((err)=>console.error(err))
       },
@@ -90,7 +99,7 @@
           },
           body: JSON.stringify(this.currentResource.doc)
         }
-        fetch(this.endpoint+'/resources', req)
+        fetch(`${editorEndpoint}/resources`, req)
         .then((res)=> res.json())
         .then((res)=>{
           this.$set(this.resources, this.resourceIndex, res)
@@ -112,7 +121,7 @@
         let delReq = {
           method: "DELETE"
         }
-        fetch(this.endpoint + '/resources/' + this.currentResource.id, delReq)
+        fetch(`${editorEndpoint}/resources/${this.currentResource.id}`, delReq)
         .then(()=>{
           this.resources.splice(this.resourceIndex,1);
           this.resourceIndex = null;
