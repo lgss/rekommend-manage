@@ -43,6 +43,7 @@
 
 <script>
   import ParentEditor from './components/controls/ParentEditor.vue'
+  import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
   
   export default {
     components :{
@@ -51,7 +52,6 @@
     data: () => ({
       parents: [],
       parentIndex: -1,
-      endpoint: process.env.VUE_APP_API_ENDPOINT,
       drawer: true,
       updateLoading: false,
       showSnackbar: false,
@@ -60,7 +60,7 @@
       snackbarTimout: 2000
     }),
     created() {
-      fetch(this.endpoint+'/journey-parents')
+      fetch(playerEndpoint + '/journey-parents')
       .then(res => res.json())
       .then(res => { this.parents = res })
     },
@@ -92,7 +92,7 @@
             ]
           })
         }
-        fetch(this.endpoint+'/journey-parent/'+this.currentParent.id, putReq )
+        fetch(`${editorEndpoint}/journey-parent/${this.currentParent.id}`, putReq )
           .then((res) => {
             res.json();
             this.updateLoading = false;
@@ -112,7 +112,7 @@
           },
           body: JSON.stringify(this.currentParent)
         }
-        fetch(this.endpoint+'/journey-parent', req)
+        fetch(`${playerEndpoint}/journey-parent`, req)
         .then((res)=> res.json())
         .then((res)=>{
           this.$set(this.parents, this.parentIndex, res)
@@ -123,7 +123,7 @@
         let delReq = {
           method: "DELETE"
         }
-        fetch(this.endpoint + '/journey-parent/' + this.currentParent.id, delReq)
+        fetch(`${editorEndpoint}/journey-parent/${this.currentParent.id}`, delReq)
         .then(()=>{
           this.parents.splice(this.parentIndex,1);
           this.parentIndex = null;

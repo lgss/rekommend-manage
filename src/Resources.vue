@@ -44,6 +44,7 @@
 
 <script>
   import ResourceEditor from './components/controls/ResourceEditor'
+  import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
   
   export default {
     components :{
@@ -53,7 +54,6 @@
       resources: [],
       resourceIndex: -1,
       component: "resource-editor",
-      endpoint: process.env.VUE_APP_API_ENDPOINT,
       drawer: true,
       searchText: "",
       updateLoading: false,
@@ -63,7 +63,7 @@
       snackbarTimout: 2000
     }),
     created() {
-      fetch(this.endpoint+'/resources')
+      fetch(playerEndpoint + '/resources')
       .then(res => res.json())
       .then(res => { this.resources = res })
     },
@@ -96,7 +96,7 @@
             ]
           })
         }
-        fetch(this.endpoint+'/resources/'+this.currentResource.id, putReq )
+        fetch(`${editorEndpoint}/resources/${this.currentResource.id}`, putReq )
           .then((res) => {
             res.json();
             this.updateLoading = false;
@@ -117,7 +117,7 @@
           },
           body: JSON.stringify(this.currentResource.doc)
         }
-        fetch(this.endpoint+'/resources', req)
+        fetch(`${editorEndpoint}/resources`, req)
         .then((res)=> res.json())
         .then((res)=>{
           this.$set(this.resources, this.resourceIndex, res)
@@ -128,7 +128,7 @@
         let delReq = {
           method: "DELETE"
         }
-        fetch(this.endpoint + '/resources/' + this.currentResource.id, delReq)
+        fetch(`${editorEndpoint}/resources/${this.currentResource.id}`, delReq)
         .then(()=>{
           this.resources.splice(this.resourceIndex,1);
           this.resourceIndex = null;
