@@ -44,7 +44,7 @@
       </template>
       <v-list>
         <v-list-item
-          v-for="(interactionType, index) in interactionTypes.interactionTypes"
+          v-for="(interactionType, index) in interactionTypes"
           :key="index"
           @click="append(index)"
         >
