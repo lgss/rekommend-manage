@@ -14,6 +14,12 @@
             </v-list-item-icon>
             New journey
           </v-list-item>
+          <v-list-item color="primary" @click="testSnack">
+            <v-list-item-icon>
+                <v-icon>mdi-plus</v-icon>
+            </v-list-item-icon>
+            Test snackbar
+          </v-list-item>
           <v-divider/>
           <div v-for="(journey, index) in journeys" :key="'j' + index">
             <v-list-group @click="loadJourney(journey)" prepend-icon="mdi-transit-connection-variant">
@@ -52,12 +58,6 @@
         <component v-else :is="interactionType" v-model="field"/>
       </v-container>
     </v-content>
-    <v-snackbar
-      v-model="showSnackbar"
-      :timeout="snackbarTimout"
-      :color="snackbarColour"
-    > {{ snackbarText }}
-    </v-snackbar>
   </div>
 </template>
 
@@ -84,10 +84,6 @@ export default {
       interactionType: '',
       errorMessages: [],
       updateLoading: false,
-      showSnackbar: false,
-      snackbarColour: null,
-      snackbarText: "",
-      snackbarTimout: 2000,
       saving: false
     }
   },
@@ -106,6 +102,9 @@ export default {
     journeySelector() {
       this.errorMessages = [] 
       //this.loadEditor(this.currentJourney,'journey')
+    },
+    testSnack() {
+      this.$store.dispatch('doSnackbar', {text: new Date(), colour: "error", icon: 'mdi-alert-circle'})
     },
     iconName(typeName) {
       return itemIcon(typeName)
@@ -206,12 +205,12 @@ export default {
         .then((res) => {
           res.json();
           this.updateLoading = false;
-          this.toast("✔️ Changes saved", "success")
+          this.$store.dispatch('doSnackbar', {text: "Changes saved", colour: "success", icon: 'mdi-check-circle'})
         })
         .catch((err)=> {
           console.error(err);
           this.updateLoading = false;
-          this.toast("❌ Changes have not been saved", "error")
+          this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
         })
       }
     },
@@ -246,11 +245,6 @@ export default {
     },
     hasMinimum(key,value,minLength) {
       if(value.length < minLength) {this.errorMessages.push({key:key, message:key + " require at least " + minLength + " value(s)"})}
-    },
-    toast(message, colour) {
-      this.showSnackbar = true;
-      this.snackbarColour = colour;
-      this.snackbarText = message;
     }
   }
 }
