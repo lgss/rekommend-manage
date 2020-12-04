@@ -39,22 +39,17 @@
       </v-list>
     </v-navigation-drawer>
     <v-content>
-      <v-container fluid class="fill-height" v-if="currentJourney">
-        <v-container>
-          <v-btn-toggle>
-            <v-btn v-if="currentJourney.id" @click="updateJourney" :loading="updateLoading">Update</v-btn>
-            <v-btn v-else @click="createJourney">Save</v-btn>
-          </v-btn-toggle>
-        </v-container>
-        <div v-if="errorMessages.length > 0">
-          <h2>There is a problem</h2>
-          <ul>
-            <li v-for="(error, index) in errorMessages" :key="index">
-              {{error.message}}
-            </li>
-          </ul>
-        </div>
-        <component :is="interactionType" v-model="field"/>
+      <v-container fluid class="fill-height">
+          <div v-if="errorMessages.length > 0">
+            <h2>There is a problem</h2>
+            <ul>
+              <li v-for="(error, index) in errorMessages" :key="index">
+                {{error.message}}
+              </li>
+            </ul>
+          </div>
+        <journey v-if="interactionType === 'journey'" v-model="field" @delete="deleteJourney(field.id)"/>
+        <component v-else :is="interactionType" v-model="field"/>
       </v-container>
     </v-content>
     <v-snackbar
@@ -122,6 +117,10 @@ export default {
       this.field = obj
       this.interactionType = fieldType || obj.fieldType
     },
+    clearEditor() {
+      this.interactionType = ''
+      this.field = null
+    },
     newPage() {
       //this.currentJourney.doc.pages.push({title: "New page", items: []})
     },
@@ -178,18 +177,11 @@ export default {
         fetch(`${editorEndpoint}/journeys/${id}`, {
           method: 'DELETE'
         })
-        .then((res) => res.json())
         .then(() =>  {
-          //this.journeys.splice(this.journeys.findIndex(j => j == this.currentJourney),1)
-          //this.currentJourney = null
-          this.journeySelector()
+          this.clearEditor()
         })
         .catch((err)=>console.error(err))
-      } else {
-        this.journeys.splice(this.journeys.findIndex(j => j == this.currentJourney),1)
-        //this.currentJourney = null;
-        this.journeySelector()
-      }    
+      } 
     },
     updateJourney() {
       this.updateLoading = true;

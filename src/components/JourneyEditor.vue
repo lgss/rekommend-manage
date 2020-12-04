@@ -19,7 +19,7 @@
                     required
                 ></v-text-field>
                 <v-btn class="my-2" :loading="saving" @click="save">Save</v-btn>
-                <v-btn class="my-2 ml-4" >Delete Journey</v-btn>
+                <v-btn class="my-2 ml-4" @click="deleteJourney">Delete Journey</v-btn>
             </v-col>
         </v-row>
         <h3>Pages</h3>
@@ -107,6 +107,9 @@ export default {
     },
     append() {
         this.value.doc.pages.push({title: "New page", items: []})
+    },
+    deleteJourney() {
+        this.$emit('delete')
     },
     save() {
         this.saving = true;
