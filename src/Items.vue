@@ -48,7 +48,8 @@
               </li>
             </ul>
           </div>
-        <component :is="interactionType" v-model="field"/>
+        <journey v-if="interactionType === 'journey'" v-model="field" @delete="deleteJourney(field.id)"/>
+        <component v-else :is="interactionType" v-model="field"/>
       </v-container>
     </v-content>
   </div>
@@ -104,6 +105,10 @@ export default {
     loadEditor(obj, fieldType) {
       this.field = obj
       this.interactionType = fieldType || obj.fieldType
+    },
+    clearEditor() {
+      this.interactionType = ''
+      this.field = null
     },
     newPage() {
       //this.currentJourney.doc.pages.push({title: "New page", items: []})
@@ -161,18 +166,11 @@ export default {
         fetch(`${editorEndpoint}/journeys/${id}`, {
           method: 'DELETE'
         })
-        .then((res) => res.json())
         .then(() =>  {
-          //this.journeys.splice(this.journeys.findIndex(j => j == this.currentJourney),1)
-          //this.currentJourney = null
-          this.journeySelector()
+          this.clearEditor()
         })
         .catch((err)=>console.error(err))
-      } else {
-        this.journeys.splice(this.journeys.findIndex(j => j == this.currentJourney),1)
-        //this.currentJourney = null;
-        this.journeySelector()
-      }    
+      } 
     },
     updateJourney() {
       this.validateJourney()
