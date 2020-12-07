@@ -26,18 +26,20 @@
             <v-btn @click="validate">Validate</v-btn>
             <v-btn v-if="currentResource.id" @click="updateResource">Update</v-btn>
             <v-btn v-else @click="createResource">Save</v-btn>
-            <v-btn @click="deleteResource">Delete</v-btn>
+            <v-btn @click="confirmDelete">Delete</v-btn>
           </v-btn-toggle>
         </v-container>
         <component ref="resourceComponent" :is="component" v-model="currentResource.doc"/>
       </v-container>
     </v-content>
+    
   </div>
 </template>
 
 
 <script>
   import ResourceEditor from './components/controls/ResourceEditor'
+  import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
   
   export default {
     components :{
@@ -52,7 +54,7 @@
       searchText: ""
     }),
     created() {
-      fetch(this.endpoint+'/resources')
+      fetch(playerEndpoint + '/resources')
       .then(res => res.json())
       .then(res => { this.resources = res })
     },
@@ -84,7 +86,7 @@
             ]
           })
         }
-        fetch(this.endpoint+'/resources/'+this.currentResource.id, putReq )
+        fetch(`${editorEndpoint}/resources/${this.currentResource.id}`, putReq )
           .then((res) => res.json())
           .catch((err)=>console.error(err))
       },
@@ -97,21 +99,33 @@
           },
           body: JSON.stringify(this.currentResource.doc)
         }
-        fetch(this.endpoint+'/resources', req)
+        fetch(`${editorEndpoint}/resources`, req)
         .then((res)=> res.json())
         .then((res)=>{
           this.$set(this.resources, this.resourceIndex, res)
         })
         .catch(console.log)
       },
+      confirmDelete() {
+            this.$dialog
+                .display(
+                    "Delete Resource",
+                    "Are you sure you want to delete this resource? This action cannot be undone",
+                    [{text:'Cancel', color:''}, {text:'Yes, Delete', color:''}]
+                )
+                .then((result) => {
+                    if (result === 1) this.deleteResource();
+                });
+        },
       deleteResource() {
         let delReq = {
           method: "DELETE"
         }
-        fetch(this.endpoint + '/resources/' + this.currentResource.id, delReq)
+        fetch(`${editorEndpoint}/resources/${this.currentResource.id}`, delReq)
         .then(()=>{
           this.resources.splice(this.resourceIndex,1);
           this.resourceIndex = null;
+          this.deleteConfirmation = false
         })
       },
       newResource() {
