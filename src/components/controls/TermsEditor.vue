@@ -2,55 +2,6 @@
     <v-container>
         <v-container v-if="loading"> </v-container>
         <v-container v-else>
-            <v-row id="preview">
-                <v-col>
-                    <v-row>
-                        <v-col>
-                            <h1 class="float-left">PREVIEW</h1>
-                        </v-col>
-                    </v-row>
-                    <v-card>
-                        <v-row>
-                            <v-col>
-                                <v-app-bar :color="appPrimary" prominent>
-                                    <v-container class="d-flex flex-column align-center">
-                                        <a>
-                                            <v-toolbar-title class="white--text">
-                                                <div role="heading" aria-level="1" class="font-weight-black">{{ appTitle }}</div>
-                                            </v-toolbar-title>
-                                        </a>
-                                        <v-container class="d-flex flex-column align-center">
-                                            <h2 role="heading" aria-level="2" tabindex="0" class="white--text subheader">
-                                                Subheader
-                                            </h2>
-                                        </v-container>
-                                    </v-container>
-                                </v-app-bar>
-                            </v-col>
-                        </v-row>
-                        <v-row class="mx-5">
-                            <v-container>
-                                    <h1 id="title">{{ title }}</h1>
-                            </v-container>
-                            <v-divider />
-                            <v-container
-                                id="content"
-                                class=""
-                                v-html="content"
-                            ></v-container>
-                        </v-row>
-                        <v-footer :color="appSecondary" class="justify-center">
-                            <v-card flat tile :color="appSecondary">
-                                <v-card-text>
-                                    <a class="white--text">
-                                        Terms and Conditions
-                                    </a>
-                                </v-card-text>
-                            </v-card>
-                        </v-footer>
-                    </v-card>
-                </v-col>
-            </v-row>
             <v-row>
                 <v-col md="6">
                     <v-text-field label="Title" v-model="title"/> 
