@@ -27,12 +27,12 @@
 </template>
 
 <script>
-import HTMLEditor from './HTMLEditor'
-/* eslint-disable */
+import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
+
 export default {
     name: 'ThemeEditor',
     created() {
-        fetch(this.endpoint + '/theme')
+        fetch(playerEndpoint + '/theme')
         .then(x => x.json())
         .then(x => {
             this.appTitle = x.title;
@@ -41,12 +41,8 @@ export default {
             this.loading = false
         })
     },
-    components: {
-        'html-editor' : HTMLEditor
-    },
     data() {
         return {
-            endpoint: process.env.VUE_APP_API_ENDPOINT,
             appTitle: null,
             appPrimary: "#1F63A3",
             appSecondary: "#1F63A3",
@@ -56,7 +52,7 @@ export default {
     },
     methods: {
         saveTheme() {
-            fetch(this.endpoint + '/theme', {
+            fetch(editorEndpoint + '/theme', {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"

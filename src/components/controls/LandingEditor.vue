@@ -23,19 +23,20 @@
 
 <script>
 import HTMLEditor from './HTMLEditor'
-/* eslint-disable */
+import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
+
 export default {
     name: 'LandingEditor',
     created() {
         Promise.all([
-            fetch(this.endpoint + "/theme")
+            fetch(playerEndpoint + "/theme")
                 .then((x) => x.json())
                 .then((x) => {
                     this.appTitle = x.title;
                     this.appPrimary = x.primary;
                     this.appSecondary = x.secondary;
                 }),
-            fetch(this.endpoint + '/content/landing')
+            fetch(playerEndpoint + '/content/landing')
                 .then((x) => (x.ok ? x.json() : Promise.reject(x)))
                 .then((x) => {
                     this.title = x.title;
@@ -57,7 +58,6 @@ export default {
     },
     data() {
         return {
-            endpoint: process.env.VUE_APP_API_ENDPOINT,
             method: "PUT",
             appTitle: null,
             appPrimary: "#1F63A3",
@@ -69,7 +69,7 @@ export default {
     },
     methods: {
         saveLanding() {
-            fetch(this.endpoint + '/content/landing', {
+            fetch(editorEndpoint + '/content/landing', {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
