@@ -59,6 +59,7 @@
 <script>
 import {interactionTypes, components} from '@/utils/itemTypes';
 import Info from '@/components/controls/Info'
+import uuidv4 from 'uuid'
 
 export default {
   components: {
