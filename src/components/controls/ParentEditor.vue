@@ -43,12 +43,12 @@
 
 <script>
 import FileUpload from "./FileUpload";
+import {playerEndpoint} from '@/utils/endpoints.js'
 
 export default {
     name: "ParentEditor",
     data: () => ({
         valid: true,
-        endpoint: process.env.VUE_APP_API_ENDPOINT,
         rules: {
             label : [
                 v => (!!v && v != "New parent") || 'Name is required',
@@ -59,7 +59,7 @@ export default {
         journeyLookup: []
     }),
     created() {
-        fetch(this.endpoint + "/journeys")
+        fetch(playerEndpoint + "/journeys")
             .then((x) => x.json())
             .then((x) => {
                 this.journeyLookup = x.map((j) => ({ id: j.id, name: j.label }));

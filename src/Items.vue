@@ -1,56 +1,55 @@
 <template>
   <div>
     <v-navigation-drawer app absolute permanent fixed disable-resize-watcher :clipped="true" color="blue--lighten-1">
-      <v-select :items="journeys" v-model="currentJourney" item-text="label" return-object label="Journey"  v-on:input="journeySelector"></v-select>
-      <v-divider></v-divider>
-      <v-container v-if="currentJourney">
-        <v-list-group v-for="(page, index) in currentJourney.doc.pages" :key="index">
-          <template v-slot:activator>
-            <v-list-item-title @click="loadEditor(page, 'page')">Page {{index + 1}} - {{page.title}}</v-list-item-title>
-          </template>
-          <v-list-item @click="loadEditor(item)" link v-for="(item, itemIndex) in page.items" :key="itemIndex">
-            <v-list-item-title>{{item.fieldType}}</v-list-item-title>
-            <v-list-item-subtitle>{{item.label}}</v-list-item-subtitle>
+      <v-list>
+        <div v-if="loading">
+          <v-skeleton-loader type="list-item"/>
+          <v-divider/>
+          <v-skeleton-loader v-for="n in 5" :key="n" type="list-item-avatar"/>
+        </div>
+        <div v-else>
+          <v-list-item color="primary" @click="newJourney">
+            <v-list-item-icon>
+                <v-icon>mdi-plus</v-icon>
+            </v-list-item-icon>
+            New journey
           </v-list-item>
-        </v-list-group>
-        <v-list-item color="primary" @click="newPage" >
-          <v-list-item-icon>
-              <v-icon>mdi-plus</v-icon>
-            </v-list-item-icon>
-          New page
-        </v-list-item>
-        <v-list-item color="primary" @click="deleteJourney">
-          <v-list-item-icon>
-              <v-icon>mdi-delete</v-icon>
-            </v-list-item-icon>
-          Delete journey
-        </v-list-item>
-        <v-divider></v-divider>
-      </v-container>
-      <v-list-item color="primary" @click="newJourney">
-        <v-list-item-icon>
-            <v-icon>mdi-plus</v-icon>
-        </v-list-item-icon>
-        New journey
-      </v-list-item>
+          <v-divider/>
+          <div v-for="(journey, index) in journeys" :key="'j' + index">
+            <v-list-group @click="loadJourney(journey)" prepend-icon="mdi-transit-connection-variant">
+              <template v-slot:activator>
+                <v-list-item-title >{{journey.label}}</v-list-item-title>
+              </template>
+              <div v-for="(page, index) in journey.doc.pages" :key="index" >
+                <v-list-group sub-group no-action append-icon="mdi-list-status" @click="loadEditor(page, 'page')">
+                  <template v-slot:activator>
+                    <v-list-item-title>{{index + 1}}. {{page.title}}</v-list-item-title>
+                  </template>
+                  <v-list-item @click="loadEditor(item)" link v-for="(item, itemIndex) in page.items" :key="itemIndex">
+                    <v-list-item-title>{{itemType(item.fieldType)}}</v-list-item-title>
+                    <v-list-item-icon>
+                      <v-icon>{{iconName(item.fieldType)}}</v-icon>
+                    </v-list-item-icon>
+                  </v-list-item>
+                </v-list-group>
+              </div>
+            </v-list-group>
+          </div>
+        </div>
+      </v-list>
     </v-navigation-drawer>
     <v-content>
-      <v-container fluid class="fill-height" v-if="currentJourney">
-        <v-container>
-          <v-btn-toggle>
-            <v-btn v-if="currentJourney.id" @click="updateJourney" :loading="updateLoading">Update</v-btn>
-            <v-btn v-else @click="createJourney">Save</v-btn>
-          </v-btn-toggle>
-        </v-container>
-        <v-container>
-          <h2 v-if="errorMessages.length > 0">There is a problem</h2>
-          <v-list v-if="errorMessages.length > 0">
-            <v-list-item v-for="(error, index) in errorMessages" :key="index">
-              <v-list-item-title>{{error.message}}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-container>
-        <component :is="interactionType" v-model="field"/>
+      <v-container fluid class="fill-height">
+          <div v-if="errorMessages.length > 0">
+            <h2>There is a problem</h2>
+            <ul>
+              <li v-for="(error, index) in errorMessages" :key="index">
+                {{error.message}}
+              </li>
+            </ul>
+          </div>
+        <journey v-if="interactionType === 'journey'" v-model="field" @delete="deleteJourney(field.id)"/>
+        <component v-else :is="interactionType" v-model="field"/>
       </v-container>
     </v-content>
     <v-snackbar
@@ -64,62 +63,82 @@
 
 <script>
 
-import ChoiceEditor from './components/controls/ChoiceEditor.vue'
-import TextBlockEditor from './components/controls/TextBlockEditor.vue'
 import PageEditor from './components/controls/PageEditor.vue'
-import JourneyEditor from './components/controls/JourneyEditor.vue'
+import JourneyEditor from './components/JourneyEditor.vue'
+import { itemTypeName, itemIcon, components as itemComponents } from './utils/itemTypes'
+import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
 
 export default {
   components: {
-    'single-choice-input': ChoiceEditor,
-    'multiple-choice-input': ChoiceEditor,
+    ...itemComponents,
     'page': PageEditor,
-    'stimulus': TextBlockEditor,
     'journey': JourneyEditor
   },
   data() {
     return {
-      journeys: [],
+      loading: true,
       currentJourney: null,
+      journeys: [],
       item: 1,
       field: {fieldType: "div"},
       interactionType: '',
       errorMessages: [],
-      endpoint: process.env.VUE_APP_API_ENDPOINT,
-      updateLoading: false,
-      showSnackbar: false,
-      snackbarColour: null,
-      snackbarText: "",
-      snackbarTimout: 2000
+      saving: false
     }
   },
   created() {
-    fetch(this.endpoint +'/journeys')
+    fetch(playerEndpoint + '/journeys')
       .then(reply => reply.json())
       .then(data => {
-        this.journeys = data.map(journey => {
-          if (!journey.img) 
-              journey.img = {}; 
-          for (const page of journey.doc.pages) 
-              for (let item of page.items)
-                  if (!item.img)
-                    item.img = {}       
-          return journey})
+        this.journeys = data
       })
+      .finally(() => this.loading = false)
   },
   methods: {
+    itemType(typeName) {
+      return itemTypeName(typeName)
+    },
     journeySelector() {
       this.errorMessages = [] 
-      //let arr = this.journeys.filter((journey)=>{return journey.id == this.currentJourneyId})
-      //this.currentJourney = arr[0]
-      this.loadEditor(this.currentJourney,'journey')
+      //this.loadEditor(this.currentJourney,'journey')
+    },
+    iconName(typeName) {
+      return itemIcon(typeName)
+    },
+    loadJourney(journey) {
+      this.loadEditor(journey, 'journey')
     },
     loadEditor(obj, fieldType) {
       this.field = obj
       this.interactionType = fieldType || obj.fieldType
     },
+    clearEditor() {
+      this.interactionType = ''
+      this.field = null
+    },
     newPage() {
-      this.currentJourney.doc.pages.push({title: "New page", items: []})
+      //this.currentJourney.doc.pages.push({title: "New page", items: []})
+    },
+    save() {
+      this.saving = true
+      fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
+        method: 'PUT',
+        body: JSON.stringify({
+          updates:[
+            {
+              paramName: "label", paramValue: this.currentJourney.label
+            },
+            {
+              paramName: "doc", paramValue: (this.currentJourney.doc)
+            },
+            {
+              paramName: "img", paramValue: (this.currentJourney.img)
+            }
+          ]
+        })
+      })
+      .then(() => this.saving = false)
+      .catch((err)=>console.error(err))
     },
     newJourney() {
       let journey = {
@@ -130,47 +149,40 @@ export default {
         }
       }
       this.journeys.push(journey)
-      this.currentJourney = journey;
+      //this.currentJourney = journey;
       this.journeySelector();
     },
     createJourney() {
       this.validateJourney()
       if(this.errorMessages.length) { return }
-      fetch(this.endpoint+'/journeys', {
+      fetch(editorEndpoint + '/journeys', {
         method:"POST",
         headers: { "content-type":"application/json"},
-        body: JSON.stringify(this.currentJourney)
+        //body: JSON.stringify(this.currentJourney)
       })
       .then(res=>res.json())
       .then(j => {
-        let index = this.journeys.indexOf(this.currentJourney);
+        let index = this.journeys.indexOf(0) //this.currentJourney);
         this.$set(this.journeys,index,j)
-        this.currentJourney = this.journeys[index]
+        //this.currentJourney = this.journeys[index]
       })
     },
-    deleteJourney() {
-      if (this.currentJourney.id) {
-        fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
+    deleteJourney(id) {
+      if (id) {
+        fetch(`${editorEndpoint}/journeys/${id}`, {
           method: 'DELETE'
         })
-        .then((res) => res.json())
         .then(() =>  {
-          this.journeys.splice(this.journeys.findIndex(j => j == this.currentJourney),1)
-          this.currentJourney = null
-          this.journeySelector()
+          this.clearEditor()
         })
         .catch((err)=>console.error(err))
-      } else {
-        this.journeys.splice(this.journeys.findIndex(j => j == this.currentJourney),1)
-        this.currentJourney = null;
-        this.journeySelector()
-      }    
+      } 
     },
     updateJourney() {
       this.updateLoading = true;
       this.validateJourney()
       if(this.errorMessages.length === 0) {
-        fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
+        fetch(`${editorEndpoint}/journeys/${this.currentJourney.id}`, {
           method: 'PUT',
           body:JSON.stringify({
             updates:[
@@ -199,7 +211,7 @@ export default {
       }
     },
     validateJourney() { 
-      this.errorMessages = []  
+      /*this.errorMessages = []  
       // validate journey
       //this.hasValue("journey id",this.currentJourney.id);
       this.hasValue("journey label",this.currentJourney.label);
@@ -222,7 +234,7 @@ export default {
             })
           }
         })
-      })
+      })*/
     },
     hasValue(key,value) {
       if(!value){this.errorMessages.push({key:key, message:key + " cannot be empty"})}

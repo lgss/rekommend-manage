@@ -25,7 +25,7 @@ import PositiveEditor from './components/controls/PositiveEditor.vue'
 import TermsEditor from './components/controls/TermsEditor.vue'
 import CompletedEditor from './components/controls/CompletedEditor.vue'
 import A11yEditor from './components/controls/A11yEditor.vue'
-/* eslint-disable */
+
 export default {
   components: {
     'theme': ThemeEditor,
