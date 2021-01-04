@@ -31,12 +31,6 @@
         <parent ref="parentComponent" v-model="currentParent"/>
       </v-container>
     </v-content>
-    <v-snackbar
-      v-model="showSnackbar"
-      :timeout="snackbarTimout"
-      :color="snackbarColour"
-    > {{ snackbarText }}
-    </v-snackbar>
   </div>
 </template>
 
@@ -52,13 +46,8 @@
     data: () => ({
       parents: [],
       parentIndex: -1,
-      endpoint: process.env.VUE_APP_API_ENDPOINT,
       drawer: true,
-      updateLoading: false,
-      showSnackbar: false,
-      snackbarColour: null,
-      snackbarText: "",
-      snackbarTimout: 2000
+      updateLoading: false
     }),
     created() {
       fetch(playerEndpoint + '/journey-parents')
@@ -97,12 +86,12 @@
           .then((res) => {
             res.json();
             this.updateLoading = false;
-            this.toast("✔️ Changes saved", "success")
+            this.$store.dispatch('doSnackbar', {text: "Changes saved successfully", colour: "success", icon: 'mdi-check-circle'})
           })
           .catch((err) => {
             console.error(err);
             this.updateLoading = false;
-            this.toast("❌ Changes have not been saved", "error")
+            this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
           })
       },
       createParent() {
@@ -139,11 +128,6 @@
         }
         this.parents.push(item);
         this.parentIndex = this.parents.length - 1
-      },
-      toast(message, colour) {
-        this.showSnackbar = true;
-        this.snackbarColour = colour;
-        this.snackbarText = message;
       }
     }
   }

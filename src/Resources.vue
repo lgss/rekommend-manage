@@ -50,7 +50,8 @@
       component: "resource-editor",
       endpoint: process.env.VUE_APP_API_ENDPOINT,
       drawer: true,
-      searchText: ""
+      searchText: "",
+      updateLoading: false
     }),
     created() {
       fetch(playerEndpoint + '/resources')
@@ -87,10 +88,12 @@
           })
         }
         fetch(`${editorEndpoint}/resources/${this.currentResource.id}`, putReq )
-          .then(() => this.toast("Changes have been saved", "success"))
-          .catch((err)=> {
-            console.error(err);
-            this.toast("❌ Changes have not been saved", "error")
+          .then(() => {
+            this.$store.dispatch('doSnackbar', {text: "Changes saved successfully", colour: "success", icon: 'mdi-check-circle'})
+          })
+          .catch((err) => {
+            console.error(err)
+            this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
           })
           .finally(() => {
             this.updateLoading = false;
