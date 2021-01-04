@@ -5,6 +5,7 @@ Vue.use(Vuetify);
 
 import 'vuetify/dist/vuetify.min.css';
 import colors from 'vuetify/lib/util/colors';
+import Dialog from '@/components/dialog.js';
 
 let vuetify = new Vuetify({
     theme: {
@@ -12,5 +13,6 @@ let vuetify = new Vuetify({
     }
 });
 
+Vue.use(Dialog, vuetify)
 
 export default vuetify

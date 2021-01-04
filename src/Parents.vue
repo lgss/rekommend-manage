@@ -23,7 +23,7 @@
         <v-container>
           <v-btn-toggle>
             <v-btn @click="validate">Validate</v-btn>
-            <v-btn v-if="currentParent.id" @click="updateParent">Update</v-btn>
+            <v-btn v-if="currentParent.id" @click="updateParent" :loading="updateLoading">Update</v-btn>
             <v-btn v-else @click="createParent">Save</v-btn>
             <v-btn @click="deleteParent">Delete</v-btn>
           </v-btn-toggle>
@@ -37,6 +37,7 @@
 
 <script>
   import ParentEditor from './components/controls/ParentEditor.vue'
+  import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
   
   export default {
     components :{
@@ -45,11 +46,11 @@
     data: () => ({
       parents: [],
       parentIndex: -1,
-      endpoint: process.env.VUE_APP_API_ENDPOINT,
-      drawer: true
+      drawer: true,
+      updateLoading: false
     }),
     created() {
-      fetch(this.endpoint+'/journey-parents')
+      fetch(playerEndpoint + '/journey-parents')
       .then(res => res.json())
       .then(res => { this.parents = res })
     },
@@ -64,6 +65,7 @@
       },
       updateParent() {
         if (!this.validate()) return;
+        this.updateLoading = true;
         let putReq = {
           method: 'PUT',
           body:JSON.stringify({
@@ -80,9 +82,17 @@
             ]
           })
         }
-        fetch(this.endpoint+'/journey-parent/'+this.currentParent.id, putReq )
-          .then((res) => res.json())
-          .catch((err)=>console.error(err))
+        fetch(`${editorEndpoint}/journey-parent/${this.currentParent.id}`, putReq )
+          .then((res) => {
+            res.json();
+            this.updateLoading = false;
+            this.$store.dispatch('doSnackbar', {text: "Changes saved successfully", colour: "success", icon: 'mdi-check-circle'})
+          })
+          .catch((err) => {
+            console.error(err);
+            this.updateLoading = false;
+            this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
+          })
       },
       createParent() {
         let req = {
@@ -92,7 +102,7 @@
           },
           body: JSON.stringify(this.currentParent)
         }
-        fetch(this.endpoint+'/journey-parent', req)
+        fetch(`${playerEndpoint}/journey-parent`, req)
         .then((res)=> res.json())
         .then((res)=>{
           this.$set(this.parents, this.parentIndex, res)
@@ -103,7 +113,7 @@
         let delReq = {
           method: "DELETE"
         }
-        fetch(this.endpoint + '/journey-parent/' + this.currentParent.id, delReq)
+        fetch(`${editorEndpoint}/journey-parent/${this.currentParent.id}`, delReq)
         .then(()=>{
           this.parents.splice(this.parentIndex,1);
           this.parentIndex = null;

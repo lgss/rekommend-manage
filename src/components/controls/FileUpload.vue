@@ -15,8 +15,8 @@
                 </v-card>
             </v-col>
             <v-col v-show="image.src">
-                <v-text-field label="Image description (alt text)" v-model="image.alt" />
-                <v-text-field label="Image mouseover (title)" v-model="image.title" />
+                <v-text-field outlined label="Image description (alt text)" v-model="image.alt" />
+                <v-text-field outlined label="Image mouseover (title)" v-model="image.title" />
             </v-col>
         </v-row>  
     </v-form>
@@ -27,8 +27,7 @@
 // So, how to fix it? I'm inclined to think that marking the files as temporary 
 // with a prefix, so that it has a TTL and then changing it to a permanent file
 import {uploadImage, deleteFile} from '@/utils/file.js'
-
-const endpoint = process.env.VUE_APP_API_ENDPOINT
+import {playerEndpoint} from '@/utils/endpoints.js'
 
 export default {
     name: "file-upload",
@@ -45,7 +44,7 @@ export default {
     },
     computed: {
         image: {
-            get: function() {return this.internal_image},
+            get: function() {return this.internal_image || {}},
             set: function(newValue) {
                 this.internal_image = newValue
                 return this.$emit('input', newValue)
@@ -58,7 +57,7 @@ export default {
     methods: {
         displayImage() {
             if (this.internal_image && this.internal_image.src)
-                return endpoint + '/image/' + this.internal_image.src
+                return playerEndpoint + '/image/' + this.internal_image.src
             
             return "/img/image-placeholder.png"
         },
