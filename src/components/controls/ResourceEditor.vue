@@ -29,7 +29,7 @@
             
             Resource description
             <html-editor
-                label="Brief description of what the resource does and what it should help the user with"
+                label="A brief description of what the resource does and what it should help the user with"
                 v-model="value.content"
             />
             <v-row>
