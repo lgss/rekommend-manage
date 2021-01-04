@@ -88,15 +88,15 @@
           })
         }
         fetch(`${editorEndpoint}/resources/${this.currentResource.id}`, putReq )
-          .then((res) => {
-            res.json();
-            this.updateLoading = false;
+          .then(() => {
             this.$store.dispatch('doSnackbar', {text: "Changes saved successfully", colour: "success", icon: 'mdi-check-circle'})
           })
           .catch((err) => {
-            console.error(err);
-            this.updateLoading = false;
+            console.error(err)
             this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
+          })
+          .finally(() => {
+            this.updateLoading = false;
           })
       },
       createResource() {

@@ -83,16 +83,14 @@
           })
         }
         fetch(`${editorEndpoint}/journey-parent/${this.currentParent.id}`, putReq )
-          .then((res) => {
-            res.json();
-            this.updateLoading = false;
+          .then(() => {
             this.$store.dispatch('doSnackbar', {text: "Changes saved successfully", colour: "success", icon: 'mdi-check-circle'})
           })
           .catch((err) => {
             console.error(err);
-            this.updateLoading = false;
             this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
           })
+          .finally(() => {this.updateLoading = false})
       },
       createParent() {
         let req = {

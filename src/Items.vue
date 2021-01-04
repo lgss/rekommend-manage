@@ -14,12 +14,6 @@
             </v-list-item-icon>
             New journey
           </v-list-item>
-          <v-list-item color="primary" @click="testSnack">
-            <v-list-item-icon>
-                <v-icon>mdi-plus</v-icon>
-            </v-list-item-icon>
-            Test snackbar
-          </v-list-item>
           <v-divider/>
           <div v-for="(journey, index) in journeys" :key="'j' + index">
             <v-list-group @click="loadJourney(journey)" prepend-icon="mdi-transit-connection-variant">
@@ -102,9 +96,6 @@ export default {
     journeySelector() {
       this.errorMessages = [] 
       //this.loadEditor(this.currentJourney,'journey')
-    },
-    testSnack() {
-      this.$store.dispatch('doSnackbar', {text: new Date(), colour: "error", icon: 'mdi-alert-circle'})
     },
     iconName(typeName) {
       return itemIcon(typeName)
@@ -202,16 +193,14 @@ export default {
             ]
           })
         })
-        .then((res) => {
-          res.json();
-          this.updateLoading = false;
+        .then(() => {
           this.$store.dispatch('doSnackbar', {text: "Changes saved", colour: "success", icon: 'mdi-check-circle'})
         })
         .catch((err)=> {
           console.error(err);
-          this.updateLoading = false;
           this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
         })
+        .finally(() => {this.updateLoading = false})
       }
     },
     validateJourney() { 
