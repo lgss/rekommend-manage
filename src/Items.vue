@@ -198,9 +198,7 @@ export default {
             ]
           })
         })
-        .then((res) => {
-          res.json();
-          this.updateLoading = false;
+        .then(() => {
           this.toast("✔️ Changes saved", "success")
         })
         .catch((err)=> {
@@ -208,6 +206,7 @@ export default {
           this.updateLoading = false;
           this.toast("❌ Changes have not been saved", "error")
         })
+        .finally(() => {this.updateLoading = false})
       }
     },
     validateJourney() { 
