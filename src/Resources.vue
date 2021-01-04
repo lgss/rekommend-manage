@@ -32,7 +32,6 @@
         <component ref="resourceComponent" :is="component" v-model="currentResource.doc"/>
       </v-container>
     </v-content>
-    
   </div>
 </template>
 
