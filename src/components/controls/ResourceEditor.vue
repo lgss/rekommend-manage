@@ -4,9 +4,7 @@
             <v-row>
                 <v-col>
                     Resource name or title
-                    <div class="v-label theme--light">
-                        🛈 Will help user identify the resource
-                    </div>
+                    <info>Will help user identify the resource</info>
                     <v-text-field
                         v-model="value.name"
                         :rules="rules.name"
@@ -15,9 +13,7 @@
                 </v-col>
                 <v-col>
                     Resource category
-                    <div class="v-label theme--light">
-                        🛈 Will help user identify what situation the resource can help them in
-                    </div>
+                    <info>Will help user identify what situation the resource can help them in</info>
                     <v-combobox
                         label=""
                         v-model="value.categories"
@@ -33,15 +29,13 @@
             
             Resource description
             <html-editor
-                label="🛈 Brief description of what the resource does and what it should help the user with"
+                label="Brief description of what the resource does and what it should help the user with"
                 v-model="value.content"
             />
             <v-row>
                 <v-col>
                     Resource logo
-                    <div class="v-label theme--light">
-                        🛈 Will help user identify the resource
-                    </div>
+                    <info>Helps user identify the resource</info>
                     <file-upload 
                         label=""
                         ref="fileUpload" 
@@ -50,9 +44,7 @@
                 </v-col>
                 <v-col>
                     Resource link
-                    <div class="v-label theme--light">
-                        🛈 Link is displayed as a button which when clicked will open a new tab
-                    </div>
+                    <info>The link is displayed as a button which when clicked will open a new tab</info>
                     <v-text-field
                         v-model="value.moreInfoUrl"
                         :rules="rules.url"
@@ -68,9 +60,8 @@
                 </v-col>
                 </v-row>
             <v-row>
-                <div class="v-label theme--light" style="padding-left:12px">
-                    🛈 Tags are how we link an answer to a resource. Include tags when matched with tags in questions will make the resource appear. Exclude tags will do the opposite
-                </div>
+                <info>Tags are how we link an answer to a resource. Include tags when matched with tags 
+                    in questions will make the resource appear. Exclude tags will do the opposite</info>
             </v-row>
             <v-row>
                 <v-col>
@@ -106,6 +97,7 @@
 <script>
 import HTMLEditor from "./HTMLEditor";
 import FileUpload from "./FileUpload";
+import Info from '@/components/controls/Info'
 
 export default {
     name: "ResourceEditor",
@@ -145,7 +137,8 @@ export default {
     },
     components: {
         "html-editor": HTMLEditor,
-        "file-upload": FileUpload
+        "file-upload": FileUpload,
+        Info
     },
 }
 </script>
