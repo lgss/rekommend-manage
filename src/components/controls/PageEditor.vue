@@ -43,6 +43,7 @@
         </v-btn>
       </template>
       <v-list>
+        <v-list-item @click="addYesNo()">Yes/No choice input</v-list-item>
         <v-list-item
           v-for="(interactionType, index) in interactionTypes"
           :key="index"
@@ -58,6 +59,7 @@
 <script>
 import {interactionTypes, components} from '@/utils/itemTypes';
 import Info from '@/components/controls/Info'
+import uuidv4 from 'uuid'
 
 export default {
   components: {
@@ -75,8 +77,23 @@ export default {
     append(index) {
       this.value.items.push({fieldType: index})
     },
+    addYesNo(){
+      this.value.items.push({
+        fieldType: 'single-choice-input',
+        choices: this.createChoice(['Yes','No','Maybe'])
+      })
+    },
     remove(idx) {
       this.value.items.splice(idx, 1)
+    },
+    createChoice(choices) {
+      return choices.map(x => ({
+        value: x,
+        id: uuidv4(),
+        img: {},
+        choices: [],
+        tags: []
+        }))
     }
   }
 }
