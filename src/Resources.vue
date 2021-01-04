@@ -24,7 +24,7 @@
         <v-container>
           <v-btn-toggle>
             <v-btn @click="validate">Validate</v-btn>
-            <v-btn v-if="currentResource.id" @click="updateResource">Update</v-btn>
+            <v-btn v-if="currentResource.id" @click="updateResource" :loading="updateLoading">Update</v-btn>
             <v-btn v-else @click="createResource">Save</v-btn>
             <v-btn @click="confirmDelete">Delete</v-btn>
           </v-btn-toggle>
@@ -32,7 +32,6 @@
         <component ref="resourceComponent" :is="component" v-model="currentResource.doc"/>
       </v-container>
     </v-content>
-    
   </div>
 </template>
 
@@ -51,7 +50,8 @@
       component: "resource-editor",
       endpoint: process.env.VUE_APP_API_ENDPOINT,
       drawer: true,
-      searchText: ""
+      searchText: "",
+      updateLoading: false
     }),
     created() {
       fetch(playerEndpoint + '/resources')
@@ -76,6 +76,7 @@
       },
       updateResource() {
         if (!this.validate()) return;
+        this.updateLoading = true;
         let putReq = {
           method: 'PUT',
           body:JSON.stringify({
@@ -87,8 +88,16 @@
           })
         }
         fetch(`${editorEndpoint}/resources/${this.currentResource.id}`, putReq )
-          .then((res) => res.json())
-          .catch((err)=>console.error(err))
+          .then((res) => {
+            res.json();
+            this.updateLoading = false;
+            this.$store.dispatch('doSnackbar', {text: "Changes saved successfully", colour: "success", icon: 'mdi-check-circle'})
+          })
+          .catch((err) => {
+            console.error(err);
+            this.updateLoading = false;
+            this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
+          })
       },
       createResource() {
         if (!this.validate()) return;
