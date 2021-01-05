@@ -129,11 +129,14 @@ export default {
                 ]}
             )
         })
-        .then(() => {}) // TODO: replace with vuetify alert
+        .then(() => {
+            this.$store.dispatch('doSnackbar', {text: "Changes saved successfully", colour: "success", icon: 'mdi-check-circle'})
+        }) 
         .finally(() => this.saving = false)
         .catch((err)=> {
+
+            this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
             console.error(err);
-            alert("There was a problem saving the journey") //TODO: replace with vuetify alert
         })
     }
   }

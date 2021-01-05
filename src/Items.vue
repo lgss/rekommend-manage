@@ -77,6 +77,7 @@ export default {
       field: {fieldType: "div"},
       interactionType: '',
       errorMessages: [],
+      updateLoading: false,
       saving: false
     }
   },
@@ -173,6 +174,7 @@ export default {
       } 
     },
     updateJourney() {
+      this.updateLoading = true;
       this.validateJourney()
       if(this.errorMessages.length === 0) {
         fetch(`${editorEndpoint}/journeys/${this.currentJourney.id}`, {
@@ -191,8 +193,14 @@ export default {
             ]
           })
         })
-        .then((res) => res.json())
-        .catch((err)=>console.error(err))
+        .then(() => {
+          this.$store.dispatch('doSnackbar', {text: "Changes saved", colour: "success", icon: 'mdi-check-circle'})
+        })
+        .catch((err)=> {
+          console.error(err);
+          this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
+        })
+        .finally(() => {this.updateLoading = false})
       }
     },
     validateJourney() { 
