@@ -31,6 +31,11 @@
         <Resources/>
       </v-tab-item>
     </v-tabs-items>
+
+    <v-snackbar v-model="showSnackbar" :timeout="snackbarTimeout" :color="snackbarColour"> 
+      <v-icon class="mr-3" color="white">{{snackbarIcon}}</v-icon>
+      <div style="width:100%">{{ snackbarText }}</div>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -39,6 +44,7 @@ import Parents from './Parents.vue';
 import Items from './Items.vue';
 import General from './General.vue';
 import Resources from './Resources.vue';
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'App',
@@ -50,8 +56,21 @@ export default {
     Resources
   },
 
+  computed: {
+    ...mapGetters([
+      'snackbarText',
+      'snackbarColour',
+      'snackbarTimeout',
+      'snackbarIcon'
+    ]),
+    showSnackbar: {
+      get: function() {return this.$store.getters.showSnackbar},
+      set: function(value) {this.$store.commit('setSnackbarVisible', value)}
+    }
+  },
+
   data: () => ({
-    tab: 'journeys'
+    tab: 'journeys',
   })
 };
 </script>

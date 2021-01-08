@@ -23,7 +23,7 @@
         <v-container>
           <v-btn-toggle>
             <v-btn @click="validate">Validate</v-btn>
-            <v-btn v-if="currentParent.id" @click="updateParent">Update</v-btn>
+            <v-btn v-if="currentParent.id" @click="updateParent" :loading="updateLoading">Update</v-btn>
             <v-btn v-else @click="createParent">Save</v-btn>
             <v-btn @click="deleteParent">Delete</v-btn>
           </v-btn-toggle>
@@ -46,7 +46,8 @@
     data: () => ({
       parents: [],
       parentIndex: -1,
-      drawer: true
+      drawer: true,
+      updateLoading: false
     }),
     created() {
       fetch(playerEndpoint + '/journey-parents')
@@ -64,6 +65,7 @@
       },
       updateParent() {
         if (!this.validate()) return;
+        this.updateLoading = true;
         let putReq = {
           method: 'PUT',
           body:JSON.stringify({
@@ -81,8 +83,14 @@
           })
         }
         fetch(`${editorEndpoint}/journey-parent/${this.currentParent.id}`, putReq )
-          .then((res) => res.json())
-          .catch((err)=>console.error(err))
+          .then(() => {
+            this.$store.dispatch('doSnackbar', {text: "Changes saved successfully", colour: "success", icon: 'mdi-check-circle'})
+          })
+          .catch((err) => {
+            console.error(err);
+            this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
+          })
+          .finally(() => {this.updateLoading = false})
       },
       createParent() {
         let req = {
