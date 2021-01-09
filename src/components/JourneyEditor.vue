@@ -66,6 +66,7 @@ import FileUpload from "./controls/FileUpload";
 import PageEditor from '@/components/controls/PageEditor'
 import {editorEndpoint} from '@/utils/endpoints.js'
 import Info from '@/components/controls/Info'
+import {v4 as uuidv4} from 'uuid'
 
 export default {
     name: 'JourneyEditor',
@@ -113,7 +114,8 @@ export default {
     },
     save() {
         this.saving = true;
-        fetch(`${editorEndpoint}/journeys/${this.value.id}`, {
+        const id = this.value.id || uuidv4()
+        fetch(`${editorEndpoint}/journeys/${id}`, {
             method: 'PUT',
             body:JSON.stringify({
                 updates:[

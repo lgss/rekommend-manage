@@ -5,7 +5,7 @@
       color="primary"
       dark
     >
-      <v-toolbar-title>{{ process.env.TITLE }} editor</v-toolbar-title>
+      <v-toolbar-title>{{ appTitle }} editor</v-toolbar-title>
 
       <template v-slot:extension>
         <v-tabs grow v-model="tab">
@@ -66,7 +66,8 @@ export default {
     showSnackbar: {
       get: function() {return this.$store.getters.showSnackbar},
       set: function(value) {this.$store.commit('setSnackbarVisible', value)}
-    }
+    },
+    appTitle() {return process.env.TITLE}
   },
 
   data: () => ({

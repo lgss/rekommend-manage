@@ -36,7 +36,7 @@ export default {
                     this.appPrimary = x.primary;
                     this.appSecondary = x.secondary;
                 }),
-            fetch(playerEndpoint + "/content/a11y")
+            fetch(editorEndpoint + "/content/a11y")
                 .then((x) => (x.ok ? x.json() : Promise.reject(x)))
                 .then((x) => {
                     this.title = x.title;

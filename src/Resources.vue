@@ -38,7 +38,7 @@
 
 <script>
   import ResourceEditor from './components/controls/ResourceEditor'
-  import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
+  import {editorEndpoint} from '@/utils/endpoints.js'
   
   export default {
     components :{
@@ -54,7 +54,7 @@
       updateLoading: false
     }),
     created() {
-      fetch(playerEndpoint + '/resources')
+      fetch(editorEndpoint + '/resources')
       .then(res => res.json())
       .then(res => { this.resources = res })
     },

@@ -10,6 +10,7 @@
             <file-upload ref="fileUpload" v-model="value.img"/>
 
             <v-autocomplete
+                class="mt-6"
                 v-model="value.journeys"
                 :items="journeyLookup"
                 filled
