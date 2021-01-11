@@ -14,7 +14,7 @@
             </v-row>
             <v-row justify="center">
                 <v-col>
-                    <v-btn @click="saveA11y" color="success">Save</v-btn>
+                    <v-btn :loading="saving" @click="saveA11y" color="success">Save</v-btn>
                 </v-col>
             </v-row>
         </v-container>
@@ -24,6 +24,7 @@
 <script>
 import HTMLEditor from "./HTMLEditor"; 
 import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
+import {savePopup} from '@/utils/ui'
 
 export default {
     name: "A11yEditor",
@@ -65,10 +66,13 @@ export default {
             title: "",
             content: "",
             loading: true,
+            saving: false
         };
     },
     methods: {
         saveA11y() {
+            this.saving = true;
+
             fetch(editorEndpoint + "/content/a11y", {
                 method: "PUT",
                 headers: {
@@ -78,7 +82,17 @@ export default {
                     title: this.title,
                     content: this.content,
                 }),
-            });
+            })
+            .then((res) => {
+                savePopup(res.status)
+            })
+            .catch((err) => {
+                console.error(err)
+                savePopup(false)
+            })
+            .finally(() => {
+                this.saving = false
+            })
         },
     }
 };
