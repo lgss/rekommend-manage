@@ -1,11 +1,11 @@
 <template>
   <v-app>
-    <v-app-bar
+    <v-app-bar app clipped-left
       max-height="112px"
       color="primary"
       dark
     >
-      <v-toolbar-title>{{ process.env.TITLE }} editor</v-toolbar-title>
+      <v-toolbar-title>{{ appTitle }} editor</v-toolbar-title>
 
       <template v-slot:extension>
         <v-tabs grow v-model="tab">
@@ -34,7 +34,7 @@
 
     <v-snackbar v-model="showSnackbar" :timeout="snackbarTimeout" :color="snackbarColour"> 
       <v-icon class="mr-3" color="white">{{snackbarIcon}}</v-icon>
-      <div style="width:100%">{{ snackbarText }}</div>
+      <span>{{ snackbarText }}</span>
     </v-snackbar>
   </v-app>
 </template>
@@ -66,7 +66,8 @@ export default {
     showSnackbar: {
       get: function() {return this.$store.getters.showSnackbar},
       set: function(value) {this.$store.commit('setSnackbarVisible', value)}
-    }
+    },
+    appTitle() {return process.env.VUE_APP_TITLE}
   },
 
   data: () => ({

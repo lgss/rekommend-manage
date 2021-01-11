@@ -14,7 +14,7 @@
             </v-list-item-icon>
             New journey
           </v-list-item>
-          <v-divider/>
+           <v-divider/>
           <div v-for="(journey, index) in journeys" :key="'j' + index">
             <v-list-group @click="loadJourney(journey)" prepend-icon="mdi-transit-connection-variant">
               <template v-slot:activator>
@@ -107,33 +107,13 @@ export default {
       this.field = obj
       this.interactionType = fieldType || obj.fieldType
     },
-    clearEditor() {
+    removeJourneyUi() {
+      this.journeys.splice(this.resourceIndex,1);
       this.interactionType = ''
       this.field = null
     },
     newPage() {
       //this.currentJourney.doc.pages.push({title: "New page", items: []})
-    },
-    save() {
-      this.saving = true
-      fetch(this.endpoint+'/journeys/'+this.currentJourney.id, {
-        method: 'PUT',
-        body: JSON.stringify({
-          updates:[
-            {
-              paramName: "label", paramValue: this.currentJourney.label
-            },
-            {
-              paramName: "doc", paramValue: (this.currentJourney.doc)
-            },
-            {
-              paramName: "img", paramValue: (this.currentJourney.img)
-            }
-          ]
-        })
-      })
-      .then(() => this.saving = false)
-      .catch((err)=>console.error(err))
     },
     newJourney() {
       let journey = {
@@ -168,40 +148,11 @@ export default {
           method: 'DELETE'
         })
         .then(() =>  {
-          this.clearEditor()
+          this.removeJourneyUi()
         })
         .catch((err)=>console.error(err))
-      } 
-    },
-    updateJourney() {
-      this.updateLoading = true;
-      this.validateJourney()
-      if(this.errorMessages.length === 0) {
-        fetch(`${editorEndpoint}/journeys/${this.currentJourney.id}`, {
-          method: 'PUT',
-          body:JSON.stringify({
-            updates:[
-              {
-                paramName: "label", paramValue: this.currentJourney.label
-              },
-              {
-                paramName: "doc", paramValue: (this.currentJourney.doc)
-              },
-              {
-                paramName: "img", paramValue: (this.currentJourney.img)
-              }
-            ]
-          })
-        })
-        .then(() => {
-          this.$store.dispatch('doSnackbar', {text: "Changes saved", colour: "success", icon: 'mdi-check-circle'})
-        })
-        .catch((err)=> {
-          console.error(err);
-          this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
-        })
-        .finally(() => {this.updateLoading = false})
-      }
+      } else
+        this.removeJourneyUi()
     },
     validateJourney() { 
       /*this.errorMessages = []  

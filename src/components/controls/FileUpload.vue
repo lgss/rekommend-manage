@@ -9,7 +9,7 @@
                             @change="selectImage" accept="image/*" type="file"/>
                         <v-img max-height="100" max-width="100" :contain="true" :src="displayImage()"/>
                     </label>
-                    <v-btn v-if="image.src" class="delete" top absolute small fab @click="remove()">
+                    <v-btn v-if="image.src" :loading="deleting" class="delete" top absolute small fab @click="remove()">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                 </v-card>
@@ -35,6 +35,7 @@ export default {
     data() {
         return {
             loading: false,
+            deleting: false,
             internal_image: {
                 src: '',
                 alt: '',
@@ -44,15 +45,15 @@ export default {
     },
     computed: {
         image: {
-            get: function() {return this.internal_image || {}},
+            get: function() {return this.internal_image},
             set: function(newValue) {
-                this.internal_image = newValue
-                return this.$emit('input', newValue)
+                this.internal_image = newValue || {}
+                return this.$emit('input', this.internal_image)
             }
         }
     },
     created() {
-        this.internal_image = this.value
+        this.image = this.value
     },
     methods: {
         displayImage() {
@@ -69,7 +70,7 @@ export default {
                      if (this.image.src) 
                          this.remove(this.image.src)
 
-                    this.image.src = fn
+                    this.$set(this.image, "src", fn)
                     return fn
                 })
                 .catch(err => {
@@ -81,16 +82,20 @@ export default {
                 })
         },
         remove(url) {
-            return deleteFile(url || this.image.src)
+            this.deleting = true;
+
+            return deleteFile(url || this.internal_image.src)
                 .finally(() => {
                     if (!url)
-                        this.image = Object.assign({}, this.image, {src: null})
+                        this.$set(this.image, "src", null)
+                    
+                    this.deleting = false
                 })
         },
     },
     watch: {
         value(newValue) {
-            this.internal_image = newValue
+            this.image = newValue
         }
     }
 };
