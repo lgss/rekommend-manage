@@ -19,7 +19,7 @@
             </v-row>
             <v-row>
                 <v-col>
-                    <v-btn @click="saveTheme()" color="success">Save</v-btn>
+                    <v-btn :loading="saving" @click="saveTheme()" color="success">Save</v-btn>
                 </v-col>
             </v-row>
         </v-container>
@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
+  import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
+  import {savePopup} from '@/utils/ui'
 
 export default {
     name: 'ThemeEditor',
@@ -47,11 +48,14 @@ export default {
             appPrimary: "#1F63A3",
             appSecondary: "#1F63A3",
             content: "content will be placed here",
-            loading: true,  
+            loading: true,
+            saving: false
         }
     },
     methods: {
         saveTheme() {
+            this.saving = true;
+
             fetch(editorEndpoint + '/theme', {
                 method: "PUT",
                 headers: {
@@ -62,6 +66,16 @@ export default {
                     primary: this.appPrimary,
                     secondary: this.appSecondary
                 })
+            })
+            .then((res) => {
+                savePopup(res.status)
+            })
+            .catch((err) => {
+                console.error(err)
+                savePopup(false)
+            })
+            .finally(() => {
+                this.saving = false
             })
         }
     }

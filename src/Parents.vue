@@ -3,32 +3,36 @@
     <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1" v-model="drawer">
       <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-left </v-icon>
       <v-list>
-        <v-list-item-group v-if="parents.length" v-model="parentIndex" color="primary">
-          <v-list-item v-for="(parent, i) in parents" :key="i">
-            <v-list-item-content>
-              <v-list-item-title v-if="parent.label" v-html="parent.label">Hello</v-list-item-title>
-            </v-list-item-content>
+        <div v-if="loading">
+          <v-skeleton-loader type="list-item"/>
+          <v-divider/>
+          <v-skeleton-loader v-for="n in 5" :key="n" type="list-item-avatar"/>
+        </div>
+        <div v-else>
+          <v-list-item color="primary" @click="newParent">
+            <v-list-item-icon>
+              <v-icon>mdi-plus</v-icon>
+            </v-list-item-icon>New Category
           </v-list-item>
-        </v-list-item-group>
-        <v-list-item color="primary" @click="newParent">
-          <v-list-item-icon>
-            <v-icon>mdi-plus</v-icon>
-          </v-list-item-icon>New Category
-        </v-list-item>
+           <v-divider/>
+          <v-list-item-group v-if="parents.length" v-model="parentIndex" color="primary">
+            <v-list-item v-for="(parent, i) in parents" :key="i">
+              <v-list-item-content>
+                <v-list-item-title v-if="parent.label" v-html="parent.label">Hello</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </div>
       </v-list>
     </v-navigation-drawer>
     <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-right </v-icon>
     <v-content>
       <v-container fluid class="fill-height" v-if="currentParent">
-        <v-container>
-          <v-btn-toggle>
-            <v-btn @click="validate">Validate</v-btn>
-            <v-btn v-if="currentParent.id" @click="updateParent" :loading="updateLoading">Update</v-btn>
-            <v-btn v-else @click="createParent">Save</v-btn>
-            <v-btn @click="deleteParent">Delete</v-btn>
-          </v-btn-toggle>
-        </v-container>
         <parent ref="parentComponent" v-model="currentParent"/>
+        <v-container>
+            <v-btn class="mr-4" :disabled="deleteLoading" :loading="updateLoading" @click="putParent">Save</v-btn>
+            <v-btn :disabled="updateLoading" :loading="deleteLoading" @click="confirmDeleteParent">Delete category</v-btn>
+        </v-container>
       </v-container>
     </v-content>
   </div>
@@ -38,6 +42,8 @@
 <script>
   import ParentEditor from './components/controls/ParentEditor.vue'
   import {playerEndpoint, editorEndpoint} from '@/utils/endpoints.js'
+  import {v4 as uuidv4} from 'uuid'
+  import {savePopup} from '@/utils/ui'
   
   export default {
     components :{
@@ -47,12 +53,17 @@
       parents: [],
       parentIndex: -1,
       drawer: true,
-      updateLoading: false
+      loading: true,
+      updateLoading: false,
+      deleteLoading: false
     }),
     created() {
       fetch(playerEndpoint + '/journey-parents')
       .then(res => res.json())
       .then(res => { this.parents = res })
+      .finally(() => {
+        this.loading = false
+      })
     },
     computed: {
       currentParent() {
@@ -63,51 +74,51 @@
       validate() {
         return this.$refs.parentComponent.validate()
       },
-      updateParent() {
-        if (!this.validate()) return;
-        this.updateLoading = true;
-        let putReq = {
-          method: 'PUT',
-          body:JSON.stringify({
-            updates:[
-              {
-                paramName: "label", paramValue: this.currentParent.label
-              },
-              {
-                paramName: "img", paramValue: this.currentParent.img
-              },
-              {
-                paramName: "journeys", paramValue: this.currentParent.journeys
-              },
-            ]
-          })
-        }
-        fetch(`${editorEndpoint}/journey-parent/${this.currentParent.id}`, putReq )
-          .then(() => {
-            this.$store.dispatch('doSnackbar', {text: "Changes saved successfully", colour: "success", icon: 'mdi-check-circle'})
-          })
-          .catch((err) => {
-            console.error(err);
-            this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
-          })
-          .finally(() => {this.updateLoading = false})
-      },
-      createParent() {
+      putParent() {
+        const parent = this.parents[this.parentIndex]
+        const id = parent.id || uuidv4()
         let req = {
-          method: "POST",
+          method: "PUT",
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(this.currentParent)
+          body: JSON.stringify(parent)
         }
-        fetch(`${playerEndpoint}/journey-parent`, req)
-        .then((res)=> res.json())
+        this.updateLoading = true;
+
+        fetch(`${editorEndpoint}/journey-parent/${id}`, req)
         .then((res)=>{
-          this.$set(this.parents, this.parentIndex, res)
+          parent.id = id
+
+          savePopup(res.status)
         })
-        .catch(console.log)
+        .finally(() => {this.updateLoading = false})
+        .catch((err) => {
+          savePopup(false)
+          console.error(err)
+        })
+      },
+      confirmDeleteParent() {
+        this.$dialog
+          .display(
+              "Delete Category",
+              "Are you sure you want to delete this category? This action cannot be undone",
+              [{text:'No', color:''}, {text:'Yes, Delete', color:''}]
+          )
+          .then((result) => {
+              if (result === 1) {
+                this.deleting = true;
+                this.deleteParent();
+              }
+          });
       },
       deleteParent() {
+        if (!this.currentParent.id) {
+          this.parents.splice(this.parentIndex,1);
+          return
+        }
+
+        this.deleteLoading = true
         let delReq = {
           method: "DELETE"
         }
@@ -115,6 +126,9 @@
         .then(()=>{
           this.parents.splice(this.parentIndex,1);
           this.parentIndex = null;
+        })
+        .finally(() => {
+          this.deleteLoading = false
         })
       },
       newParent() {

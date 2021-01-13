@@ -6,7 +6,7 @@
         <v-list-item color="primary" @click="changeView('theme')">Theme</v-list-item>
         <v-list-item color="primary" @click="changeView('landing')">Landing</v-list-item>
         <v-list-item color="primary" @click="changeView('completed')">Assessment completed</v-list-item>
-        <v-list-item color="primary" @click="changeView('positive')">Positive outcome</v-list-item>
+        <v-list-item color="primary" @click="changeView('positive')">Default results</v-list-item>
         <v-list-item color="primary" @click="changeView('terms')">Terms and Conditions</v-list-item>
         <v-list-item color="primary" @click="changeView('a11y')">Accessibility statement</v-list-item>
       </v-list>

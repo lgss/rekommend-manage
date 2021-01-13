@@ -19,7 +19,7 @@
                     required
                 ></v-text-field>
                 <v-btn class="my-2" :loading="saving" @click="save">Save</v-btn>
-                <v-btn class="my-2 ml-4" @click="deleteJourney">Delete Journey</v-btn>
+                <v-btn class="my-2 ml-4" :disabled="saving" @click="deleteJourney">Delete Journey</v-btn>
             </v-col>
         </v-row>
         <h3>Pages</h3>
@@ -66,6 +66,8 @@ import FileUpload from "./controls/FileUpload";
 import PageEditor from '@/components/controls/PageEditor'
 import {editorEndpoint} from '@/utils/endpoints.js'
 import Info from '@/components/controls/Info'
+import {v4 as uuidv4} from 'uuid'
+import {savePopup} from '@/utils/ui'
 
 export default {
     name: 'JourneyEditor',
@@ -73,7 +75,8 @@ export default {
         return {
             drag: false,
             errorMessages: '',
-            saving: false
+            saving: false,
+            deleting: false
         }
     },
     components: {
@@ -109,35 +112,32 @@ export default {
         this.value.doc.pages.push({title: "New page", items: []})
     },
     deleteJourney() {
-        this.$emit('delete')
+        this.$dialog
+            .display(
+                "Delete journey",
+                "Are you sure you want to delete this journey? This action cannot be undone",
+                [{text:'No', color:''}, {text:'Yes, Delete', color:''}]
+            )
+            .then((result) => {
+                if (result === 1) this.$emit('delete')
+            });
     },
     save() {
         this.saving = true;
-        fetch(`${editorEndpoint}/journeys/${this.value.id}`, {
+        const id = this.value.id || uuidv4()
+        fetch(`${editorEndpoint}/journeys/${id}`, {
             method: 'PUT',
-            body:JSON.stringify({
-                updates:[
-                {
-                    paramName: "label", paramValue: this.value.label
-                },
-                {
-                    paramName: "doc", paramValue: (this.value.doc)
-                },
-                {
-                    paramName: "img", paramValue: (this.value.img)
-                }
-                ]}
-            )
+            body:JSON.stringify(this.value)
         })
-        .then(() => {
-            this.$store.dispatch('doSnackbar', {text: "Changes saved successfully", colour: "success", icon: 'mdi-check-circle'})
+        .then((res) => {
+            savePopup(res.status)
+            this.$set(this.value, "id", id)
         }) 
-        .finally(() => this.saving = false)
         .catch((err)=> {
-
-            this.$store.dispatch('doSnackbar', {text: "Changes have not been saved", colour: "error", icon: 'mdi-alert-circle'})
+            savePopup(false)
             console.error(err);
         })
+        .finally(() => this.saving = false)
     }
   }
 }
