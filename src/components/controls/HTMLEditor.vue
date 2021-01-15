@@ -23,6 +23,9 @@
                         <v-btn @click="showImagePrompt(commands.caption_image)">
                             <v-icon>mdi-signature-image</v-icon>
                         </v-btn>
+                        <v-btn @click="showVideoPrompt(commands.video)">
+                            <v-icon>mdi-video</v-icon>
+                        </v-btn>
                         <v-btn :class="{'v-btn--active': isActive.heading({ level: 1})}" @click="commands.heading({ level: 1})">
                             H1
                         </v-btn>
@@ -63,6 +66,7 @@ import {
   History,
 } from 'tiptap-extensions'
 import CaptionImage from '@/plugins/caption-images-editor.js'
+import Video from '@/plugins/video-editor.js'
 
 export default {
     props: ['label', 'mandatory', 'rules', 'value'],
@@ -80,7 +84,8 @@ export default {
                 new Italic(),
                 new Underline(),
                 new History(),
-                new CaptionImage()],
+                new CaptionImage(),
+                new Video()],
                 onUpdate: ({getHTML}) => {
                     this.$emit('input', getHTML())
                 },
@@ -107,6 +112,17 @@ export default {
             command({ src })
         }
       },
+      showVideoPrompt(command)  {
+          const youtube_parser = (url) => {
+            var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            var match = url.match(regExp);
+            return (match&&match[7].length==11)? match[7] : false;
+          }
+        const src = youtube_parser(prompt('Enter the url of your YouTube video here'))
+        if (src) {
+            command({src: `https://www.youtube.com/embed/${src}`})
+        }
+      }
     },
     watch: {
         value(newValue) {
