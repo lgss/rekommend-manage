@@ -1,6 +1,8 @@
 <template>
     <v-container>
-        <v-container v-if="loading"> </v-container>
+        <v-container v-if="loading" class="text-center"> 
+            <v-progress-circular indeterminate size="100" width="10" color="#dddddd"/>
+        </v-container>
         <v-container v-else>
             <v-row>
                 <v-col md="6">
