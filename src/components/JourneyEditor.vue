@@ -66,8 +66,8 @@ import FileUpload from "./controls/FileUpload";
 import PageEditor from '@/components/controls/PageEditor'
 import {editorEndpoint} from '@/utils/endpoints.js'
 import Info from '@/components/controls/Info'
-import {v4 as uuidv4} from 'uuid'
 import {savePopup} from '@/utils/ui'
+import { nanoid } from 'nanoid'
 
 export default {
     name: 'JourneyEditor',
@@ -124,7 +124,7 @@ export default {
     },
     save() {
         this.saving = true;
-        const id = this.value.id || uuidv4()
+        const id = this.value.id || nanoid(11)
         fetch(`${editorEndpoint}/journeys/${id}`, {
             method: 'PUT',
             body:JSON.stringify(this.value)
