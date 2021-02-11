@@ -10,10 +10,7 @@
             </template>
             <span>Scroll to top</span>
         </v-tooltip>
-        <v-container v-if="loading" class="text-center"> 
-            <v-progress-circular indeterminate size="100" width="10" color="#dddddd"/>
-        </v-container>
-        <v-container v-else>  
+        <v-container>  
             <v-row>
                 <v-col md="12">
                     <span>
@@ -119,23 +116,9 @@
 </template>
 
 <script>
-import {playerEndpoint} from '@/utils/endpoints.js'
 
 export default {
     name: "IntroductionEditor",
-    created() {
-        Promise.all([
-            fetch(playerEndpoint + "/theme")
-                .then((x) => x.json())
-                .then((x) => {
-                    this.appTitle = x.title;
-                    this.appPrimary = x.primary;
-                    this.appSecondary = x.secondary;
-                }),
-        ]).finally(() => {
-            this.loading = false;
-        });
-    },
     methods: {
         scrollTop() {
             this.$vuetify.goTo(0)
