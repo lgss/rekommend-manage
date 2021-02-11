@@ -3,6 +3,7 @@
     <v-navigation-drawer app absolute :clipped="true" color="blue--lighten-1" v-model="drawer">
       <v-icon large @click.stop="drawer = !drawer"> mdi-chevron-left </v-icon>
       <v-list>
+        <v-list-item color="primary" @click="changeView('introduction')">Introduction</v-list-item>
         <v-list-item color="primary" @click="changeView('theme')">Theme</v-list-item>
         <v-list-item color="primary" @click="changeView('landing')">Landing</v-list-item>
         <v-list-item color="primary" @click="changeView('completed')">Assessment completed</v-list-item>
@@ -19,6 +20,7 @@
 </template>
 
 <script>
+import IntroductionEditor from './components/controls/IntroductionEditor.vue'
 import ThemeEditor from './components/controls/ThemeEditor.vue'
 import LandingEditor from './components/controls/LandingEditor.vue'
 import PositiveEditor from './components/controls/PositiveEditor.vue'
@@ -28,6 +30,7 @@ import A11yEditor from './components/controls/A11yEditor.vue'
 
 export default {
   components: {
+    'introduction': IntroductionEditor,
     'theme': ThemeEditor,
     'terms': TermsEditor,
     'landing': LandingEditor,
@@ -37,7 +40,7 @@ export default {
   },
   data() {
     return {
-      interactionType: '',
+      interactionType: 'introduction',
       drawer: true,
     }
   },
