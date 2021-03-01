@@ -19,7 +19,7 @@
                         <ol>
                             <li><a href="#general">General</a></li>
                                 <ul>
-                                    <li><a href="#theme">Theme</a><li>
+                                    <li><a href="#theme">Theme</a></li>
                                     <li><a href="#landing">Landing</a></li>
                                     <li><a href="#completed">Assessment Completed</a></li>
                                     <li><a href="#default">Default Results</a></li>
